@@ -1,6 +1,8 @@
+require("dotenv").config();
+
 const fs = require("fs");
-const database = require('quick.db')
-const db = require('quick.db')
+const database = require("quick.db");
+const db = require("quick.db");
 const { Client, Intents, Collection, MessageEmbed, Permissions, GatewayIntentBits, MessageAttachment, MessageActionRow, MessageButton } = require("discord.js");
 const axios = require('axios')
 const request = require('request');
@@ -64,8 +66,9 @@ for (const file of slashFiles) {
   client.slash.set(command.slashCmd.name, command);
 }
 
-const { token, default_prefix, color, error } = require("./config.json");
+const { default_prefix, color, error } = require("./config.json");
 
+const token = process.env.DISCORD_TOKEN;
 const rest = new REST({ version: '9' }).setToken(token);
 
 (async () => {
