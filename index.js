@@ -53,26 +53,34 @@ const client = new Client({
 });
 
 const mariadb = require('mariadb');
-global.db =  mariadb.createPool({
-   host :  "localhost",
-   user : "luisu",
-   password : "Luis6672$",
-   connectionLimit: 5
 
-})
+global.db = mariadb.createPool({
+  host: process.env.DB_HOST,
+  port: Number(process.env.DB_PORT),
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
+  connectionLimit: 5
+});
+
 const { QuickDB, MySQLDriver } = require('quick.db');
+
 (async () => {
   const mysql = new MySQLDriver({
-    host:     'localhost',
-    user:     'luisu',
-    password: 'Luis6672$',
-    database: 'allstar'
+    host: process.env.DB_HOST,
+    port: Number(process.env.DB_PORT),
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME
   });
-  
+
   await mysql.connect();
 
-  
-   client.db = new QuickDB({ driver: mysql });
+  client.db = new QuickDB({
+    driver: mysql
+  });
+
+  console.log('Database connected successfully.');
 })();
 
 client.slash_data = []
