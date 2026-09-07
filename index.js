@@ -71,13 +71,15 @@ const { QuickDB, MySQLDriver } = require('quick.db');
     port: Number(process.env.DB_PORT),
     user: process.env.DB_USER,
     password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME
+    database: process.env.DB_NAME,
+    table: 'allstar'
   });
 
   await mysql.connect();
 
   client.db = new QuickDB({
-    driver: mysql
+    driver: mysql,
+    table: 'allstar'
   });
 
   console.log('Database connected successfully.');
