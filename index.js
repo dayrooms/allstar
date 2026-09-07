@@ -3,14 +3,8 @@ require("dotenv").config();
 const fs = require("fs");
 const database = require("quick.db");
 const db = require("quick.db");
-const { Client, Intents, Collection, MessageEmbed, Permissions, GatewayIntentBits, MessageAttachment, MessageActionRow, MessageButton } = require("discord.js");
-const axios = require('axios')
-const request = require('request');
-const { REST } = require('@discordjs/rest');
-const { Routes } = require('discord-api-types/v9');
-const client = new Client({
-  intents: [
-    Iconst {
+
+const {
   Client,
   GatewayIntentBits,
   Collection,
@@ -22,12 +16,39 @@ const client = new Client({
   ButtonStyle,
   ChannelType
 } = require("discord.js");
+
+const axios = require("axios");
+const request = require("request");
+const { REST } = require("@discordjs/rest");
+const { Routes } = require("discord-api-types/v10");
+
+const client = new Client({
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers,
+    GatewayIntentBits.GuildBans,
+    GatewayIntentBits.GuildEmojisAndStickers,
+    GatewayIntentBits.GuildIntegrations,
+    GatewayIntentBits.GuildWebhooks,
+    GatewayIntentBits.GuildInvites,
+    GatewayIntentBits.GuildPresences,
+    GatewayIntentBits.GuildVoiceStates,
+    GatewayIntentBits.GuildMessages,
+    GatewayIntentBits.GuildMessageReactions,
+    GatewayIntentBits.GuildMessageTyping,
+    GatewayIntentBits.DirectMessages,
+    GatewayIntentBits.DirectMessageReactions,
+    GatewayIntentBits.DirectMessageTyping
   ],
-  ws: { properties: { $browser: "Discord iOS" } },
+  ws: {
+    properties: {
+      $browser: "Discord iOS"
+    }
+  },
   restTimeOffset: 0,
   allowedMentions: {
     parse: ["roles", "users"],
-    repliedUser: false,
+    repliedUser: false
   }
 });
 
