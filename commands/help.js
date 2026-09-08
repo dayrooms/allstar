@@ -1,12 +1,12 @@
 const {
-  MessageEmbed,
-  MessageActionRow,
-  MessageButton,
+  EmbedBuilder,
   ActionRowBuilder,
+  ButtonBuilder,
+  ButtonStyle,
   ModalBuilder,
   TextInputBuilder,
   TextInputStyle,
-  MessageSelectMenu
+  StringSelectMenuBuilder
 
 } = require("discord.js");
 let utility = []
@@ -89,7 +89,7 @@ module.exports = {
           buttonList,
           timeout = 15
         ) => {
-          let timedout = new MessageEmbed()
+          let timedout = new EmbedBuilder()
             .setDescription(
               `<:allstarwarn:996517869791748199> Command Timed out`
             )
@@ -99,8 +99,8 @@ module.exports = {
           if (!pages) throw new Error("Pages are not given.");
           if (!buttonList) throw new Error("Buttons are not given.");
           if (
-            buttonList[0].style === "LINK" ||
-            buttonList[1].style === "LINK"
+            buttonList[0].data.style === ButtonStyle.Link ||
+            buttonList[1].data.style === ButtonStyle.Link
           )
             throw new Error(
               "Link buttons are not supported with discordjs-button-pagination"
@@ -108,13 +108,13 @@ module.exports = {
           if (buttonList.length !== 3) throw new Error("Need two buttons.");
 
           let page = 0;
-          let invite = new MessageButton()
+          let invite = new ButtonBuilder()
             .setLabel("Invite")
             .setURL(
               "https://discord.com/api/oauth2/authorize?client_id=938863295543251024&permissions=8&scope=bot%20applications.commands"
             )
-            .setStyle("LINK");
-          const row = new MessageActionRow().addComponents(
+            .setStyle(ButtonStyle.Link);
+          const row = new ActionRowBuilder().addComponents(
             buttonList,
             invite
           );
@@ -141,7 +141,7 @@ module.exports = {
 
           collector.on("collect", async (i) => {
             //console.log(i.user.id)
-            if (i.user.id !== msg.author.id) return i.reply({ embeds: [new MessageEmbed().setDescription(`${xmark} You are not the author`).setColor(error)], ephemeral: true })
+            if (i.user.id !== msg.author.id) return i.reply({ embeds: [new EmbedBuilder().setDescription(`${xmark} You are not the author`).setColor(error)], ephemeral: true })
             switch (i.customId) {
               case buttonList[0].customId:
                 page = page > 0 ? --page : pages.length - 1;
@@ -172,7 +172,7 @@ module.exports = {
 
           collector.on("end", () => {
             if (!curPage.deleted) {
-              const disabledRow = new MessageActionRow().addComponents(
+              const disabledRow = new ActionRowBuilder().addComponents(
                 buttonList[0].setDisabled(true),
                 buttonList[1].setDisabled(true),
                 buttonList[2].setDisabled(true)
@@ -198,7 +198,7 @@ module.exports = {
           let pingemoji = `<:allstarconnection:996699189432025180>`;
         } else pingemoji = `<:allstarbadconnection:996700696671948901> `;
 
-        let embed1 = new MessageEmbed()
+        let embed1 = new EmbedBuilder()
           .setAuthor({ name: `Allstar Help Menu `, iconURL: `${client.user.displayAvatarURL({ dynamic: true })}` })
           .setDescription('```RUBY\n\n  help + [module/command] ```')
           .addFields(
@@ -226,7 +226,7 @@ module.exports = {
           })
           .setColor(color);
 
-        let embed2 = new MessageEmbed()
+        let embed2 = new EmbedBuilder()
 
 
           .addFields({
@@ -237,7 +237,7 @@ module.exports = {
           })
           .setColor(color);
 
-        let embedanti = new MessageEmbed()
+        let embedanti = new EmbedBuilder()
 
           .addFields({
             name: `<:Modbadge:1010885860801126461> Security commands [${security.length}]`,
@@ -248,7 +248,7 @@ module.exports = {
           .setColor(color);
         // .setFooter({text: message.author.tag ,iconURL: client.user.displayAvatarURL()})
 
-        let embed3 = new MessageEmbed()
+        let embed3 = new EmbedBuilder()
 
           .addFields({
             name: `<:Serverinsights:1010885871119106058>  Utility commands [${utility.length}]`,
@@ -258,7 +258,7 @@ module.exports = {
           })
           .setColor(color);
 
-        let embedwelc = new MessageEmbed()
+        let embedwelc = new EmbedBuilder()
 
           .addFields({
             name: `<:Wave:1010885882678620193> Welcomer commands [9]`,
@@ -268,7 +268,7 @@ module.exports = {
           }
           )
           .setColor(color);
-        let embedbye = new MessageEmbed()
+        let embedbye = new EmbedBuilder()
 
           .addFields(
             {
@@ -278,7 +278,7 @@ module.exports = {
               inline: true,
             })
           .setColor(color);
-        let embedjoindm = new MessageEmbed()
+        let embedjoindm = new EmbedBuilder()
 
           .addFields(
             {
@@ -290,7 +290,7 @@ module.exports = {
           )
           .setColor(color);
 
-        let embedinfo = new MessageEmbed()
+        let embedinfo = new EmbedBuilder()
 
           .addFields({
             name: `<:allstarinfo:997234551568994324> Information commands [${information.length}]`,
@@ -300,7 +300,7 @@ module.exports = {
           })
           .setColor(color);
 
-        let config = new MessageEmbed()
+        let config = new EmbedBuilder()
 
           .addFields({
             name: `<:Settings:1010885871773433866>  Configurable commands [${confis.length}]`,
@@ -309,7 +309,7 @@ module.exports = {
             inline: true,
           })
           .setColor(color);
-        let images = new MessageEmbed()
+        let images = new EmbedBuilder()
           .setThumbnail(
             "https://media.discordapp.net/attachments/952942524085977121/1008802945980178473/IconPictures.png"
           )
@@ -320,7 +320,7 @@ module.exports = {
             inline: true,
           })
           .setColor(color);
-          let gamesss = new MessageEmbed()
+          let gamesss = new EmbedBuilder()
     
           .addFields({
             name: `<:Emoji:1032349517972000788>  Games commands [${games.length}]`,
@@ -329,18 +329,18 @@ module.exports = {
             inline: true,
           })
           .setColor(color);
-        let timedout = new MessageEmbed()
+        let timedout = new EmbedBuilder()
           .setDescription(
             `<:allstarwarn:996517869791748199> Command Timed out`
           )
           .setColor(error);
 
-        let invite = new MessageButton()
+        let invite = new ButtonBuilder()
           .setLabel("Invite Me!")
           .setURL(
             "https://discord.com/api/oauth2/authorize?client_id=938863295543251024&permissions=8&scope=bot%20applications.commands"
           )
-          .setStyle("LINK");
+          .setStyle(ButtonStyle.Link);
         if (args[0] === "security") {
           return message.reply({ embeds: [embedanti] });
         } else if (args[0] === "welcomer") {
@@ -363,24 +363,24 @@ module.exports = {
             }\n Usage ${command.usage}\n Aliases  ${command.aliases.join(
               ", "
             )} \n ${command.aliases} `;
-          let x = new MessageEmbed().setDescription(info).setColor(color);
+          let x = new EmbedBuilder().setDescription(info).setColor(color);
 
           return message.reply({ embeds: [x] });
         }
-        const button1 = new MessageButton()
+        const button1 = new ButtonBuilder()
           .setCustomId("previousbtn")
           .setEmoji("<a:left:1033526539188449310>")
-          .setStyle("PRIMARY");
+          .setStyle(ButtonStyle.Primary);
 
-        const button2 = new MessageButton()
+        const button2 = new ButtonBuilder()
           .setCustomId("nextbtn")
           .setEmoji("<:right:1033526800401317928>")
-          .setStyle("PRIMARY");
-        const button3 = new MessageButton()
+          .setStyle(ButtonStyle.Primary);
+        const button3 = new ButtonBuilder()
           .setCustomId("fastp")
           //.setEmoji("<:cancel:1042487068850401310> ")
           .setEmoji("<:DW_X_Mark:1032345318127304806>")
-          .setStyle("DANGER");
+          .setStyle(ButtonStyle.Danger);
 
 
 
