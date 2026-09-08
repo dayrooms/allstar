@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,MessageButton,MessageActionRow, Permissions } = require('discord.js');
+const{ EmbedBuilder,ButtonBuilder,ActionRowBuilder,ButtonStyle,PermissionFlagsBits } = require('discord.js');
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const db = require('quick.db')
 const talkedRecently = new Set();
@@ -21,31 +20,31 @@ module.exports = {
     } else {
 
 
-        let missperms = new MessageEmbed()
+        let missperms = new EmbedBuilder()
         .setDescription(`${xmark} You're missing \`BAN_MEMBERS\` permission`)
         .setColor(error)
-       let imissperms = new MessageEmbed()
+       let imissperms = new EmbedBuilder()
         .setDescription(`${xmark}  i don't have perms`)
         .setColor(error)
-       let example = new MessageEmbed()
+       let example = new EmbedBuilder()
        .setDescription(`${xmark} you need to provide a [User/ID]`)
        .setColor(error)
-       let banyou = new MessageEmbed()
+       let banyou = new EmbedBuilder()
        .setDescription(`${xmark} You can't ban yourself`)
        .setColor(error)
-       let invaliduser = new MessageEmbed()
+       let invaliduser = new EmbedBuilder()
        .setDescription(`${xmark} Invalid user`)
        .setColor(error)
-       let unbannable = new MessageEmbed()
+       let unbannable = new EmbedBuilder()
        .setDescription(`${xmark} Can't ban that user`)
        .setColor(error)
-       let higherrole = new MessageEmbed()
+       let higherrole = new EmbedBuilder()
        .setDescription(`${xmark} Can't ban a user with higher role than yours`)
        .setColor(error)
     
     
-              if (!message.member.permissions.has([ Permissions.FLAGS.BAN_MEMBERS]))  return message.reply({ embeds:[missperms]});
-          if (!message.guild.me.permissions.has([ Permissions.FLAGS.BAN_MEMBERS])) return message.reply({ embeds:[imissperms]});
+              if (!message.member.permissions.has(PermissionFlagsBits.BanMembers))  return message.reply({ embeds:[missperms]});
+          if (!message.guild.members.me.permissions.has(PermissionFlagsBits.BanMembers)) return message.reply({ embeds:[imissperms]});
           
 
           let mentionedMember = await message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args.join(' ').toLocaleLowerCase()) || message.guild.members.cache.find(r => r.displayName.toLowerCase() === args.join(' ').toLocaleLowerCase()) || client.users.cache.get(args[0])
@@ -63,19 +62,19 @@ module.exports = {
 
           //mentionedMember.send(`You got banned by ${message.author} in ${message.guild.name}`)
 
-          const row = new MessageActionRow().addComponents(
-            new MessageButton()
+          const row = new ActionRowBuilder().addComponents(
+            new ButtonBuilder()
              .setCustomId('yes')
              .setEmoji("<:Blurple_check:1013176396861931630>")
-             .setStyle('SECONDARY'),
+             .setStyle(ButtonStyle.Secondary),
            
-           new MessageButton()
+           new ButtonBuilder()
              .setCustomId('no')
              .setEmoji("<:DW_X_Mark:1013176426763145216>")
-             .setStyle('SECONDARY')
+             .setStyle(ButtonStyle.Secondary)
          )
          let msg = message.reply({embeds:[
-          new MessageEmbed().setDescription(`Are you sure you want to ban this user.`).setColor(color)
+          new EmbedBuilder().setDescription(`Are you sure you want to ban this user.`).setColor(color)
         ],
                        components:[row]
                       })
@@ -92,7 +91,7 @@ module.exports = {
            console.log(ButtonInteraction)
            const id = ButtonInteraction.first().customId;
            if(id === 'yes') {
-            let embed = new MessageEmbed()
+            let embed = new EmbedBuilder()
          .setDescription(`${checked} Banned `)
          .setColor(color)
          await message.guild.members.ban(mentionedMember,{
@@ -103,11 +102,11 @@ module.exports = {
         // message.channel.delete().catch(() => {/*Ignore error*/})
            }
            if(id === 'no') {
-                          let embed = new MessageEmbed()
+                          let embed = new EmbedBuilder()
          .setTitle(`Canceled`)
          .setColor(color)
          await message.channel.send({embeds:[
-             new MessageEmbed().setDescription(`${checked} Canceled`).setColor(color)
+             new EmbedBuilder().setDescription(`${checked} Canceled`).setColor(color)
            ]})
            }
          })
