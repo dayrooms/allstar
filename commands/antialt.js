@@ -1,4 +1,4 @@
-const { MessageEmbed, Permissions } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const db = require('quick.db')
 const {
   default_prefix,
@@ -26,7 +26,7 @@ module.exports = {
     if (talkedRecently.has(message.author.id)) {
       message.react(`⌛`);
     } else {
-      let checkenable = new MessageEmbed()
+      let checkenable = new EmbedBuilder()
         .setDescription(
           `<:allstarenabled:996521189986021386> Anti Alt Is Enabled `
         )
@@ -34,7 +34,7 @@ module.exports = {
           `https://cdn.discordapp.com/attachments/991601306747813978/996704762110148688/IconServerSecurity_1.gif`
         )
         .setColor(color);
-      let checkdisabled = new MessageEmbed()
+      let checkdisabled = new EmbedBuilder()
         .setDescription(
           `<:allstardisabled:996521221749481516>  Anti Alt Is Disabled `
         )
@@ -42,7 +42,7 @@ module.exports = {
           `https://cdn.discordapp.com/attachments/991601306747813978/996704762110148688/IconServerSecurity_1.gif`
         )
         .setColor(color);
-      let onlyown = new MessageEmbed()
+      let onlyown = new EmbedBuilder()
         .setDescription(`${xmark} Only server owner can use this command`)
         .setColor(error);
 
@@ -53,14 +53,14 @@ module.exports = {
           /*Ignore error*/
         });
 
-      let aenabled = new MessageEmbed()
+      let aenabled = new EmbedBuilder()
         .setDescription(`${checked} Anti Alt is now enabled`)
         .setColor(color);
-      let missperms = new MessageEmbed()
+      let missperms = new EmbedBuilder()
         .setDescription(`${xmark}  You're missing \`MANAGE_GUILD\` permission`)
         .setColor(error);
 
-      let nukeable = new MessageEmbed()
+      let nukeable = new EmbedBuilder()
         .setDescription(`${checked}  Anti Alt enabled`)
         .setColor(color);
       if (args[0] == "on") {
@@ -76,10 +76,10 @@ module.exports = {
             /*Ignore error*/
           });
       } else if (args[0] == "off") {
-        let disabled = new MessageEmbed()
+        let disabled = new EmbedBuilder()
           .setDescription(`${checked}  Anti Alt is now disabled`)
           .setColor(color);
-        let alreadydisabled = new MessageEmbed()
+        let alreadydisabled = new EmbedBuilder()
           .setDescription(`${xmark}  Anti Alt is disabled`)
           .setColor(error);
         if ((await db.has(`antiraid_${message.guild.id}`)) === true) {
@@ -104,7 +104,7 @@ module.exports = {
           });
         }
       } else if (args[0] == "info") {
-        let embed11 = new MessageEmbed()
+        let embed11 = new EmbedBuilder()
           .setDescription(
             `<:allstaruser:998562258210803793>  Anti Alt \n <:allstar:1001031487103193108> antialt [on/off] info :\`kicks every alt account if enabled \``
           )
