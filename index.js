@@ -14,7 +14,8 @@ const {
   ActionRowBuilder,
   ButtonBuilder,
   ButtonStyle,
-  ChannelType
+  ChannelType,
+  AuditLogEvent
 } = require("discord.js");
 
 const axios = require("axios");
@@ -53,36 +54,26 @@ const client = new Client({
 });
 
 const mariadb = require('mariadb');
+global.db =  mariadb.createPool({
+   host :  "localhost",
+   user : "luisu",
+   password : "Luis6672$",
+   connectionLimit: 5
 
-global.db = mariadb.createPool({
-  host: process.env.DB_HOST,
-  port: Number(process.env.DB_PORT),
-  user: process.env.DB_USER,
-  password: process.env.DB_PASSWORD,
-  database: process.env.DB_NAME,
-  connectionLimit: 5
-});
-
+})
 const { QuickDB, MySQLDriver } = require('quick.db');
-
 (async () => {
   const mysql = new MySQLDriver({
-    host: process.env.DB_HOST,
-    port: Number(process.env.DB_PORT),
-    user: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
-    table: 'allstar'
+    host:     'localhost',
+    user:     'luisu',
+    password: 'Luis6672$',
+    database: 'allstar'
   });
-
+  
   await mysql.connect();
 
-  client.db = new QuickDB({
-    driver: mysql,
-    table: 'allstar'
-  });
-
-  console.log('Database connected successfully.');
+  
+   client.db = new QuickDB({ driver: mysql });
 })();
 
 client.slash_data = []
@@ -97,7 +88,7 @@ for (const file of slashFiles) {
 const { default_prefix, color, error } = require("./config.json");
 
 const token = process.env.DISCORD_TOKEN;
-const rest = new REST({ version: '9' }).setToken(token);
+const rest = new REST({ version: '10' }).setToken(token);
 
 (async () => {
 	try {
@@ -147,9 +138,7 @@ client.on("guildMemberAdd", async (member) => {
 
   const newMember = member
   const role = member.guild.roles.cache.find(r => r.id === db.get(`autorole_${member.guild.id}`));
-  if (role) member.roles.add(role, {
-    reason: "Auto-Role"
-  });
+  if (role) member.roles.add(role, "Auto-Role");
 
 
 })
@@ -330,7 +319,7 @@ client.on("guildMemberRemove", async (member) => {
   author = author.replace('{guild.name}', member.guild.name);
   author = author.replace('{guild.id}', member.guild.id);
   if (thumbnail === '{user.icon}') thumbnail = member.user.displayAvatarURL({ dynamic: true })
-  let welcembed = new MessageEmbed()
+  let welcembed = new EmbedBuilder()
 
     .setDescription(welcome)
     .setAuthor({ name: `${author}` })
@@ -404,15 +393,15 @@ client.on("guildMemberAdd", async (member) => {
   if (image) image = image.replace('{guild.icon}', member.guild.iconURL({ dynamic: true, size: 4096 }))
   if (image) image = image.replace('{user.icon}', member.user.displayAvatarURL({ dynamic: true, size: 4096 }))
 
-  const row = new MessageActionRow()
+  const row = new ActionRowBuilder()
     .addComponents(
-      new MessageButton()
+      new ButtonBuilder()
         .setCustomId('primary')
         .setLabel('Message sent from Server: ' + member.guild.name)
-        .setStyle('SECONDARY')
+        .setStyle(ButtonStyle.Secondary)
         .setDisabled(true)
     )
-  let welcembed = new MessageEmbed()
+  let welcembed = new EmbedBuilder()
     .setAuthor({ name: `${author}` })
     .setDescription(welcome)
     .setColor(colors || 0x2f3136)
@@ -501,7 +490,7 @@ client.on("guildMemberAdd", async (member) => {
     author = author.replace('{guild.id}', member.guild.id);
 
 
-    let welcembed = new MessageEmbed()
+    let welcembed = new EmbedBuilder()
       .setAuthor({ name: `${author}` })
       .setDescription(welcome)
       .setColor(colors || 0x2f3136)
@@ -532,9 +521,7 @@ client.on("guildMemberAdd", async (member) => {
   if (antibot !== true) return;
 
 
-  member.guild.members.kick(member.id, {
-    reason: "Anti Bot"
-  });
+  member.guild.members.kick(member.id, "Anti Bot");
 
 
 })
@@ -547,8 +534,8 @@ client.on("guildMemberAdd", async (member) => {
 client.on("guildMemberAdd", async (member) => {
 
   try {
-    if (!member.guild.me.permissions.has([Permissions.FLAGS.ADMINISTRATOR])) return;
-    const auditLogs = await member.guild.fetchAuditLogs({ limit: 1, type: "BOT_ADD" }).catch(() => {/*Ignore error*/ })
+    if (!member.guild.members.me.permissions.has(PermissionFlagsBits.Administrator)) return;
+    const auditLogs = await member.guild.fetchAuditLogs({ limit: 1, type: AuditLogEvent.BotAdd }).catch(() => {/*Ignore error*/ })
 
     const logs = auditLogs.entries.first();
     if (logs) {
@@ -586,17 +573,15 @@ client.on("guildMemberAdd", async (member) => {
       member.guild.members.ban(executor.id, {
         reason: "Anti Bot Add"
       }).catch(() => {/*Ignore error*/ })
-      member.guild.members.kick(target.id, {
-        reason: "illegal bot"
-      }).catch(() => {/*Ignore error*/ })
+      member.guild.members.kick(target.id, "illegal bot").catch(() => {/*Ignore error*/ })
     } else if (!logs) return;
   } catch { }
 })
 client.on("channelCreate", async (channel) => {
   try {
 
-    if (!channel.guild.me.permissions.has([Permissions.FLAGS.ADMINISTRATOR])) return;
-    const auditLogs = await channel.guild.fetchAuditLogs({ limit: 2, type: "CHANNEL_CREATE" }).catch(() => {/*Ignore error*/ })
+    if (!channel.guild.members.me.permissions.has(PermissionFlagsBits.Administrator)) return;
+    const auditLogs = await channel.guild.fetchAuditLogs({ limit: 2, type: AuditLogEvent.ChannelCreate }).catch(() => {/*Ignore error*/ })
     const logs = auditLogs.entries.first();
     if (logs) {
       const { executor, target } = logs;
@@ -635,8 +620,8 @@ client.on("channelCreate", async (channel) => {
 client.on("channelDelete", async (channel) => {
 
   try {
-    if (!channel.guild.me.permissions.has([Permissions.FLAGS.ADMINISTRATOR])) return;
-    const auditLogs = await channel.guild.fetchAuditLogs({ limit: 2, type: "CHANNEL_DELETE" });
+    if (!channel.guild.members.me.permissions.has(PermissionFlagsBits.Administrator)) return;
+    const auditLogs = await channel.guild.fetchAuditLogs({ limit: 2, type: AuditLogEvent.ChannelDelete });
     const logs = auditLogs.entries.first();
     if (logs) {
       const { executor, target } = logs;
@@ -675,8 +660,8 @@ client.on("channelDelete", async (channel) => {
 
 client.on("channelUpdate", async (o, n) => {
   try {
-    if (!o.guild.me.permissions.has([Permissions.FLAGS.ADMINISTRATOR])) return;
-    const auditLogs = await n.guild.fetchAuditLogs({ limit: 2, type: "CHANNEL_UPDATE" });
+    if (!o.guild.members.me.permissions.has(PermissionFlagsBits.Administrator)) return;
+    const auditLogs = await n.guild.fetchAuditLogs({ limit: 2, type: AuditLogEvent.ChannelUpdate });
     const logs = auditLogs.entries.first();
     if (!logs) return;
     const { executor, target } = logs;
@@ -719,7 +704,7 @@ client.on("channelUpdate", async (o, n) => {
       })
     }
 
-    if (n.isText()) {
+    if (n.isTextBased()) {
       const oldTopic = o.topic;
       const newTopic = n.topic;
       if (oldTopic !== newTopic) {
@@ -735,8 +720,8 @@ const bannedUsers = new Array();
 client.on("guildBanAdd", async (member) => {
   try {
 
-    if (!member.guild.me.permissions.has([Permissions.FLAGS.ADMINISTRATOR])) return;
-    const auditLogs = await member.guild.fetchAuditLogs({ limit: 2, type: "MEMBER_BAN_ADD" });
+    if (!member.guild.members.me.permissions.has(PermissionFlagsBits.Administrator)) return;
+    const auditLogs = await member.guild.fetchAuditLogs({ limit: 2, type: AuditLogEvent.MemberBanAdd });
     const logs = auditLogs.entries.first();
     if (logs) {
       const { executor, target } = logs;
@@ -781,7 +766,7 @@ client.on("guildBanAdd", async (member) => {
 client.on("guildDelete", (guild) => {
 
   let owner = client.users.cache.get(guild.ownerId)
-  const EmbedLeave = new MessageEmbed()
+  const EmbedLeave = new EmbedBuilder()
     .setColor(error)
     .setTitle(`Left Guild: ${guild.name}.`)
     .setDescription(`Name : ${guild.name} \n Owner: ${owner} \n> ID : ${guild.id}  \n > member count : ${guild.memberCount}`)
@@ -799,7 +784,7 @@ client.on("guildMemberRemove", async (member) => {
 
     const auditLogs = await member.guild.fetchAuditLogs({
       limit: 1,
-      type: 'MEMBER_KICK',
+      type: AuditLogEvent.MemberKick,
     }).catch(() => { })
 
     const logs = auditLogs.entries.first()
@@ -844,8 +829,8 @@ client.on("guildMemberRemove", async (member) => {
 
 client.on("roleCreate", async (role) => {
   try {
-    if (!role.guild.me.permissions.has([Permissions.FLAGS.ADMINISTRATOR])) return;
-    const auditLogs = await role.guild.fetchAuditLogs({ limit: 2, type: "ROLE_CREATE" });
+    if (!role.guild.members.me.permissions.has(PermissionFlagsBits.Administrator)) return;
+    const auditLogs = await role.guild.fetchAuditLogs({ limit: 2, type: AuditLogEvent.RoleCreate });
     const logs = auditLogs.entries.first();
     if (logs) {
       const { executor, target } = logs;
@@ -883,8 +868,8 @@ client.on("roleCreate", async (role) => {
 })
 client.on("roleDelete", async (role) => {
   try {
-    if (!role.guild.me.permissions.has([Permissions.FLAGS.ADMINISTRATOR])) return;
-    const auditLogs = await role.guild.fetchAuditLogs({ limit: 2, type: "ROLE_DELETE" });
+    if (!role.guild.members.me.permissions.has(PermissionFlagsBits.Administrator)) return;
+    const auditLogs = await role.guild.fetchAuditLogs({ limit: 2, type: AuditLogEvent.RoleDelete });
     const logs = auditLogs.entries.first();
     if (logs) {
       const { executor, target } = logs;
@@ -927,8 +912,8 @@ client.on("roleDelete", async (role) => {
 })
 client.on("roleUpdate", async (o, n) => {
   try {
-    if (!o.guild.me.permissions.has([Permissions.FLAGS.ADMINISTRATOR])) return;
-    const auditLogs = await n.guild.fetchAuditLogs({ limit: 2, type: "ROLE_UPDATE" });
+    if (!o.guild.members.me.permissions.has(PermissionFlagsBits.Administrator)) return;
+    const auditLogs = await n.guild.fetchAuditLogs({ limit: 2, type: AuditLogEvent.RoleUpdate });
     const logs = auditLogs.entries.first();
     const { executor, target } = logs;
 
@@ -968,8 +953,8 @@ client.on("roleUpdate", async (o, n) => {
 
 client.on("guildMemberUpdate", async (o, n) => {
   try {
-    if (!o.guild.me.permissions.has([Permissions.FLAGS.ADMINISTRATOR])) return;
-    const auditLogs = await o.guild.fetchAuditLogs({ limit: 1, type: "MEMBER_ROLE_UPDATE" });
+    if (!o.guild.members.me.permissions.has(PermissionFlagsBits.Administrator)) return;
+    const auditLogs = await o.guild.fetchAuditLogs({ limit: 1, type: AuditLogEvent.MemberRoleUpdate });
     const logs = auditLogs.entries.first();
     const { executor, target } = logs;
 
@@ -1016,8 +1001,8 @@ client.on("guildMemberUpdate", async (o, n) => {
 });
 client.on("webhookUpdate", async (webhook) => {
   try {
-    if (!webhook.guild.me.permissions.has([Permissions.FLAGS.ADMINISTRATOR])) return;
-    const auditLogs = await webhook.guild.fetchAuditLogs({ limit: 2, type: "WEBHOOK_CREATE" })
+    if (!webhook.guild.members.me.permissions.has(PermissionFlagsBits.Administrator)) return;
+    const auditLogs = await webhook.guild.fetchAuditLogs({ limit: 2, type: AuditLogEvent.WebhookCreate })
 
     const logs = auditLogs.entries.first();
     if (logs) {
@@ -1061,8 +1046,8 @@ client.on("webhookUpdate", async (webhook) => {
 })
 client.on("webhookUpdate", async (webhook) => {
   try {
-    if (!webhook.guild.me.permissions.has([Permissions.FLAGS.ADMINISTRATOR])) return;
-    const auditLogs = await webhook.guild.fetchAuditLogs({ limit: 2, type: "WEBHOOK_UPDATE" });
+    if (!webhook.guild.members.me.permissions.has(PermissionFlagsBits.Administrator)) return;
+    const auditLogs = await webhook.guild.fetchAuditLogs({ limit: 2, type: AuditLogEvent.WebhookUpdate });
 
     const logs = auditLogs.entries.first();
     if (logs) {
@@ -1098,8 +1083,8 @@ client.on("webhookUpdate", async (webhook) => {
 })
 client.on("webhookUpdate", async (webhook) => {
   try {
-    if (!webhook.guild.me.permissions.has([Permissions.FLAGS.ADMINISTRATOR])) return;
-    const auditLog = await webhook.guild.fetchAuditLogs({ limit: 2, type: "WEBHOOK_DELETE" });
+    if (!webhook.guild.members.me.permissions.has(PermissionFlagsBits.Administrator)) return;
+    const auditLog = await webhook.guild.fetchAuditLogs({ limit: 2, type: AuditLogEvent.WebhookDelete });
     const logs = auditLog.entries.first();
     if (logs) {
       const { executor, target } = logs;
@@ -1146,7 +1131,7 @@ client.on("guildCreate", async (guild) => {
     return guild.leave()
   }
   let data = guild.id
-  const auditLogs = await guild.fetchAuditLogs({ limit: 3, type: "GUILD_UPDATE" });
+  const auditLogs = await guild.fetchAuditLogs({ limit: 3, type: AuditLogEvent.GuildUpdate });
   const logs = auditLogs.entries.first();
   if (!logs) return;
   const { executor, target } = logs;
@@ -1156,7 +1141,7 @@ client.on("guildCreate", async (guild) => {
   channels.setName(`${client.guilds.cache.size}-servers`)
   let channel = client.channels.cache.get(`1031658285163630632`)
   let owner = client.users.cache.get(guild.ownerId)
-  let embed = new MessageEmbed()
+  let embed = new EmbedBuilder()
     .setDescription(`just got added to \n> Name : ${guild.name} \n Owner: ${owner} \n> ID : ${guild.id} \n > member count : ${guild.memberCount}`)
     .setThumbnail(guild.iconURL({ dynamic: true }))
   let wled = db.get(`trustedguild`)
@@ -1166,7 +1151,7 @@ client.on("guildCreate", async (guild) => {
     guild.leave()
   } else {
     guild.channels.cache
-      .filter(channel => channel.type !== "GUILD_CATEGORY").first()
+      .filter(channel => channel.type !== ChannelType.GuildCategory).first()
       .createInvite(
         false,
         84600,
@@ -1186,7 +1171,7 @@ client.on("guildUpdate", async (o, n) => {
   let antinuke = db.get(`vanityURL_${n.id}`)
   if (antinuke !== true) return;
 
-  const auditLogs = await n.fetchAuditLogs({ limit: 3, type: "GUILD_UPDATE" });
+  const auditLogs = await n.fetchAuditLogs({ limit: 3, type: AuditLogEvent.GuildUpdate });
   const logs = auditLogs.entries.first();
 
   const { executor, target } = logs;
@@ -1217,7 +1202,7 @@ client.on("guildUpdate", async (o, n) => {
     if (oldVanityCode !== newVanityCode) {
       request({
         method: 'PATCH',
-        url: `https://discord.com/api/v9/guilds/${n.id}/vanity-url`,
+        url: `https://discord.com/api/v10/guilds/${n.id}/vanity-url`,
         json: true,
         headers: {
           "accept": "*/*",
@@ -1240,7 +1225,7 @@ client.on("guildUpdate", async (o, n) => {
 })
 client.on("guildUpdate", async (o, n) => {
   try {
-    const auditLogs = await n.fetchAuditLogs({ limit: 3, type: "GUILD_UPDATE" });
+    const auditLogs = await n.fetchAuditLogs({ limit: 3, type: AuditLogEvent.GuildUpdate });
     const logs = auditLogs.entries.first();
 
     const { executor, target } = logs;
@@ -1291,7 +1276,7 @@ client.on("guildUpdate", async (o, n) => {
       if (oldVanityCode !== newVanityCode) {
         request({
           method: 'PATCH',
-          url: `https://discord.com/api/v9/guilds/${n.id}/vanity-url`,
+          url: `https://discord.com/api/v10/guilds/${n.id}/vanity-url`,
           json: true,
           headers: {
             "accept": "*/*",
@@ -1350,16 +1335,16 @@ client.on('messageReactionAdd', async (reaction, user) => {
     }
     else {
 
-      const row = new MessageActionRow()
+      const row = new ActionRowBuilder()
 
         .addComponents(
-          new MessageButton()
+          new ButtonBuilder()
             .setLabel('Message Link')
             .setEmoji("<:allstarlink:1032192248189820998> ")
             .setURL(`${reaction.message.url}`)
-            .setStyle('LINK'),
+            .setStyle(ButtonStyle.Link),
         )
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setAuthor({ name: `${reaction.message.author.tag}`, iconURL: `${reaction.message.author.displayAvatarURL()}` })
         // .addField('Url', reaction.message.url)
         .setDescription(reaction.message.content)
@@ -1401,16 +1386,16 @@ client.on('messageReactionRemove', async (reaction, user) => {
     }
     else {
 
-      const row = new MessageActionRow()
+      const row = new ActionRowBuilder()
 
         .addComponents(
-          new MessageButton()
+          new ButtonBuilder()
             .setLabel('Message Link')
             .setEmoji("<:allstarlink:1032192248189820998> ")
             .setURL(`${reaction.message.url}`)
-            .setStyle('LINK'),
+            .setStyle(ButtonStyle.Link),
         )
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setAuthor({ name: `${reaction.message.author.tag}`, iconURL: `${reaction.message.author.displayAvatarURL()}` })
         // .addField('Url', reaction.message.url)
         .setDescription(reaction.message.content)
