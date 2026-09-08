@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -29,7 +28,7 @@ module.exports = {
           const msg = fetchMessages.first();
 
  
-          let embed = new MessageEmbed()
+          let embed = new EmbedBuilder()
         .setDescription(` <:Message:1010885858792067192> [Jump to First Message](${msg.url}) in this Channel`)
         .setColor(color)
         message.reply({embeds:[embed]});
