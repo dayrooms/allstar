@@ -1,5 +1,5 @@
 const fs = require("fs");
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder, ActivityType } = require('discord.js');
 module.exports = {
   event: "ready",
   once: true,
@@ -7,7 +7,7 @@ module.exports = {
     client.readyOn = Date.now()
     // Handle Restart
     const { exec } = require('child_process');
-    var restartedEmbed = new MessageEmbed()
+    var restartedEmbed = new EmbedBuilder()
       .setColor("#32CD32")
       .setTitle("Bot Restarted <a:Check:1045087654280179783>")
       .setDescription("Everything seems good. The bot has been restarted.")
@@ -40,7 +40,7 @@ module.exports = {
     setInterval(async () => {
      // client.user.setActivity(`${client.guilds.cache.size} Servers & ${client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)} Users`, {
          client.user.setActivity(`discord.gg/heist`, {
-        type: "LISTENING",
+        type: ActivityType.Listening,
         url: "https://www.twitch.tv/discord"
       })
       var guild = client.guilds.cache.get("1031650118375571537");
@@ -52,7 +52,7 @@ module.exports = {
     }, 100000)
     /*
      client.user.setActivity(`discord.gg/heist`, {
-        type: "LISTENING",
+        type: ActivityType.Listening,
         url: "https://www.twitch.tv/discord",
         emoji:"⭐"
       })
