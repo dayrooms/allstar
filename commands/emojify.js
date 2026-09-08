@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const axios = require('axios')
 const { default_prefix ,color,error,owner } = require("../config.json")
 const talkedRecently = new Set();
@@ -23,7 +22,7 @@ module.exports = {
     } else {
         axios.get(`https://luminabot.xyz/api/text/emojify?text=${args.join(" ")}`)
               .then(response => {
-            let embed = new MessageEmbed()
+            let embed = new EmbedBuilder()
             .setDescription(`${response.data.emojifyed}`)
             .setColor(color)
             message.reply({embeds:[embed]})
