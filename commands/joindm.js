@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,MessageActionRow,MessageButton,Permissions } = require('discord.js');
+const{ EmbedBuilder,ActionRowBuilder,ButtonBuilder,ButtonStyle,PermissionFlagsBits } = require('discord.js');
 const db = require('quick.db')
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const request = require('request')
@@ -23,15 +22,15 @@ module.exports = {
              message.react(`⌛`)
     } else {
 
-    let missperms = new MessageEmbed()
+    let missperms = new EmbedBuilder()
     .setDescription(`${xmark} You're missing \`MANAGE_GUILD\` permission`)
     .setColor(error)
-    if (!message.member.permissions.has([ Permissions.FLAGS.MANAGE_GUILD])) return message.reply({ embeds:[missperms]});
+    if (!message.member.permissions.has(PermissionFlagsBits.ManageGuild)) return message.reply({ embeds:[missperms]});
 
     let prefix = db.get(`prefix_${message.guild.id}`);
     if (prefix === null) { prefix = default_prefix; };
     if (message.author.bot) return;
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setDescription(`\<a:allstarwelcome:996512695480238182>  **joindm setup** \n <:allstar:1001031487103193108> joindm embed <:allstar:1001031487103193108> joindm message \n <:allstar:1001031487103193108> joindm footer \n <:allstar:1001031487103193108> joindm author \n <:allstar:1001031487103193108> joindm image \n <:allstar:1001031487103193108> joindm removeimage \n <:allstar:1001031487103193108> joindm clear \n <:allstar:1001031487103193108> joindm stats \n <:allstar:1001031487103193108> joindm variables \n <:allstar:1001031487103193108> joindm color`)
       .setColor(color)
 
@@ -42,12 +41,12 @@ module.exports = {
       db.set(`joindmmessage_${message.guild.id}`, args.splice(1).join(' '))
       let wlcmsg = db.get(`joindmmessage_${message.guild.id}`)
       if (wlcmsg === null) {
-        const setmsgembed = new MessageEmbed()
+        const setmsgembed = new EmbedBuilder()
           .setDescription(`${xmark} There is no joindm message set one with ${prefix}welcome message`)
           .setColor(error)
         return message.reply({embeds:[setmsgembed]})
       } else {
-        const setembed = new MessageEmbed()
+        const setembed = new EmbedBuilder()
           .setTitle(`${checked} joindm message updated`)
           .setDescription(`${wlcmsg}`)
           .setColor(color)
@@ -58,7 +57,7 @@ module.exports = {
 
       let welcome = db.get(`joindmmessage_${message.guild.id}`);
       if (welcome === null) {
-                const setmsgembed = new MessageEmbed()
+                const setmsgembed = new EmbedBuilder()
           .setDescription(`${xmark} There is no joindm message set one with ${prefix}welcome message`)
           .setColor(error)
         return message.reply({embeds:[setmsgembed]})
@@ -116,19 +115,19 @@ module.exports = {
       author = author.replace('{guild.name}', message.member.guild.name);
       author = author.replace('{guild.id}', message.member.guild.id);
       if(thumbnail === '{user.icon}') thumbnail =  message.member.displayAvatarURL({dynamic:true})
-      let tested = new MessageEmbed()
+      let tested = new EmbedBuilder()
       .setDescription(`${checked} Tested joindm` )
       .setColor(color)
       console.log(thumbnail)
-           const row = new MessageActionRow()
+           const row = new ActionRowBuilder()
         .addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          	.setCustomId('primary')
 	        .setLabel('Message sent from Server: ' + message.guild.name)
-	        .setStyle('SECONDARY')
+	        .setStyle(ButtonStyle.Secondary)
 	        .setDisabled(true)
         )
-      let welcembed = new MessageEmbed()
+      let welcembed = new EmbedBuilder()
 
       .setDescription(welcome)
       .setAuthor({name:`${author}`})
@@ -151,13 +150,13 @@ module.exports = {
     } else if (args[0] === 'variables') {
       const member = message.author
       const ordinal = (message.guild.memberCount.toString().endsWith(1) && !message.guild.memberCount.toString().endsWith(11)) ? 'st' : (message.guild.memberCount.toString().endsWith(2) && !message.guild.memberCount.toString().endsWith(12)) ? 'nd' : (message.guild.memberCount.toString().endsWith(3) && !message.guild.memberCount.toString().endsWith(13)) ? 'rd' : 'th';
-      const variablesembed = new MessageEmbed()
+      const variablesembed = new EmbedBuilder()
         .setTitle(`joindm variables`)
         .setDescription(`> {user}  - <@` + member + `>\n> {user.name}  - ` + message.author.username + `\n> {user.tag}  - ` + message.author.tag + `\n> {user.id}  - ` + message.author.id + `\n> {guild.name}  - ` + message.member.guild.name + `\n> {guild.id}  - ` + message.member.guild.id + `\n> {membercount}  - ` + message.member.guild.memberCount + `\n> {membercount.ordinal}  - ` + message.member.guild.memberCount + ordinal + `\n **Image Variables**  \n> {guild.icon}\n {user.icon}`)
         .setColor(color)
       message.reply({embeds:[variablesembed]})
     }  else if (args[0] === "clear") {
-      let deleted = new MessageEmbed()
+      let deleted = new EmbedBuilder()
       .setDescription(`${checked} cleared joindm setup from the database`)
       .setColor(color)
       db.delete(`joindmwelcembed_${message.guild.id}`);
@@ -172,7 +171,7 @@ module.exports = {
       db.set(`joindmwelcembed_${message.guild.id}`, args.splice(1).join(' '))
         let footers = db.get(`joindmwelcembed_${message.guild.id}`);
       if (footers === null) return;
-      let footemebed = new MessageEmbed()
+      let footemebed = new EmbedBuilder()
       .setTitle(`${checked} sucessfuly updated footer`)
        .setDescription(`${footers}`)
       return await message.reply({embeds:[footemebed]})
@@ -181,7 +180,7 @@ module.exports = {
 
     else if(args[0] === "image") {
         if(args[1] === '{guild.icon}'){
-                  let x = new MessageEmbed()
+                  let x = new EmbedBuilder()
         .setDescription(`${checked} Succesfully updated Image`)
         .setColor(color)
          db.set(`joindmimage_${message.guild.id}`,args[1])
@@ -189,7 +188,7 @@ module.exports = {
        
         }
         else if(args[1]== '{user.icon}') {
-                            let x = new MessageEmbed()
+                            let x = new EmbedBuilder()
         .setDescription(`${checked} Succesfully updated Image`)
         .setColor(color)
          db.set(`joindmimage_${message.guild.id}`,args[1])
@@ -199,10 +198,10 @@ module.exports = {
         
         let icon = args[1]
       //  if(!icon) icon = args[0]
-      let no = new MessageEmbed()
+      let no = new EmbedBuilder()
       .setDescription(`${xmark} Not a well formed URL`)
       .setColor(error)
-        let x = new MessageEmbed()
+        let x = new EmbedBuilder()
         .setDescription(`${checked} Succesfully updated Image`)
         .setColor(color)
         
@@ -220,7 +219,7 @@ module.exports = {
  
     }
       else if(args[0] === "removeimage") {
-        let x = new MessageEmbed()
+        let x = new EmbedBuilder()
         .setDescription(`${checked} sucessfuly removed image`)
         .setColor(color)
 
@@ -290,7 +289,7 @@ module.exports = {
     image = image.replace('{user.icon}',message.author.displayAvatarURL({dynamic:true,size:4096}))
       
       
-      let stats = new MessageEmbed()
+      let stats = new EmbedBuilder()
       .setDescription(`<a:allstarwelcome:996512695480238182> ${message.guild.name} Joindm Stats `)
       .setColor(color)
             .addFields(
@@ -336,7 +335,7 @@ module.exports = {
       
     } else if(args[0] === "author") {
       
-      let authorembed = new MessageEmbed()
+      let authorembed = new EmbedBuilder()
       .setDescription(`${checked} Succesfully updated Author`)
       .setColor(color)
       db.set(`joindmauthor_${message.guild.id}`, args.splice(1).join(' '))
@@ -345,7 +344,7 @@ module.exports = {
       
     } else if(args[0] === "color") {
       
-      let authorembed = new MessageEmbed()
+      let authorembed = new EmbedBuilder()
       .setDescription(`${checked} Succesfully updated Color`)
       .setColor(color)
       db.set(`joindmcolor_${message.guild.id}`, args.splice(1).join(' '))
@@ -355,7 +354,7 @@ module.exports = {
     }
       else if(args[0] === "thumbnail") {
         if(args[1] === '{guild.icon}'){
-                  let x = new MessageEmbed()
+                  let x = new EmbedBuilder()
         .setDescription(`${checked} Succesfully updated Thumbnail`)
         .setColor(color)
          db.set(`joindmthumbnail_${message.guild.id}`,args[1])
@@ -363,7 +362,7 @@ module.exports = {
        
         }
         if(args[1]== '{user.icon}') {
-                            let x = new MessageEmbed()
+                            let x = new EmbedBuilder()
         .setDescription(`${checked} Succesfully updated Thumbnail`)
         .setColor(color)
          db.set(`joindmthumbnail_${message.guild.id}`,args[1])
@@ -371,10 +370,10 @@ module.exports = {
         }
         let icon = args[1]
       //  if(!icon) icon = args[0]
-      let no = new MessageEmbed()
+      let no = new EmbedBuilder()
       .setDescription(`${xmark} Not a well formed URL`)
       .setColor(error)
-        let x = new MessageEmbed()
+        let x = new EmbedBuilder()
         .setDescription(`${checked} Succesfully updated Thumbnail`)
         .setColor(color)
         
