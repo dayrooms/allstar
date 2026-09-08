@@ -1,4 +1,4 @@
-const { MessageEmbed,Permissions } = require("discord.js");
+const { EmbedBuilder, PermissionFlagsBits } = require("discord.js");
 const {
   default_prefix,
   color,
@@ -29,22 +29,22 @@ module.exports = {
 
 
 
-      let aenabled = new MessageEmbed()
+      let aenabled = new EmbedBuilder()
         .setDescription(`${checked} Anti link is now enabled`)
         .setColor(color);
-      let missperms = new MessageEmbed()
+      let missperms = new EmbedBuilder()
         .setDescription(`${xmark} You're missing \`MANAGE_GUILD\` permission `)
         .setColor(error);
 
-      let nukeable = new MessageEmbed()
+      let nukeable = new EmbedBuilder()
         .setDescription(`${checked}  Anti link is Enabled`)
         .setColor(color);
 
    
-        if (!message.member.permissions.has([ Permissions.FLAGS.MANAGE_GUILD])) return message.reply({ embeds:[missperms]});
+        if (!message.member.permissions.has(PermissionFlagsBits.ManageGuild)) return message.reply({ embeds:[missperms]});
 
        if (args[0] === "off") {
-        let disabled = new MessageEmbed()
+        let disabled = new EmbedBuilder()
           .setDescription(`${checked}  Anti link is now disabled`)
           .setColor(color);
 
@@ -66,7 +66,7 @@ module.exports = {
           });
       } else if (args[0] == "info") {
 
-        let embed11 = new MessageEmbed()
+        let embed11 = new EmbedBuilder()
 
           .setDescription(
             `<:allstarsecurity:996512639666618518>  Allstar anti link \n <:allstar:1001031487103193108> antilink on - toggles antilink event on \n <:allstar:1001031487103193108> antilink off - toggles antilink event off \n <:allstar:1001031487103193108> antilink whitelist \n <:allstar:1001031487103193108> antilink blacklist \n <:allstar:1001031487103193108> antilink whitelisted`
@@ -79,13 +79,13 @@ module.exports = {
         });
       }
       if (!args[0]) {
-        let checkenable = new MessageEmbed()
+        let checkenable = new EmbedBuilder()
 
           .setDescription(
             `<:allstarenabled:996521189986021386> Anti link is enabled  \n Usage : \n <:allstar:1001031487103193108> antilink [on/off] \n  antilink whitelist \n <:allstar:1001031487103193108> antilink blacklist \n <:allstar:1001031487103193108> antilink whitelisted`
           )
           .setColor(color);
-        let checkdisabled = new MessageEmbed()
+        let checkdisabled = new EmbedBuilder()
           .setDescription(
             `<:allstardisabled:996521221749481516>  Anti link is disabled \n Usage : \n <:allstar:1001031487103193108> antilink [on/off] \n  antilink whitelist \n <:allstar:1001031487103193108> antilink blacklist \n <:allstar:1001031487103193108> antilink whitelisted`
           )
@@ -103,10 +103,10 @@ module.exports = {
       } else if (args[0] === "whitelist") {
         let antinuke = db.get(`antilink_${message.guild.id}`);
 
-                let missperms = new MessageEmbed()
+                let missperms = new EmbedBuilder()
         .setDescription(`${xmark}  You're missing \`MANAGE_GUILD\` permission`)
         .setColor(error)
-        if (!message.member.permissions.has([ Permissions.FLAGS.MANAGE_GUILD])) return message.reply({ embeds:[missperms]});
+        if (!message.member.permissions.has(PermissionFlagsBits.ManageGuild)) return message.reply({ embeds:[missperms]});
         
         if (antinuke !== true) {
           return message.reply({embeds:[{description:`${xmark} Enable antilink first`,color:error}]});
@@ -115,7 +115,7 @@ module.exports = {
           message.mentions.users.first() ||
           message.guild.members.cache.get(args[1]);
         if (!user) {
-          let usermention = new MessageEmbed()
+          let usermention = new EmbedBuilder()
             .setDescription(
               `
             ${xmark}  Mention user to whitelist
@@ -129,7 +129,7 @@ module.exports = {
         }
         let trustedusers = db.get(`linktrusted_${message.guild.id}`);
         if (trustedusers && trustedusers.find((find) => find.user == user.id)) {
-          let trust = new MessageEmbed()
+          let trust = new EmbedBuilder()
             .setColor(error)
             .setDescription(`${xmark}  That user is already whitelisted`);
           return message.reply({ embeds: [trust] });
@@ -138,7 +138,7 @@ module.exports = {
           user: user.id,
         };
         db.push(`linktrusted_${message.guild.id}`, data);
-        let added = new MessageEmbed()
+        let added = new EmbedBuilder()
           .setDescription(
             `
         ${checked}  Anti link Whitelisted ${user}
@@ -151,10 +151,10 @@ module.exports = {
         });
       } else if (args[0] === "blacklist") {
         let antinuke = db.get(`antilink_${message.guild.id}`);
-                let missperms = new MessageEmbed()
+                let missperms = new EmbedBuilder()
         .setDescription(`${xmark}  You're missing \`MANAGE_GUILD\` permission`)
         .setColor(error)
-        if (!message.member.permissions.has([ Permissions.FLAGS.MANAGE_GUILD])) return message.reply({ embeds:[missperms]});
+        if (!message.member.permissions.has(PermissionFlagsBits.ManageGuild)) return message.reply({ embeds:[missperms]});
         if (antinuke !== true) {
           return message.reply({embeds:[{description:`${xmark} Enable antilink first`,color:error}]});
         }
@@ -163,7 +163,7 @@ module.exports = {
           message.guild.members.cache.get(args[1]) ||
           args[0];
         if (!user) {
-          let usermention = new MessageEmbed()
+          let usermention = new EmbedBuilder()
             .setDescription(`${xmark}  Mention a user/ID`)
             .setColor(error);
           return message.reply({
@@ -174,7 +174,7 @@ module.exports = {
         let database = db.get(`linktrusted_${message.guild.id}`);
         if (database) {
           let data = database.find((x) => x.user === user.id);
-          let unabletofind = new MessageEmbed()
+          let unabletofind = new EmbedBuilder()
             .setDescription(
               `${xmark}  Could not find that user in the database`
             )
@@ -189,7 +189,7 @@ module.exports = {
           });
 
           db.set(`linktrusted_${message.guild.id}`, filter);
-          let deleted = new MessageEmbed()
+          let deleted = new EmbedBuilder()
             .setDescription(`${checked} Removed ${user} From Vanity Whitelist.`)
             .setColor(color);
 
@@ -197,24 +197,24 @@ module.exports = {
             embeds: [deleted],
           });
         } else {
-          let notrust = new MessageEmbed()
+          let notrust = new EmbedBuilder()
             .setDescription(`${xmark}  That user is not whitelisted`)
             .setColor(error);
           message.reply({ embeds: [notrust] });
         }
       } else if (args[0] === "whitelisted") {
-        let errors = new MessageEmbed()
+        let errors = new EmbedBuilder()
           .setDescription(`${xmark} There are no whitelisted users`)
           .setColor(error);
 
-                let missperms = new MessageEmbed()
+                let missperms = new EmbedBuilder()
         .setDescription(`${xmark}  You're missing \`MANAGE_GUILD\` permission`)
         .setColor(error)
-        if (!message.member.permissions.has([ Permissions.FLAGS.MANAGE_GUILD])) return message.reply({ embeds:[missperms]});
+        if (!message.member.permissions.has(PermissionFlagsBits.ManageGuild)) return message.reply({ embeds:[missperms]});
 
         let guild = message.guild.iconURL();
 
-        let wordlist = new MessageEmbed();
+        let wordlist = new EmbedBuilder();
         let database = db.get(`linktrusted_${message.guild.id}`);
         if (database == null)
           return message
@@ -231,7 +231,7 @@ module.exports = {
             arrayv.push(`<@${m.user}> - ${m.user}`);
           });
           wordlist.setDescription(message.guild.name);
-          wordlist.addField("Anti link whitelists", `>  ${arrayv.join("\n> ")}`);
+          wordlist.addFields({ name: "Anti link whitelists", value: `>  ${arrayv.join("\n> ")}` });
           wordlist.setThumbnail(message.guild.iconURL({ dynamic: true }));
           wordlist.setColor(color);
         }
