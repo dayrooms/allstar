@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,MessageActionRow,MessageButton } = require('discord.js');
+const{ EmbedBuilder,ActionRowBuilder,ButtonBuilder } = require('discord.js');
 const { default_prefix ,color,error,owner } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -18,16 +17,16 @@ module.exports = {
         if (talkedRecently.has(message.author.id)) {
              message.react(`⌛`)
     } else {
-             const row = new MessageActionRow()
+             const row = new ActionRowBuilder()
         .addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          .setLabel('Invite Me!')
          .setEmoji(`<:MessageLink:1010885859735785553> `)
          .setURL("https://discord.com/api/oauth2/authorize?client_id=938863295543251024&permissions=8&scope=bot%20applications.commands")
-         .setStyle('LINK'),
+         .setStyle(ButtonStyle.Link),
         )
 
-          let embed = new MessageEmbed()
+          let embed = new EmbedBuilder()
         .setURL(`https://discord.gg/heist`)
         .setTitle(`Allstar`)
         .setDescription(`<:sensowelcoming:1031693657809616967>  Allstar Security & Multipurpose \n> Guilds \`${client.guilds.cache.size}\` \n> Users \`${client.guilds.cache.reduce((a, g) => a + g.memberCount, 0)}\``)
