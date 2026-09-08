@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder, GuildVerificationLevel } = require('discord.js');
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -22,7 +21,7 @@ module.exports = {
           let emoji = `<:887705796476018688:989122635705233418> `;
       client.fetchInvite(args[0]).then((invite) => {
 
-        let xx = new MessageEmbed()
+        let xx = new EmbedBuilder()
       .setDescription(`${xmark} Couldn't fetch that server `)
       .setColor(error)
         if(!invite) return message.reply({embeds:[xx]})
@@ -34,18 +33,18 @@ module.exports = {
         
         
             const verificationLevels = {
-      NONE: 'None',
-      LOW: 'Low',
-      MEDIUM: 'Medium',
-      HIGH: 'High',
-      VERY_HIGH: 'Highest'
+      [GuildVerificationLevel.None]: 'None',
+      [GuildVerificationLevel.Low]: 'Low',
+      [GuildVerificationLevel.Medium]: 'Medium',
+      [GuildVerificationLevel.High]: 'High',
+      [GuildVerificationLevel.VeryHigh]: 'Highest'
     };
         let owner = invite.guild.ownerId 
         if(!owner) {
            owner = `couldn't cache `
         }
         else owner = `<@${invite.guild.ownerId}>`
-              let embed = new MessageEmbed()
+              let embed = new EmbedBuilder()
       .setColor(color)
               .setThumbnail(invite.guild.iconURL({dynamic:true , size:4096}))
               .addFields({
@@ -87,7 +86,7 @@ module.exports = {
   
     }).catch((err) => {
         console.log(err)
-                let xx = new MessageEmbed()
+                let xx = new EmbedBuilder()
       .setDescription(`${xmark} Couldn't fetch that server `)
       .setColor(error)
                 message.reply({embeds:[xx]})
