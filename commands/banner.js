@@ -1,4 +1,4 @@
-const{ MessageEmbed,MessageActionRow,MessageButton } = require('discord.js');
+const{ EmbedBuilder,ActionRowBuilder,ButtonBuilder,ButtonStyle } = require('discord.js');
 const { default_prefix ,color,error,owner } = require("../config.json")
 const talkedRecently = new Set();
 const axios = require('axios')
@@ -20,7 +20,7 @@ module.exports = {
     } else {
       try {
 
-    let nobanner = new MessageEmbed()
+    let nobanner = new EmbedBuilder()
           .setImage(`https://images-ext-1.discordapp.net/external/QnVBXMmbnt8ksbjQ1LEa7Pd3sd995EgaTr3J1p923JA/%3Fcolour%3D5263440%26w%3D1024%26h%3D205/https/image.sx4.dev/api/colour?width=922&height=184`)
           .setColor(color)
     
@@ -37,31 +37,31 @@ module.exports = {
           if(data.banner){
             let url = data.banner.startsWith("a_")?".gif?size=4096":".png?size=4096";
             url = `https://cdn.discordapp.com/banners/${message.author.id}/${data.banner}${url}`
-                      let embed = new MessageEmbed()
+                      let embed = new EmbedBuilder()
           .setImage(url)
           .setColor(color)
           //.setFooter({text: message.author.tag ,iconURL: client.user.displayAvatarURL()})
-                                    const row = new MessageActionRow()
+                                    const row = new ActionRowBuilder()
         .addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          .setLabel('webp')
          .setEmoji("<:MessageLink:1010885859735785553>")
          .setURL(url)
-         .setStyle('LINK'),
+         .setStyle(ButtonStyle.Link),
         )
         .addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          .setLabel('jpg')
          .setEmoji("<:MessageLink:1010885859735785553>")
            .setURL(url)
-         .setStyle('LINK'),
+         .setStyle(ButtonStyle.Link),
         )
         .addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          .setLabel('png')
          .setEmoji("<:MessageLink:1010885859735785553>")
           .setURL(url)
-         .setStyle('LINK'),
+         .setStyle(ButtonStyle.Link),
         )
           await message.reply({embeds:[embed],components:[row]}).catch(() => {/*Ignore error*/})
           } else {
@@ -76,30 +76,30 @@ module.exports = {
           if(data.banner){
             let url = data.banner.startsWith("a_")?".gif?size=4096":".png?size=4096";
             url = `https://cdn.discordapp.com/banners/${mentionedMember.id}/${data.banner}${url}`
-                      let embed = new MessageEmbed()
+                      let embed = new EmbedBuilder()
           .setImage(url)
           .setColor(color)
-                                                          const row = new MessageActionRow()
+                                                          const row = new ActionRowBuilder()
         .addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          .setLabel('webp')
          .setEmoji("<:MessageLink:1010885859735785553>")
          .setURL(url)
-         .setStyle('LINK'),
+         .setStyle(ButtonStyle.Link),
         )
         .addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          .setLabel('jpg')
          .setEmoji("<:MessageLink:1010885859735785553>")
            .setURL(url)
-         .setStyle('LINK'),
+         .setStyle(ButtonStyle.Link),
         )
         .addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          .setLabel('png')
          .setEmoji("<:MessageLink:1010885859735785553>")
           .setURL(url)
-         .setStyle('LINK'),
+         .setStyle(ButtonStyle.Link),
         )
           //.setFooter({text: mentionedMember.tag ,iconURL: client.user.displayAvatarURL()})
           await message.reply({embeds:[embed],components:[row]}).catch(() => {/*Ignore error*/})
