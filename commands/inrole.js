@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,MessageActionRow,MessageButton,Permissions  } = require('discord.js');
+const{ EmbedBuilder,ActionRowBuilder,ButtonBuilder,ButtonStyle,PermissionFlagsBits  } = require('discord.js');
 const { default_prefix ,color,error,owner,xmark } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -19,16 +18,16 @@ module.exports = {
              message.react(`⌛`)
     } else { 
      
-        let missperms = new MessageEmbed()
+        let missperms = new EmbedBuilder()
     .setDescription(`${xmark} You're missing \`MANAGE_ROLES\` permission`)
     .setColor(error)
-   let imissperms = new MessageEmbed()
+   let imissperms = new EmbedBuilder()
     .setDescription(`${xmark} i don't have perms`)
     .setColor(error)
 
      //if(message.author.id !== message.guild.ownerId) return message.channel.send({embeds:[onlyown]});
 
-   // if (!message.member.permissions.has([ Permissions.FLAGS.MANAGE_ROLES]))  return message.reply({ embeds:[missperms]});
+   // if (!message.member.permissions.has(PermissionFlagsBits.ManageRoles))  return message.reply({ embeds:[missperms]});
      const role = message.mentions.roles.first() || message.guild.roles.cache.get(args[0]) || message.guild.roles.cache.find(r => r.name === args.slice(0).join(' ')) || message.guild.roles.cache.find(role => role.name === args[0]) 
       
       let i0 = 0;
@@ -45,22 +44,22 @@ module.exports = {
           .join("\n");
 
 
-               const button1 = new MessageButton()
+               const button1 = new ButtonBuilder()
       .setCustomId('previousbtn')
       .setEmoji("<:allstarleft:1009905064695042138>")
-      .setStyle('SECONDARY');
-            let invite2 = new MessageButton()
+      .setStyle(ButtonStyle.Secondary);
+            let invite2 = new ButtonBuilder()
          .setLabel('Invite')
          .setURL("https://discord.com/api/oauth2/authorize?client_id=938863295543251024&permissions=8&scope=bot%20applications.commands")
-         .setStyle('LINK')
-      const button2 = new MessageButton()
+         .setStyle(ButtonStyle.Link)
+      const button2 = new ButtonBuilder()
       .setCustomId('nextbtn')
       .setEmoji("<:allstarright:1009905118336012398> ")
-      .setStyle('SECONDARY');
-       const button3 = new MessageButton()
+      .setStyle(ButtonStyle.Secondary);
+       const button3 = new ButtonBuilder()
       .setCustomId('fastp')
       .setEmoji("<:DW_X_Mark:1013176426763145216>")
-      .setStyle('SECONDARY');
+      .setStyle(ButtonStyle.Secondary);
 
 
 
@@ -69,8 +68,8 @@ module.exports = {
       button3,
       button2,
   ]
-    const row = new MessageActionRow().addComponents(buttonList);
-        let embed = new MessageEmbed()
+    const row = new ActionRowBuilder().addComponents(buttonList);
+        let embed = new EmbedBuilder()
 
         .setColor(color)
         .setFooter({text:`Page - ${page}/${Math.ceil(role.members.size / 10)}`})
@@ -119,7 +118,7 @@ const collector = await curPage.createMessageComponentCollector({
       
                 embed
                   .setFooter(
-                    `Page - ${page}/${Math.round(role.members.size / 10 + 1)}`
+                    { text: `Page - ${page}/${Math.round(role.members.size / 10 + 1)}` }
                   )
                   .setDescription(description);
       
