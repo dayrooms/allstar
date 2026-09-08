@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require("discord.js");
 const { default_prefix ,color,error,owner } = require("../config.json")
 const db = require('quick.db')
 module.exports = {
@@ -28,7 +28,7 @@ module.exports = {
       if(userfix === null) userfix = `Not Set`
       
     let mentionedMember =  message.member;
-      const prefixEmbed = new MessageEmbed()
+      const prefixEmbed = new EmbedBuilder()
         .setDescription(`<:Settings:1032717784456626226>   **Prefixes For ${message.author.username}** \n> Default Prefix: \`${default_prefix}\` \n> Server prefix: \`${serverfix || `Not Set`}\` \n> Custom Prefix: \`${userfix || "Not Set"}\``)
         .setColor(color)   
 
@@ -60,19 +60,19 @@ db.set(`commandsused`,cp + 1)
 command.execute(message,args,client)
 }
 else {
-        const row = new MessageActionRow().addComponents(
-   new MessageButton()
+        const row = new ActionRowBuilder().addComponents(
+   new ButtonBuilder()
     .setCustomId('yes')
     .setEmoji("<:Blurple_check:1013176396861931630>")
-    .setStyle('SECONDARY'),
+    .setStyle(ButtonStyle.Secondary),
   
-  new MessageButton()
+  new ButtonBuilder()
     .setCustomId('no')
     .setEmoji("<:DW_X_Mark:1013176426763145216>")
-    .setStyle('SECONDARY')
+    .setStyle(ButtonStyle.Secondary)
 )
 let msg = message.reply({embeds:[
-  new MessageEmbed().setDescription(`Do you agree to allstars [Privacy policy](https://nekokouri.gitbook.io/allstar/details/privacy-policy) \n **Warning** Reacting with ${xmark} will blacklist you from using allstar`).setColor(color)
+  new EmbedBuilder().setDescription(`Do you agree to allstars [Privacy policy](https://nekokouri.gitbook.io/allstar/details/privacy-policy) \n **Warning** Reacting with ${xmark} will blacklist you from using allstar`).setColor(color)
 ],
                components:[row]
               })
@@ -92,7 +92,7 @@ collector.on("end", (ButtonInteraction) => {
     
             let trustedusers = db.get(`privacy`)
 if(trustedusers && trustedusers.find(find => find.user == message.author.id)) {
-let trust = new MessageEmbed()
+let trust = new EmbedBuilder()
 .setColor(error)
 .setDescription(`${xmark} That user is already whitelisted`)
 return message.reply({embeds:[trust]})
@@ -101,7 +101,7 @@ let data = {
 user: message.author.id
 }
 db.push(`privacy`, data)
-let added = new MessageEmbed()
+let added = new EmbedBuilder()
 .setDescription(`
 ${checked}  You accepted to allstars privacy policy
 `)
@@ -121,10 +121,10 @@ return message.reply({
 user: message.author.id
 }
     db.push(`blacklisted`,data)
- let embed = new MessageEmbed()
+ let embed = new EmbedBuilder()
 .setColor(color)
   message.channel.send({embeds:[
-    new MessageEmbed().setDescription(`${xmark} now you'll be blacklisted from using commands`).setColor(color)
+    new EmbedBuilder().setDescription(`${xmark} now you'll be blacklisted from using commands`).setColor(color)
   ]})
   }
 })
