@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,MessageButton, MessageActionRow } = require('discord.js');
+const{ EmbedBuilder,ButtonBuilder, ActionRowBuilder } = require('discord.js');
 const db = require('quick.db')
 const { default_prefix ,color,error,owner,xmark,checked } = require("../config.json")
 const talkedRecently = new Set();
