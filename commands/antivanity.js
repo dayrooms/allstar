@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const {
   default_prefix,
   color,
@@ -31,18 +31,18 @@ module.exports = {
         vanity = `Not Set`;
       }
 
-      let onlyown = new MessageEmbed()
+      let onlyown = new EmbedBuilder()
         .setDescription(`${xmark} Only server owner can use this command`)
         .setColor(error);
 
-      let aenabled = new MessageEmbed()
+      let aenabled = new EmbedBuilder()
         .setDescription(`${checked} Antivanity is now enabled`)
         .setColor(color);
-      let missperms = new MessageEmbed()
+      let missperms = new EmbedBuilder()
         .setDescription(`${xmark} You're missing perms`)
         .setColor(error);
 
-      let nukeable = new MessageEmbed()
+      let nukeable = new EmbedBuilder()
         .setDescription(`${checked}  Antivanity Enabled`)
         .setColor(color);
 
@@ -53,13 +53,13 @@ module.exports = {
       if (args[0] === "set") {
         let vanity = message.guild.vanityURLCode;
         db.set(`vanity_${message.guild.id}`, vanity);
-        let vanit = new MessageEmbed()
+        let vanit = new EmbedBuilder()
           .setDescription(`${checked} Updated Vanity to ${vanity}`)
           .setColor(color);
 
         message.reply({ embeds: [vanit] });
       } else if (args[0] === "off") {
-        let disabled = new MessageEmbed()
+        let disabled = new EmbedBuilder()
           .setDescription(`${checked}  Antivanity is now disabled`)
           .setColor(color);
 
@@ -84,7 +84,7 @@ module.exports = {
         if (vanity === null) {
           vanity = `There's no vanity set`;
         }
-        let embed11 = new MessageEmbed()
+        let embed11 = new EmbedBuilder()
 
           .setDescription(
             `<:allstarsecurity:996512639666618518>  Allstar Vanity Protection \n <:allstar:1001031487103193108> antivanity on - toggles antivanity event on \n <:allstar:1001031487103193108> antivanity off - toggles antivanity event off \n <:allstar:1001031487103193108> antivanity set - locks current server vanity`
@@ -97,13 +97,13 @@ module.exports = {
         });
       }
       if (!args[0]) {
-        let checkenable = new MessageEmbed()
+        let checkenable = new EmbedBuilder()
 
           .setDescription(
             `<:allstarenabled:996521189986021386> Antivanity Is Enabled VanityURL  - ${vanity} \n Usage : \n <:allstar:1001031487103193108> antivanity [on/off] \n <:allstar:1001031487103193108> Set vanity by running antivanity set then set antivanity on \n <:allstar:1001031487103193108> antivanity whitelist \n <:allstar:1001031487103193108> antivanity blacklist`
           )
           .setColor(color);
-        let checkdisabled = new MessageEmbed()
+        let checkdisabled = new EmbedBuilder()
           .setDescription(
             `<:allstardisabled:996521221749481516>  Antivanity Is Disabled VanityURL  - ${vanity} \n Usage : \n <:allstar:1001031487103193108> antivanity [on/off] \n <:allstar:1001031487103193108> Set vanity by running antivanity set then set antivanity on \n <:allstar:1001031487103193108> antivanity whitelist \n <:allstar:1001031487103193108> antivanity blacklist`
           )
@@ -121,7 +121,7 @@ module.exports = {
       } else if (args[0] === "whitelist") {
         let antinuke = db.get(`vanityURL_${message.guild.id}`);
 
-        let onlyown = new MessageEmbed()
+        let onlyown = new EmbedBuilder()
           .setDescription(`${xmark} Only server owner can use this command`)
           .setColor(error);
 
@@ -135,7 +135,7 @@ module.exports = {
           message.mentions.users.first() ||
           message.guild.members.cache.get(args[1]);
         if (!user) {
-          let usermention = new MessageEmbed()
+          let usermention = new EmbedBuilder()
             .setDescription(
               `
             ${xmark}  Mention user to whitelist
@@ -149,7 +149,7 @@ module.exports = {
         }
         let trustedusers = db.get(`vanitytrusted_${message.guild.id}`);
         if (trustedusers && trustedusers.find((find) => find.user == user.id)) {
-          let trust = new MessageEmbed()
+          let trust = new EmbedBuilder()
             .setColor(error)
             .setDescription(`${xmark}  That user is already whitelisted`);
           return message.reply({ embeds: [trust] });
@@ -158,7 +158,7 @@ module.exports = {
           user: user.id,
         };
         db.push(`vanitytrusted_${message.guild.id}`, data);
-        let added = new MessageEmbed()
+        let added = new EmbedBuilder()
           .setDescription(
             `
         ${checked}  Vanity Whitelisted ${user}
@@ -171,7 +171,7 @@ module.exports = {
         });
       } else if (args[0] === "blacklist") {
         let antinuke = db.get(`vanityURL_${message.guild.id}`);
-        let onlyown = new MessageEmbed()
+        let onlyown = new EmbedBuilder()
           .setDescription(`${xmark} Only server owner can use this command`)
           .setColor(error);
 
@@ -187,7 +187,7 @@ module.exports = {
           message.guild.members.cache.get(args[1]) ||
           args[0];
         if (!user) {
-          let usermention = new MessageEmbed()
+          let usermention = new EmbedBuilder()
             .setDescription(`${xmark}  Mention a user/ID`)
             .setColor(error);
           return message.reply({
@@ -198,7 +198,7 @@ module.exports = {
         let database = db.get(`vanitytrusted_${message.guild.id}`);
         if (database) {
           let data = database.find((x) => x.user === user.id);
-          let unabletofind = new MessageEmbed()
+          let unabletofind = new EmbedBuilder()
             .setDescription(
               `${xmark}  Could not find that user in the database`
             )
@@ -213,7 +213,7 @@ module.exports = {
           });
 
           db.set(`vanitytrusted_${message.guild.id}`, filter);
-          let deleted = new MessageEmbed()
+          let deleted = new EmbedBuilder()
             .setDescription(`${checked} Removed ${user} From Vanity Whitelist.`)
             .setColor(color);
 
@@ -221,17 +221,17 @@ module.exports = {
             embeds: [deleted],
           });
         } else {
-          let notrust = new MessageEmbed()
+          let notrust = new EmbedBuilder()
             .setDescription(`${xmark}  That user is not whitelisted`)
             .setColor(error);
           message.reply({ embeds: [notrust] });
         }
       } else if (args[0] === "whitelisted") {
-        let errors = new MessageEmbed()
+        let errors = new EmbedBuilder()
           .setDescription(`${xmark} There are no whitelisted users`)
           .setColor(error);
 
-        let onlyown = new MessageEmbed()
+        let onlyown = new EmbedBuilder()
           .setDescription(`${xmark} Only server owner can use this command`)
           .setColor(error);
 
@@ -242,7 +242,7 @@ module.exports = {
 
         let guild = message.guild.iconURL();
 
-        let wordlist = new MessageEmbed();
+        let wordlist = new EmbedBuilder();
         let database = db.get(`vanitytrusted_${message.guild.id}`);
         if (database == null)
           return message
@@ -259,7 +259,7 @@ module.exports = {
             arrayv.push(`<@${m.user}> - ${m.user}`);
           });
           wordlist.setDescription(message.guild.name);
-          wordlist.addField("Vanity Users", `>  ${arrayv.join("\n> ")}`);
+          wordlist.addFields({ name: "Vanity Users", value: `>  ${arrayv.join("\n> ")}` });
           wordlist.setThumbnail(message.guild.iconURL({ dynamic: true }));
           wordlist.setColor(color);
         }
