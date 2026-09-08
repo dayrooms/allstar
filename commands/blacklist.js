@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const db = require('quick.db')
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const talkedRecently = new Set();
@@ -22,7 +21,7 @@ module.exports = {
     } else {
 
          let antinuke = db.get(`anti-new_${message.guild.id}`)
-        let onlyown = new MessageEmbed()
+        let onlyown = new EmbedBuilder()
         .setDescription(`${xmark} Only server owner can use this command`)
         .setColor(error)
   
@@ -37,7 +36,7 @@ module.exports = {
      let user = await message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args.join(' ').toLocaleLowerCase()) || message.guild.members.cache.find(r => r.displayName.toLowerCase() === args.join(' ').toLocaleLowerCase()) || client.users.cache.get(args[0])
 
                   if(!user) {
-                    let usermention = new MessageEmbed()
+                    let usermention = new EmbedBuilder()
                     .setDescription(`${xmark}  Mention a user/ID`)
                     .setColor(error)
                     return message.reply({
@@ -48,7 +47,7 @@ module.exports = {
                   let database = db.get(`trustedusers_${message.guild.id}`)
                   if(database) {
                       let data = database.find(x => x.user === user.id)
-                    let unabletofind = new MessageEmbed()
+                    let unabletofind = new EmbedBuilder()
                     .setDescription(`${xmark}  Could not find that user in the database`)
                     .setColor(error)
                       if(!data) return message.reply({embeds:[unabletofind]})
@@ -61,7 +60,7 @@ module.exports = {
                       })
                     
                       db.set(`trustedusers_${message.guild.id}`, filter)
-                    let deleted = new MessageEmbed()
+                    let deleted = new EmbedBuilder()
                     .setDescription(`${checked} Removed ${user} From whitelisted `)
                     .setColor(color)
                     
@@ -70,7 +69,7 @@ module.exports = {
                     });
                     
                   } else {          
-                      let notrust = new MessageEmbed()
+                      let notrust = new EmbedBuilder()
                       .setDescription(`${xmark}  That user is not whitelisted`)
                       .setColor(error)
                   message.reply({embeds:[notrust]})
