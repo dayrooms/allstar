@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 var fs = require('fs');
 const { normalize } = require('path');
 const { description } = require('../commands/usage');
@@ -47,7 +47,7 @@ module.exports.runCmd = async (client, interaction, GeneralData) => {
         var aliases = (v.aliases === undefined || v.aliases?.length === 0) ? "N/A" : v.aliases.join(", ");
         console.log(v.name === "welcome")
         category_info_embeds[categories.indexOf(category)].push(
-            new MessageEmbed()
+            new EmbedBuilder()
                 .setColor("#FF0000")
                 .setAuthor({ name: "Help Menu" })
                 .setTitle(`**${category}** | Commands`)
@@ -123,7 +123,7 @@ module.exports.runCmd = async (client, interaction, GeneralData) => {
     function createLandingEmbed(category, stats) {
         if (options.filter(x => x.name == category)[0] === undefined) console.log(category)
         stats[2] = stats[0]
-        return new MessageEmbed()
+        return new EmbedBuilder()
             .setColor("#FFFFFF")
             .setAuthor({ name: "Help Menu" })
             .setTitle(`**${category}** | Commands`)
