@@ -1,4 +1,4 @@
-const { MessageEmbed } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const { default_prefix ,color,error,owner } = require("../config.json")
 const db = require('quick.db')
 const ms = require('moment');
@@ -12,7 +12,7 @@ module.exports = {
   if (message.author.bot) return;
     let tim = db.get(`afktime-${message.author.id}+${message.guild.id}`)
   if (db.has(`afk-${message.author.id}+${message.guild.id}`)) {
-          const embed2 = new MessageEmbed()
+          const embed2 = new EmbedBuilder()
         .setColor(color)
         .setDescription(`<a:allstarwelcome:996512695480238182>  Welcome back ${message.author.tag} `) // + db.get(`afk-${message.author.id}+${message.guild.id}`)
         .setFooter({text:`last seen ${ms(tim).fromNow()}`})
@@ -28,7 +28,7 @@ module.exports = {
   if (message.mentions.members.first()) {
     if (db.has(`afk-${message.mentions.members.first().id}+${message.guild.id}`)) {
       let time = db.get(`afktime-${message.mentions.members.first().id}+${message.guild.id}`)
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
         .setColor(error)
         .setDescription(` <:warn:1033072412188737638>  ${message.mentions.members.first()} is AFK: \n <:allstarreply:1032192256192553030>  ` + db.get(`afk-${message.mentions.members.first().id}+${message.guild.id}`))
         .setFooter({text:`last seen ${ms(time).fromNow()}`})
