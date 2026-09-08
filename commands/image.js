@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,MessageButton, MessageActionRow } = require('discord.js');
+const{ EmbedBuilder,ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
 const db = require('quick.db')
 const axios = require('axios')
 const { default_prefix ,color,error,owner,xmark } = require("../config.json")
@@ -37,22 +36,22 @@ module.exports = {
           `**results for ${query} - ${response.data.images_results.length}\n\n **`
 
 
-               const button1 = new MessageButton()
+               const button1 = new ButtonBuilder()
       .setCustomId('previousbtn')
       .setEmoji("<a:left:1033526539188449310>")
-      .setStyle('PRIMARY');
-            let invite2 = new MessageButton()
+      .setStyle(ButtonStyle.Primary);
+            let invite2 = new ButtonBuilder()
          .setLabel('Invite')
          .setURL("https://discord.com/api/oauth2/authorize?client_id=938863295543251024&permissions=8&scope=bot%20applications.commands")
-         .setStyle('LINK')
-      const button2 = new MessageButton()
+         .setStyle(ButtonStyle.Link)
+      const button2 = new ButtonBuilder()
       .setCustomId('nextbtn')
       .setEmoji("<:right:1033526800401317928> ")
-      .setStyle('PRIMARY');
-       const button3 = new MessageButton()
+      .setStyle(ButtonStyle.Primary);
+       const button3 = new ButtonBuilder()
       .setCustomId('fastp')
       .setEmoji("<:DW_X_Mark:1013176426763145216>")
-      .setStyle('DANGER');
+      .setStyle(ButtonStyle.Danger);
 
 
 
@@ -61,8 +60,8 @@ module.exports = {
       button3,
       button2,
   ]
-    const row = new MessageActionRow().addComponents(buttonList);
-        let embed = new MessageEmbed()
+    const row = new ActionRowBuilder().addComponents(buttonList);
+        let embed = new EmbedBuilder()
         .setAuthor({name:`${message.author.tag}`,iconURL:`${message.author.displayAvatarURL({dynamic:true,size:4096})}`})
         .setColor(color)
         .setImage(response.data.images_results[0].original)
@@ -106,7 +105,7 @@ const collector = await curPage.createMessageComponentCollector({
                 embed
                  .setAuthor({name:`${message.author.tag}`,iconURL:`${message.author.displayAvatarURL({dynamic:true,size:4096})}`})
                   .setFooter(
-                    `Page - ${page}/${Math.round(response.data.images_results.length / 1 + 1)}`
+                    { text: `Page - ${page}/${Math.round(response.data.images_results.length / 1 + 1)}` }
                   )
                   .setDescription(description)
                  .setImage(response.data.images_results[i0].original)
