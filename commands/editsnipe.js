@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const db = require('quick.db')
 const { default_prefix ,color,error,owner ,xmark} = require("../config.json")
 const talkedRecently = new Set();
@@ -22,11 +21,11 @@ module.exports = {
              message.react(`⌛`)
     } else {
       const msg = db.get(`editsniped${message.channel.id}`)
-              let ok = new MessageEmbed()
+              let ok = new EmbedBuilder()
         .setDescription(`${xmark} there are no recently edited messages`)
         .setColor(error)
       if (msg === null) return message.reply({embeds:[ok]})
-      let embed = new MessageEmbed()
+      let embed = new EmbedBuilder()
      // .addField(`${msg.author}`,`${msg.content}   `)
       .setAuthor({name:`${msg.author}`,iconURL:`${msg.avatar}`})
       .setDescription(' \```' + msg.content + '\``` ')
