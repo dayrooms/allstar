@@ -1,4 +1,4 @@
-const { MessageEmbed, Permissions } = require("discord.js");
+const { EmbedBuilder, PermissionFlagsBits } = require("discord.js");
 const db = require('quick.db')
 const {
   default_prefix,
@@ -26,30 +26,30 @@ module.exports = {
     if (talkedRecently.has(message.author.id)) {
       message.react(`⌛`);
     } else {
-      let checkenable = new MessageEmbed()
+      let checkenable = new EmbedBuilder()
         .setDescription(
           `<:allstarenabled:996521189986021386> Auto snipe is enabled `
         )
         .setColor(color);
-      let checkdisabled = new MessageEmbed()
+      let checkdisabled = new EmbedBuilder()
         .setDescription(
           `<:allstardisabled:996521221749481516>  Auto snipe is disabled `
         )
         .setColor(color);
 
 
-      let aenabled = new MessageEmbed()
+      let aenabled = new EmbedBuilder()
         .setDescription(`${checked} Auto snipe is now enabled`)
         .setColor(color);
-      let missperms = new MessageEmbed()
+      let missperms = new EmbedBuilder()
         .setDescription(`${xmark} You're missing \`MANAGE_GUILD\` permission`)
         .setColor(error);
 
-      let nukeable = new MessageEmbed()
+      let nukeable = new EmbedBuilder()
         .setDescription(`${checked}  Auto snipe enabled`)
         .setColor(color);
       if (args[0] == "on") {
-        if (!message.member.permissions.has([Permissions.FLAGS.MANAGE_GUILD]))
+        if (!message.member.permissions.has(PermissionFlagsBits.ManageGuild))
           return message.reply({ embeds: [missperms] });
 
         if ((await db.has(`autosniped_${message.guild.id}`)) === false) {
@@ -62,10 +62,10 @@ module.exports = {
             /*Ignore error*/
           });
       } else if (args[0] == "off") {
-        let disabled = new MessageEmbed()
+        let disabled = new EmbedBuilder()
           .setDescription(`${checked} Auto snipe disabled`)
           .setColor(color);
-        let alreadydisabled = new MessageEmbed()
+        let alreadydisabled = new EmbedBuilder()
           .setDescription(`${xmark}  Auto snipe is already disabled `)
           .setColor(error);
         if ((await db.has(`autosniped_${message.guild.id}`)) === true) {
