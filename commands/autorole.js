@@ -1,4 +1,4 @@
-const { MessageEmbed, Permissions } = require("discord.js");
+const { EmbedBuilder, PermissionFlagsBits } = require("discord.js");
 const db = require('quick.db')
 const {
   default_prefix,
@@ -25,14 +25,14 @@ module.exports = {
     if (talkedRecently.has(message.author.id)) {
       message.react(`⌛`);
     } else {
-      let missperms = new MessageEmbed()
+      let missperms = new EmbedBuilder()
         .setDescription(`${xmark} You're missing \`MANAGE_GUILD\` permission`)
         .setColor(error);
-      let trustedno = new MessageEmbed()
+      let trustedno = new EmbedBuilder()
         .setDescription(`${xmark} Only trusted admins can use this command`)
         .setColor(error);
 
-      if (!message.member.permissions.has([Permissions.FLAGS.MANAGE_GUILD]))
+      if (!message.member.permissions.has(PermissionFlagsBits.ManageGuild))
         return message.reply({ embeds: [missperms] });
 
       let trustedusers = db.get(`trustedusers_${message.guild.id}`);
@@ -41,14 +41,14 @@ module.exports = {
         trustedusers.find((find) => find.user == message.author.id) || message.guild.ownerId
         
       ) {
-        let examplembed = new MessageEmbed()
+        let examplembed = new EmbedBuilder()
           .setDescription(
             ` autorole <<role.id>> \n setup autorole to give roles to new members`
           )
           .setColor(color);
         if (args[0] === "none") {
           db.delete(`autorole_${message.guild.id}`);
-          let embed = new MessageEmbed()
+          let embed = new EmbedBuilder()
             .setDescription(`${checked} Removed Autorole`)
             .setColor(color);
           message.reply({ embeds: [embed] });
@@ -64,20 +64,20 @@ module.exports = {
           message.guild.roles.cache.find((role) => role.name.includes(args[1]));
 
         if (!role) {
-          let embed = new MessageEmbed()
+          let embed = new EmbedBuilder()
             .setDescription(`${xmark} couldn't find that role`)
             .setColor(error);
           message.reply({ embeds: [embed] });
         } else if (role) {
           console.log(role.perms)
           db.set(`autorole_${message.guild.id}`, role.id);
-          let embed = new MessageEmbed()
+          let embed = new EmbedBuilder()
             .setDescription(`${checked} Succesfully Set ${role} as autorole`)
             .setColor(color);
           message.reply({ embeds: [embed] });
         } else if (args[0] === "none") {
           db.delete(`autorole_${message.guild.id}`);
-          let embed = new MessageEmbed()
+          let embed = new EmbedBuilder()
             .setDescription(`${checked} Removed Autorole`)
             .setColor(color);
           message.reply({ embeds: [embed] });
