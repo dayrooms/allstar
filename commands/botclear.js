@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,Permissions } = require('discord.js');
+const{ EmbedBuilder,PermissionFlagsBits } = require('discord.js');
 const { default_prefix ,color,error,owner } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -21,14 +20,14 @@ module.exports = {
 
     
     
-            let missperms = new MessageEmbed()
+            let missperms = new EmbedBuilder()
         .setDescription(`<:allstarwarn:996517869791748199> You're missing \`MANAGE_MESSAGES\` permission`)
         .setColor(error)
-       let imissperms = new MessageEmbed()
+       let imissperms = new EmbedBuilder()
         .setDescription(`<:allstarwarn:996517869791748199>  i don't have perms`)
         .setColor(error)
-    if (!message.member.permissions.has("MANAGE_MESSAGES")) return message.reply({embds:[missperms]});
-    if (!message.guild.me.permissions.has("MANAGE_MESSAGES")) return message.reply({embeds:[imissperms]});
+    if (!message.member.permissions.has(PermissionFlagsBits.ManageMessages)) return message.reply({embds:[missperms]});
+    if (!message.guild.members.me.permissions.has(PermissionFlagsBits.ManageMessages)) return message.reply({embeds:[imissperms]});
 
     try {
       message.channel.messages.fetch().then(messages => {
@@ -40,7 +39,7 @@ module.exports = {
     }
     message.delete().catch(() => {})
 
-    let botClearEmbed = new MessageEmbed()
+    let botClearEmbed = new EmbedBuilder()
       .setColor(color)
       .setDescription(`<:allstarcheckmark:996517782491508896>  cleared bot messages`)
     message.channel.send({ embeds: [botClearEmbed] }).then(m => m.delete(800000));
