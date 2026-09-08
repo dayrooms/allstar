@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,Util } = require('discord.js');
+const{ EmbedBuilder, parseEmoji } = require('discord.js');
 const moment = require('moment')
 const { default_prefix ,color,error,owner,xmark } = require("../config.json")
 const talkedRecently = new Set();
@@ -22,13 +21,13 @@ module.exports = {
 
        let emoji = `<:allstarreply:1032192256192553030> `;
         // let emote =  client.emojis.cache.get(args[2].match(/<:.*:(.*)>/)[1])
-      let emote = Util.parseEmoji(args[0]);
-      if(!emote) return message.reply({embeds:[new MessageEmbed().setDescription(`${xmark} I couldn't find that emoji `).setColor(error)]})
+      let emote = parseEmoji(args[0]);
+      if(!emote) return message.reply({embeds:[new EmbedBuilder().setDescription(`${xmark} I couldn't find that emoji `).setColor(error)]})
      const style = 'R' 
     const starttime = `<t:${Math.floor(emote.createdAt/1000)}` + (style ? `:${style}` : '') + '>'
         const emojiExt = emote.animated ? '.gif' : '.png';
         const emojiURL = `https://cdn.discordapp.com/emojis/${emote.id + emojiExt}`;
-      let embed = new MessageEmbed()
+      let embed = new EmbedBuilder()
       .setDescription(`Emoji Info `)
       .setColor(color)
       .addFields(
