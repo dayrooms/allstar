@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,Util,MessageActionRow,MessageButton } = require('discord.js');
+const{ EmbedBuilder, parseEmoji, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 const parse = require('../regex.js')
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const talkedRecently = new Set();
@@ -22,13 +21,13 @@ module.exports = {
     } else {
               const emoji = args[0];
         if (!args[0]) {
-            const enlargeEmbed = new MessageEmbed()
+            const enlargeEmbed = new EmbedBuilder()
                .setDescription(`${xmark} You must provide an emote to enlarge `)
             .setColor(error)
             if (!args[0]) return message.reply({embeds:[enlargeEmbed]})
         }
-        let custom = Util.parseEmoji(emoji);
-        const embed = new MessageEmbed()
+        let custom = parseEmoji(emoji);
+        const embed = new EmbedBuilder()
         .setColor(color);
 
         if (custom.id) {
@@ -36,37 +35,37 @@ module.exports = {
             return message.channel.send({
               embeds:[embed],
              components:[
-                new MessageActionRow()
+                new ActionRowBuilder()
         .addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          .setLabel('Download')
          .setURL(`https://cdn.discordapp.com/emojis/${custom.id}.${custom.animated ? "gif" : "png"}`)
-         .setStyle('LINK'),
+         .setStyle(ButtonStyle.Link),
         )
               ]
             });
         }
         else {
             let parsed = parse(emoji, { assetType: "png" });
-            if (!parsed[0]) return message.reply({embeds:[new MessageEmbed().setDescription(`${xmark} You must provide a valid emote`).setColor(error)]})
+            if (!parsed[0]) return message.reply({embeds:[new EmbedBuilder().setDescription(`${xmark} You must provide a valid emote`).setColor(error)]})
 
             embed.setImage(parsed[0].url);
-              const row = new MessageActionRow()
+              const row = new ActionRowBuilder()
         .addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          .setLabel('Invite Me!')
          .setURL(parsed[0].url)
-         .setStyle('LINK'),
+         .setStyle(ButtonStyle.Link),
         )
             return message.channel.send({
               embeds:[embed],
               components:[
-                new MessageActionRow()
+                new ActionRowBuilder()
         .addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          .setLabel('Download')
          .setURL(parsed[0].url)
-         .setStyle('LINK'),
+         .setStyle(ButtonStyle.Link),
         )
               ]
             });
