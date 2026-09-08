@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder, ChannelType } = require('discord.js');
 const moment = require('moment')
 const { default_prefix ,color,error,owner } = require("../config.json")
 const talkedRecently = new Set();
@@ -24,7 +23,16 @@ module.exports = {
       let channel = message.mentions.channels.first() || message.channel
      const style = 'R' 
     const starttime = `<t:${Math.floor(channel.createdAt/1000)}` + (style ? `:${style}` : '') + '>'
-      let embed = new MessageEmbed()
+      const channelTypeNames = {
+        [ChannelType.GuildText]: 'text',
+        [ChannelType.GuildVoice]: 'voice channel',
+        [ChannelType.GuildCategory]: 'category channel',
+        [ChannelType.GuildAnnouncement]: 'announcement channel',
+        [ChannelType.GuildStageVoice]: 'stage channel',
+        [ChannelType.GuildForum]: 'forum channel',
+      };
+      let channelTypeName = channelTypeNames[channel.type] || channel.type.toString();
+      let embed = new EmbedBuilder()
       .setDescription(`Channel Info <:Text:1010885876479438859> `)
       .setColor(color)
       .addFields(
@@ -35,7 +43,7 @@ module.exports = {
         },
         {
           name:`Type`,
-          value:`${emoji} ${channel.type.replace('GUILD_TEXT','text').replace('GUILD_VOICE','voice channel').replace('GUILD_CATEGORY','category channel')}`,
+          value:`${emoji} ${channelTypeName}`,
           inline:true
         },
         {
