@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,EmbedBuilder } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const { default_prefix ,color,error,owner,xmark } = require("../config.json")
 const parse = require('../regex.js')
 const talkedRecently = new Set();
