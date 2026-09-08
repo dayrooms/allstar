@@ -1,7 +1,7 @@
 module.exports.runEvent = async (client, interaction, currentDate) => {
-    const { MessageEmbed } = require('discord.js');
-    if (interaction.type !== "APPLICATION_COMMAND") return
-        interaction.reply({ embeds: [new MessageEmbed()
+    const { EmbedBuilder, InteractionType } = require('discord.js');
+    if (interaction.type !== InteractionType.ApplicationCommand) return
+        interaction.reply({ embeds: [new EmbedBuilder()
             .setColor("#FFFFFF")
             .setTitle("Please Wait <a:vile_loading:1045004235915411536>")
             .setDescription("Running the command you've requested.")
@@ -24,7 +24,7 @@ module.exports.runEvent = async (client, interaction, currentDate) => {
         premiumTS: interaction.member.premiumSinceTimestamp,
         currentDate: currentDate
     }
-    if (client.slash.get(interaction.commandName.toString().toLowerCase()) === undefined || client.slash.get(interaction.commandName.toString().toLowerCase()) === null) await message.reply({ embeds: [new MessageEmbed()
+    if (client.slash.get(interaction.commandName.toString().toLowerCase()) === undefined || client.slash.get(interaction.commandName.toString().toLowerCase()) === null) await message.reply({ embeds: [new EmbedBuilder()
         .setColor("#8B0000")
         .setAuthor({ name: "An Error Occured" })
         .setTitle("Command Not Found")
