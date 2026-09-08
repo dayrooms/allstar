@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const axios = require('axios')
 const { default_prefix ,color,error,owner,checked } = require("../config.json")
 const talkedRecently = new Set();
