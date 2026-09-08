@@ -1,5 +1,5 @@
 const {
-    MessageEmbed
+    EmbedBuilder
   } = require('discord.js');
   const { SlashCommandBuilder } = require('@discordjs/builders');
   var hastebin = require('hastebin')
@@ -29,7 +29,7 @@ const {
           .then(function(urlToPaste) {
             var input = code
             if (input.toString().length > 1000) input = "Not Available."
-            var success_embed = new MessageEmbed()
+            var success_embed = new EmbedBuilder()
               .setColor(0x00FF00)
               .setTitle('Code Executed Successfully')
               .addFields({
@@ -54,7 +54,7 @@ const {
           .catch(function(requestError) {
             var input = code
             if (input.toString().length > 1000) input = "Not Available."
-            var error_embed = new MessageEmbed()
+            var error_embed = new EmbedBuilder()
               .setColor(0xFF0000)
               .setTitle('Code Execution Failed')
               .addFields({
@@ -82,7 +82,7 @@ const {
       } else {
         var input = code
         if (input.toString().length > 1000) input = "Not Available."
-        var success_normal_embed = new MessageEmbed()
+        var success_normal_embed = new EmbedBuilder()
           .setColor(0x00FF00)
           .setTitle('Code Executed Successfully')
           .addFields({
@@ -109,7 +109,7 @@ const {
       if (input.toString().length > 1000) input = "Not Available."
       var error_type = "Error"
       if (e.toString().split(":").length !== 0) error_type = e.toString().split(":")[0]
-      var error_normal_embed = new MessageEmbed()
+      var error_normal_embed = new EmbedBuilder()
         .setColor(0xFF0000)
         .setTitle('Code Execution Failed')
         .addFields({
