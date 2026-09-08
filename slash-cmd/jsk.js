@@ -1,9 +1,9 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed } = require("discord.js")
+const { EmbedBuilder, ButtonStyle, ComponentType } = require("discord.js")
 const { exec } = require('child_process');
 var memStat = require('mem-stat');
 var fs = require("fs")
-const { MessageActionRow, MessageButton } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder } = require('discord.js');
 module.exports.name = "jsk";
 module.exports.slashCmd = new SlashCommandBuilder()
     .setName('jsk')
@@ -41,7 +41,7 @@ module.exports.slashCmd = new SlashCommandBuilder()
     )
 module.exports.runCmd = async (client, interaction, GeneralData) => {
     if (!["461914901624127489", "979978940707930143", "812126383077457921"].includes(GeneralData.user_id.toString())) return await GeneralData.message.edit({
-        embeds: [new MessageEmbed()
+        embeds: [new EmbedBuilder()
             .setColor("#8B0000")
             .setAuthor({ name: "An Error Occured" })
             .setTitle("Permission Denied")
@@ -52,7 +52,7 @@ module.exports.runCmd = async (client, interaction, GeneralData) => {
                 iconURL: client.user.displayAvatarURL()
             })], ephemeral: true
     })
-    if (interaction.options._subcommand === "info") {
+    if (interaction.options.getSubcommand() === "info") {
         Number.prototype.formatBytes = function () {
             var units = ['B', 'KB', 'MB', 'GB', 'TB'],
                 bytes = this,
@@ -143,11 +143,11 @@ Message cache capped at 1000, presences intent is enabled, members intent is ena
 Average websocket latency: ${Math.round(client.ws.ping)}ms`,color:"FFFFFF", ephemeral: false
     }]})
     }
-    if (interaction.options._subcommand === "reload") {
+    if (interaction.options.getSubcommand() === "reload") {
         const module_type = interaction.options.getString('type');
         const module_arg = interaction.options.getString('module');
         if (module_type === undefined || module_type === null || module_arg === undefined || module_arg === null) if (!module) return await GeneralData.message.edit({
-            embeds: [new MessageEmbed()
+            embeds: [new EmbedBuilder()
                 .setColor("#8B0000")
                 .setAuthor({ name: "An Error Occured" })
                 .setTitle("Slash Command Failed")
@@ -159,7 +159,7 @@ Average websocket latency: ${Math.round(client.ws.ping)}ms`,color:"FFFFFF", ephe
                 })], ephemeral: false
         })
         if (!["mod_reload_cmd", "mod_reload_slshcmd"].includes(module_type.toString())) return await GeneralData.message.edit({
-            embeds: [new MessageEmbed()
+            embeds: [new EmbedBuilder()
                 .setColor("#8B0000")
                 .setAuthor({ name: "An Error Occured" })
                 .setTitle("Module Type Not Found")
@@ -183,7 +183,7 @@ Average websocket latency: ${Math.round(client.ws.ping)}ms`,color:"FFFFFF", ephe
         if (module_type.toString() === "mod_reload_cmd") {
             var module = client.commands.get(module_arg.toString().toLowerCase())
             if (!module) return await GeneralData.message.edit({
-                embeds: [new MessageEmbed()
+                embeds: [new EmbedBuilder()
                     .setColor("#8B0000")
                     .setAuthor({ name: "An Error Occured" })
                     .setTitle("Module Not Found")
@@ -196,7 +196,7 @@ Average websocket latency: ${Math.round(client.ws.ping)}ms`,color:"FFFFFF", ephe
             })
             var deleted = client.commands.delete(module_arg.toString().toLowerCase())
             if (!deleted) return await GeneralData.message.edit({
-                embeds: [new MessageEmbed()
+                embeds: [new EmbedBuilder()
                     .setColor("#8B0000")
                     .setAuthor({ name: "An Error Occured" })
                     .setTitle("Module Not Deleted")
@@ -212,7 +212,7 @@ Average websocket latency: ${Math.round(client.ws.ping)}ms`,color:"FFFFFF", ephe
                 client.commands.set(module_arg.toString().toLowerCase(), module.exports)
             })
             await GeneralData.message.edit({
-                embeds: [new MessageEmbed()
+                embeds: [new EmbedBuilder()
                     .setColor("#008B00")
                     .setAuthor({ name: "JishakuNJS" })
                     .setTitle("Module Reloaded")
@@ -228,7 +228,7 @@ Average websocket latency: ${Math.round(client.ws.ping)}ms`,color:"FFFFFF", ephe
         if (module_type.toString() === "mod_reload_slshcmd") {
             var module = client.slash.get(module_arg.toString().toLowerCase())
             if (!module) return await GeneralData.message.edit({
-                embeds: [new MessageEmbed()
+                embeds: [new EmbedBuilder()
                     .setColor("#8B0000")
                     .setAuthor({ name: "An Error Occured" })
                     .setTitle("Module Not Found")
@@ -241,7 +241,7 @@ Average websocket latency: ${Math.round(client.ws.ping)}ms`,color:"FFFFFF", ephe
             })
             var deleted = client.slash.delete(module_arg.toString().toLowerCase())
             if (!deleted) return await GeneralData.message.edit({
-                embeds: [new MessageEmbed()
+                embeds: [new EmbedBuilder()
                     .setColor("#8B0000")
                     .setAuthor({ name: "An Error Occured" })
                     .setTitle("Module Not Deleted")
@@ -257,7 +257,7 @@ Average websocket latency: ${Math.round(client.ws.ping)}ms`,color:"FFFFFF", ephe
                 client.slash.set(module_arg.toString().toLowerCase(), module.exports)
             })
             await GeneralData.message.edit({
-                embeds: [new MessageEmbed()
+                embeds: [new EmbedBuilder()
                     .setColor("#008B00")
                     .setAuthor({ name: "JishakuNJS" })
                     .setTitle("Module Reloaded")
@@ -270,9 +270,9 @@ Average websocket latency: ${Math.round(client.ws.ping)}ms`,color:"FFFFFF", ephe
             })
         }
     }
-    if (interaction.options._subcommand === "shutdown") {
+    if (interaction.options.getSubcommand() === "shutdown") {
         await await GeneralData.message.edit({
-            embeds: [new MessageEmbed()
+            embeds: [new EmbedBuilder()
                 .setColor("#008B00")
                 .setAuthor({ name: "JishakuNJS" })
                 .setTitle("Shutting Down...")
@@ -287,16 +287,16 @@ Average websocket latency: ${Math.round(client.ws.ping)}ms`,color:"FFFFFF", ephe
             client.destroy()
         }, 5000)
     }
-    if (interaction.options._subcommand === "exit-node") {
-        const row = new MessageActionRow()
+    if (interaction.options.getSubcommand() === "exit-node") {
+        const row = new ActionRowBuilder()
             .addComponents(
-                new MessageButton()
+                new ButtonBuilder()
                     .setCustomId('exit_jsk_shtdn')
                     .setLabel('Exit')
-                    .setStyle('DANGER'),
+                    .setStyle(ButtonStyle.Danger),
             );
         await GeneralData.message.edit({
-            embeds: [new MessageEmbed()
+            embeds: [new EmbedBuilder()
                 .setColor("#008B00")
                 .setAuthor({ name: "JishakuNJS" })
                 .setTitle("Are you sure?")
@@ -307,11 +307,11 @@ Average websocket latency: ${Math.round(client.ws.ping)}ms`,color:"FFFFFF", ephe
                     iconURL: client.user.displayAvatarURL()
                 })], ephemeral: true, components: [row]
         })
-        const collector = GeneralData.message.createMessageComponentCollector({ componentType: 'BUTTON', time: 30000 });
+        const collector = GeneralData.message.createMessageComponentCollector({ componentType: ComponentType.Button, time: 30000 });
 
         collector.on('collect', async i => {
             if (i.user.id !== GeneralData.user_id) return await i.reply({
-                embeds: [new MessageEmbed()
+                embeds: [new EmbedBuilder()
                     .setColor("#8B0000")
                     .setAuthor({ name: "An Error Occurred" })
                     .setTitle("Unauthorized Action")
@@ -324,7 +324,7 @@ Average websocket latency: ${Math.round(client.ws.ping)}ms`,color:"FFFFFF", ephe
             })
             await i.deferUpdate()
             await GeneralData.message.edit({
-                embeds: [new MessageEmbed()
+                embeds: [new EmbedBuilder()
                     .setColor("#008B00")
                     .setAuthor({ name: "JishakuNJS" })
                     .setTitle("Running Task")
@@ -343,7 +343,7 @@ Average websocket latency: ${Math.round(client.ws.ping)}ms`,color:"FFFFFF", ephe
 
         collector.on('end', async collected => {
             await GeneralData.message.edit({
-                embeds: [new MessageEmbed()
+                embeds: [new EmbedBuilder()
                     .setColor("#8B0000")
                     .setAuthor({ name: "JishakuNJS" })
                     .setTitle("Task Canceled")
@@ -356,7 +356,7 @@ Average websocket latency: ${Math.round(client.ws.ping)}ms`,color:"FFFFFF", ephe
             })
         });
     }
-    if (interaction.options._subcommand === "reload-all") {
+    if (interaction.options.getSubcommand() === "reload-all") {
         function delay(time) {
             return new Promise(resolve => setTimeout(resolve, time));
         }
@@ -373,7 +373,7 @@ Average websocket latency: ${Math.round(client.ws.ping)}ms`,color:"FFFFFF", ephe
         })
         };
         await GeneralData.message.edit({
-            embeds: [new MessageEmbed()
+            embeds: [new EmbedBuilder()
                 .setColor("#FFFFFF")
                 .setAuthor({ name: "JishakuNJS" })
                 .setTitle("Reloading Modules")
@@ -401,7 +401,7 @@ Average websocket latency: ${Math.round(client.ws.ping)}ms`,color:"FFFFFF", ephe
             var commandFile = client.commands.get(k)
             if (!commandFile) {
                 await GeneralData.message.edit({
-                    embeds: [new MessageEmbed()
+                    embeds: [new EmbedBuilder()
                         .setColor("#FF0000")
                         .setAuthor({ name: "An Error Occurred" })
                         .setTitle(`Failed to reload module`)
@@ -417,7 +417,7 @@ Average websocket latency: ${Math.round(client.ws.ping)}ms`,color:"FFFFFF", ephe
             var deleted = client.commands.delete(k)
             if (!deleted) {
                 await GeneralData.message.edit({
-                    embeds: [new MessageEmbed()
+                    embeds: [new EmbedBuilder()
                         .setColor("#8B0000")
                         .setAuthor({ name: "An Error Occured" })
                         .setTitle("Module Not Deleted")
@@ -434,7 +434,7 @@ Average websocket latency: ${Math.round(client.ws.ping)}ms`,color:"FFFFFF", ephe
             client.commands.set(k, module.exports)
         }
         await GeneralData.message.edit({
-            embeds: [new MessageEmbed()
+            embeds: [new EmbedBuilder()
                 .setColor("#FFFFFF")
                 .setAuthor({ name: "JishakuNJS" })
                 .setTitle("All Modules Reloaded")
