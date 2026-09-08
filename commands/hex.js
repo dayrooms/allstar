@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const { default_prefix ,color,error,owner,xmark } = require("../config.json")
 const request = require('axios');
 const talkedRecently = new Set();
@@ -27,7 +26,7 @@ module.exports = {
 
 
         let shades = [data.data.shade[0], data.data.shade[1],data.data.shade[2],data.data.shade[3] ]
-      let embed = new MessageEmbed()
+      let embed = new EmbedBuilder()
       .setAuthor({name:`${data.data.name}`,iconURL:`${data.data.images.square}`})
       .addFields(
       {
@@ -47,7 +46,7 @@ module.exports = {
       }
       )
 
-      .addField(`Shades`,'\```yaml\n\n' + shades + '\```')
+      .addFields({ name: `Shades`, value: '\```yaml\n\n' + shades + '\```' })
       .setImage(data.data.images.gradient)
       .setThumbnail(data.data.images.square)
       .setColor(args[0])
