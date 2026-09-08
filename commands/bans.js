@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,MessageActionRow,MessageButton,xmark  } = require('discord.js');
+const{ EmbedBuilder,ActionRowBuilder,ButtonBuilder,ButtonStyle  } = require('discord.js');
 const { default_prefix ,color,error,owner } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -38,22 +37,22 @@ module.exports = {
           .join("\n\n");
 
 
-               const button1 = new MessageButton()
+               const button1 = new ButtonBuilder()
       .setCustomId('previousbtn')
       .setEmoji("<:allstarleft:1009905064695042138>")
-      .setStyle('SECONDARY');
-            let invite2 = new MessageButton()
+      .setStyle(ButtonStyle.Secondary);
+            let invite2 = new ButtonBuilder()
          .setLabel('Invite')
          .setURL("https://discord.com/api/oauth2/authorize?client_id=938863295543251024&permissions=8&scope=bot%20applications.commands")
-         .setStyle('LINK')
-      const button2 = new MessageButton()
+         .setStyle(ButtonStyle.Link)
+      const button2 = new ButtonBuilder()
       .setCustomId('nextbtn')
       .setEmoji("<:allstarright:1009905118336012398> ")
-      .setStyle('SECONDARY');
-       const button3 = new MessageButton()
+      .setStyle(ButtonStyle.Secondary);
+       const button3 = new ButtonBuilder()
       .setCustomId('fastp')
       .setEmoji("<:DW_X_Mark:1013176426763145216>")
-      .setStyle('SECONDARY');
+      .setStyle(ButtonStyle.Secondary);
 
 
 
@@ -62,8 +61,8 @@ module.exports = {
       button3,
       button2,
   ]
-    const row = new MessageActionRow().addComponents(buttonList);
-        let embed = new MessageEmbed()
+    const row = new ActionRowBuilder().addComponents(buttonList);
+        let embed = new EmbedBuilder()
 
         .setColor(color)
         .setFooter({text:`Page - ${page}/${Math.ceil(bans.size / 10)}`})
@@ -113,7 +112,7 @@ const collector = await curPage.createMessageComponentCollector({
       
                 embed
                   .setFooter(
-                    `Page - ${page}/${Math.round(bans.size / 10 + 1)}`
+                    { text: `Page - ${page}/${Math.round(bans.size / 10 + 1)}` }
                   )
                   .setDescription(description);
       
