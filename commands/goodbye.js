@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,Permissions } = require('discord.js');
+const{ EmbedBuilder,PermissionFlagsBits } = require('discord.js');
 const db = require('quick.db')
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const request = require('request')
@@ -23,15 +22,15 @@ module.exports = {
              message.react(`⌛`)
     } else {
 
-    let missperms = new MessageEmbed()
+    let missperms = new EmbedBuilder()
     .setDescription(`${xmark} You're missing \`MANAGE_GUILD\` permission`)
     .setColor(error)
-    if (!message.member.permissions.has([ Permissions.FLAGS.MANAGE_GUILD])) return message.reply({ embeds:[missperms]});
+    if (!message.member.permissions.has(PermissionFlagsBits.ManageGuild)) return message.reply({ embeds:[missperms]});
 
     let prefix = db.get(`prefix_${message.guild.id}`);
     if (prefix === null) { prefix = default_prefix; };
     if (message.author.bot) return;
-    const embed = new MessageEmbed()
+    const embed = new EmbedBuilder()
       .setDescription(`\<a:allstarwelcome:996512695480238182>  **farewell old member** \n <:allstar:1001031487103193108> goodbye channel \n <:allstar:1001031487103193108> goodbye message \n <:allstar:1001031487103193108> goodbye footer \n <:allstar:1001031487103193108> goodbye author \n <:allstar:1001031487103193108> goodbye image \n <:allstar:1001031487103193108> goodbye removeimage \n <:allstar:1001031487103193108> goodbye clear \n <:allstar:1001031487103193108> goodbye stats \n <:allstar:1001031487103193108> goodbye variables \n <:allstar:1001031487103193108> goodbye color`)
       .setColor(color)
 
@@ -42,12 +41,12 @@ module.exports = {
       db.set(`leavemessage_${message.guild.id}`, args.splice(1).join(' '))
       let wlcmsg = db.get(`leavemessage_${message.guild.id}`)
       if (wlcmsg === null) {
-        const setmsgembed = new MessageEmbed()
+        const setmsgembed = new EmbedBuilder()
           .setDescription(`${xmark} There is no goodbye message set one with ${prefix}goodbye message`)
           .setColor(error)
         return message.reply({embeds:[setmsgembed]})
       } else {
-        const setembed = new MessageEmbed()
+        const setembed = new EmbedBuilder()
           .setTitle(`${checked} goodbye message updated`)
           .setDescription(`${wlcmsg}`)
           .setColor(color)
@@ -56,7 +55,7 @@ module.exports = {
     } else if (args[0] === 'test') {
       let chx = db.get(`leavechannel_${message.guild.id}`);
       if (chx === null) {
-        let nochan = new MessageEmbed()
+        let nochan = new EmbedBuilder()
           .setDescription(`${xmark} There is no goodbye channel set`)
           .setColor(error)
         
@@ -64,7 +63,7 @@ module.exports = {
       }
       let welcome = db.get(`leavemessage_${message.guild.id}`);
       if (welcome === null) {
-                const setmsgembed = new MessageEmbed()
+                const setmsgembed = new EmbedBuilder()
           .setDescription(`${xmark} There is no goodbye message set one with ${prefix}goodbye message`)
           .setColor(error)
         return message.reply({embeds:[setmsgembed]})
@@ -122,11 +121,11 @@ module.exports = {
       author = author.replace('{guild.name}', message.member.guild.name);
       author = author.replace('{guild.id}', message.member.guild.id);
       if(thumbnail === '{user.icon}') thumbnail =  message.member.displayAvatarURL({dynamic:true})
-      let tested = new MessageEmbed()
+      let tested = new EmbedBuilder()
       .setDescription(`${checked} Tested goodbye in <#` + chx + `>` )
       .setColor(color)
       console.log(thumbnail)
-      let welcembed = new MessageEmbed()
+      let welcembed = new EmbedBuilder()
 
       .setDescription(welcome)
       .setAuthor({name:`${author}`})
@@ -140,7 +139,7 @@ module.exports = {
       client.channels.cache.get(chx).send({embeds:[welcembed]}).catch((error) =>{return message.reply(error)}).then(() => message.channel.send({embeds:[tested]}))
       
       if (chx === null) {
-        let chxnull = new MessageEmbed()
+        let chxnull = new EmbedBuilder()
         .setDescription(`${xmark} There is no goodbye channel set`)
         .setColor(error)
         return message.reply({embeds:[chxnull]})
@@ -148,7 +147,7 @@ module.exports = {
     } else if (args[0] === 'variables') {
       const member = message.author
       const ordinal = (message.guild.memberCount.toString().endsWith(1) && !message.guild.memberCount.toString().endsWith(11)) ? 'st' : (message.guild.memberCount.toString().endsWith(2) && !message.guild.memberCount.toString().endsWith(12)) ? 'nd' : (message.guild.memberCount.toString().endsWith(3) && !message.guild.memberCount.toString().endsWith(13)) ? 'rd' : 'th';
-      const variablesembed = new MessageEmbed()
+      const variablesembed = new EmbedBuilder()
         .setTitle(`goodbye variables`)
         .setDescription(`> {user}  - <@` + member + `>\n> {user.name}  - ` + message.author.username + `\n> {user.tag}  - ` + message.author.tag + `\n> {user.id}  - ` + message.author.id + `\n> {guild.name}  - ` + message.member.guild.name + `\n> {guild.id}  - ` + message.member.guild.id + `\n> {membercount}  - ` + message.member.guild.memberCount + `\n> {membercount.ordinal}  - ` + message.member.guild.memberCount + ordinal + `\n **Image Variables**  \n> {guild.icon}\n {user.icon}`)
         .setColor(color)
@@ -156,18 +155,18 @@ module.exports = {
     } else if (args[0] === "channel") {
       let channel = message.mentions.channels.first()
       if (!channel) {
-        const welcomechannel = new MessageEmbed()
+        const welcomechannel = new EmbedBuilder()
         .setDescription(`${xmark} you need to mention a channel set the channel for users who left \n> goodbye channel <:allstarchannell:996785609777614918> channel`)
         .setColor(error)
         return message.reply({embeds:[welcomechannel]})
       }
       db.set(`leavechannel_${message.guild.id}`, channel.id)
-      let xs = new MessageEmbed()
+      let xs = new EmbedBuilder()
       .setDescription(`${checked} Set the goodbye channel to ${channel}`)
       .setColor(color)
       await message.reply({embeds:[xs]})
     }  else if (args[0] === "clear") {
-      let deleted = new MessageEmbed()
+      let deleted = new EmbedBuilder()
       .setDescription(`${checked} cleared goodbye setup from the database`)
       .setColor(color)
       db.delete(`leavechannel_${message.guild.id}`)
@@ -183,7 +182,7 @@ module.exports = {
       db.set(`leaveembed_${message.guild.id}`, args.splice(1).join(' '))
         let footers = db.get(`leaveembed_${message.guild.id}`);
       if (footers === null) return;
-      let footemebed = new MessageEmbed()
+      let footemebed = new EmbedBuilder()
       .setTitle(`${checked} sucessfuly updated footer`)
        .setDescription(`${footers}`)
       return await message.reply({embeds:[footemebed]})
@@ -192,7 +191,7 @@ module.exports = {
 
     else if(args[0] === "image") {
         if(args[1] === '{guild.icon}'){
-                  let x = new MessageEmbed()
+                  let x = new EmbedBuilder()
         .setDescription(`${checked} Succesfully updated Image`)
         .setColor(color)
          db.set(`leaveimage_${message.guild.id}`,args[1])
@@ -200,7 +199,7 @@ module.exports = {
        
         }
         else if(args[1]== '{user.icon}') {
-                            let x = new MessageEmbed()
+                            let x = new EmbedBuilder()
         .setDescription(`${checked} Succesfully updated Image`)
         .setColor(color)
          db.set(`leaveimage_${message.guild.id}`,args[1])
@@ -210,10 +209,10 @@ module.exports = {
         
         let icon = args[1]
       //  if(!icon) icon = args[0]
-      let no = new MessageEmbed()
+      let no = new EmbedBuilder()
       .setDescription(`${xmark} Not a well formed URL`)
       .setColor(error)
-        let x = new MessageEmbed()
+        let x = new EmbedBuilder()
         .setDescription(`${checked} Succesfully updated Image`)
         .setColor(color)
         
@@ -231,7 +230,7 @@ module.exports = {
  
     }
       else if(args[0] === "removeimage") {
-        let x = new MessageEmbed()
+        let x = new EmbedBuilder()
         .setDescription(`${checked} sucessfuly removed image`)
         .setColor(color)
 
@@ -298,7 +297,7 @@ module.exports = {
     image = image.replace('{user.icon}',message.author.displayAvatarURL({dynamic:true,size:4096}))
       
       
-      let stats = new MessageEmbed()
+      let stats = new EmbedBuilder()
       .setDescription(`<a:allstarwelcome:996512695480238182> ${message.guild.name} Goodbye Stats `)
       .setColor(color)
             .addFields({
@@ -343,7 +342,7 @@ module.exports = {
       
     } else if(args[0] === "author") {
       
-      let authorembed = new MessageEmbed()
+      let authorembed = new EmbedBuilder()
       .setDescription(`${checked} Succesfully updated Author`)
       .setColor(color)
       db.set(`leaveauthor_${message.guild.id}`, args.splice(1).join(' '))
@@ -352,7 +351,7 @@ module.exports = {
       
     } else if(args[0] === "color") {
       
-      let authorembed = new MessageEmbed()
+      let authorembed = new EmbedBuilder()
       .setDescription(`${checked} Succesfully updated Color`)
       .setColor(color)
       db.set(`leavecolor_${message.guild.id}`, args.splice(1).join(' '))
@@ -362,7 +361,7 @@ module.exports = {
     }
       else if(args[0] === "thumbnail") {
         if(args[1] === '{guild.icon}'){
-                  let x = new MessageEmbed()
+                  let x = new EmbedBuilder()
         .setDescription(`${checked} Succesfully updated Thumbnail`)
         .setColor(color)
          db.set(`leavethumbnail_${message.guild.id}`,args[1])
@@ -370,7 +369,7 @@ module.exports = {
        
         }
         if(args[1]== '{user.icon}') {
-                            let x = new MessageEmbed()
+                            let x = new EmbedBuilder()
         .setDescription(`${checked} Succesfully updated Thumbnail`)
         .setColor(color)
          db.set(`leavethumbnail_${message.guild.id}`,args[1])
@@ -378,10 +377,10 @@ module.exports = {
         }
         let icon = args[1]
       //  if(!icon) icon = args[0]
-      let no = new MessageEmbed()
+      let no = new EmbedBuilder()
       .setDescription(`${xmark} Not a well formed URL`)
       .setColor(error)
-        let x = new MessageEmbed()
+        let x = new EmbedBuilder()
         .setDescription(`${checked} Succesfully updated Thumbnail`)
         .setColor(color)
         
