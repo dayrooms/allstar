@@ -1,5 +1,4 @@
-
-const{MessageEmbed, MessageActionRow ,MessageButton} = require('discord.js');
+const{EmbedBuilder, ActionRowBuilder ,ButtonBuilder,ButtonStyle} = require('discord.js');
 const { default_prefix ,color,error,owner } = require("../config.json")
 const db = require('quick.db')
 const os = require("os");
@@ -27,30 +26,30 @@ module.exports = {
     
       let memoryUsage = `${Math.round(process.memoryUsage().heapUsed / 1024 / 1024 * 100) / 100}MB`;
       const duration = moment.duration(client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
-    const row = new MessageActionRow()
+    const row = new ActionRowBuilder()
         .addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          .setLabel('Invite Me!')
           .setEmoji("<:MessageLink:1010885859735785553>")
          .setURL("https://discord.com/api/oauth2/authorize?client_id=938863295543251024&permissions=8&scope=bot%20applications.commands")
-         .setStyle('LINK'),
+         .setStyle(ButtonStyle.Link),
         )
         .addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          .setLabel('Support Server!')
           .setEmoji("<:MessageLink:1010885859735785553>")
          .setURL("https://discord.gg/heist")
-         .setStyle('LINK'),
+         .setStyle(ButtonStyle.Link),
         )
          .addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          .setLabel('Privacy Policy!')
           .setEmoji("<:MessageLink:1010885859735785553>")
          .setURL("https://nek0.gitbook.io/allstar/details/privacy-policy")
-         .setStyle('LINK'),
+         .setStyle(ButtonStyle.Link),
         )
  
-        let embed = new MessageEmbed()
+        let embed = new EmbedBuilder()
         .setAuthor({name:`Allstar Info`,iconURL:`${client.user.displayAvatarURL()}`})
         .setDescription('\```' + `Developed and maintained by ${client.users.cache.get('839221856976109608').tag}` + '\```')
         .addFields(
