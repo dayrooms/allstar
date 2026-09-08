@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const db = require('quick.db')
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const talkedRecently = new Set();
@@ -25,7 +24,7 @@ module.exports = {
         const content = args.join(" ") ? args.join(' ') : "AFK"
         await db.set(`afktime-${message.author.id}+${message.guild.id}`,Date.now())
         await db.set(`afk-${message.author.id}+${message.guild.id}`, content)
-        const embed = new MessageEmbed()
+        const embed = new EmbedBuilder()
         .setColor(color)
         .setAuthor({name:`${message.author.username} went AFK`,iconURL:`${message.author.displayAvatarURL({dynamic:true,size:4096})}`})
         .setDescription(` \n **Status**  \n <:allstarreply:1032192256192553030>  ${content}`)
