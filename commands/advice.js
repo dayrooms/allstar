@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const axios = require('axios')
 const { default_prefix ,color,error,owner } = require("../config.json")
 const talkedRecently = new Set();
@@ -23,7 +22,7 @@ module.exports = {
       
 .then(response => {
       
-  let embed = new MessageEmbed()
+  let embed = new EmbedBuilder()
     .setDescription('\```' + response.data.advice + '\```')
     .setColor(color)
            message.reply({embeds:[embed]})
