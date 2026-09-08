@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const { default_prefix ,color,error,owner } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -23,7 +22,7 @@ module.exports = {
 
          let mentionedMember = await message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args.join(' ').toLocaleLowerCase()) || message.guild.members.cache.find(r => r.displayName.toLowerCase() === args.join(' ').toLocaleLowerCase()) || message.member;
    
-      let embed = new MessageEmbed()
+      let embed = new EmbedBuilder()
       .setImage(`https://api.memegen.link/images/drake/${args[0].replace(" ", "%20")}/${args[1].replace(" ", "%20")}.png`)
       .setColor(color)
       message.reply({embeds:[embed]})
