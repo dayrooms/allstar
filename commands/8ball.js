@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,MessageAttachment } = require('discord.js');
+const{ EmbedBuilder,AttachmentBuilder } = require('discord.js');
 const axios = require('axios')
 const { default_prefix ,color,error,owner } = require("../config.json")
 const talkedRecently = new Set();
@@ -22,7 +21,7 @@ module.exports = {
       axios.get(`https://luminabot.xyz/api/json/8ball?text=${args.join(" ")}`)
       .then(response => {
         message.reply({embeds:[
-        new MessageEmbed()
+        new EmbedBuilder()
           .setDescription(`> **Question** ${response.data.question} \n>  **Answer** \`${response.data.answer}\``)
           .setFooter({text:`question asked by ${message.author.username}`})
           .setColor(color)
@@ -31,7 +30,7 @@ module.exports = {
     })
       
       /*
-        let embed = new MessageEmbed()
+        let embed = new EmbedBuilder()
         .setURL(`${response.data.url}`)
         .setTitle(`${response.data.title}`)
         .setDescription(`<:down2:1010942456562462750> : ${response.data.upvotes} | <:Message:1010885858792067192> : ${response.data.comments}`)
