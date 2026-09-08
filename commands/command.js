@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const { default_prefix ,color,error,owner } = require("../config.json")
 const db = require('quick.db')
 module.exports = {
@@ -20,7 +19,7 @@ module.exports = {
     
     
          let bitch = `<@531968872211939368>`
-                    let onlyown = new MessageEmbed()
+                    let onlyown = new EmbedBuilder()
         .setDescription(`<:allstarwarn:996517869791748199> Only server owner can use this command`)
         .setColor(color)
 
