@@ -1,4 +1,4 @@
-const { MessageActionRow, MessageButton, MessageEmbed, MessageSelectMenu } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, EmbedBuilder, StringSelectMenuBuilder } = require('discord.js');
 class Paginator {
     constructor(client, message, embeds, pages) {
         if (!client || !message || !embeds || !pages) throw Error("<Paginator> constructor recieved an invalid set of data. Expected: Client <Object>, Message <Object>, Embeds <Array>, Pages <Number>")
@@ -67,8 +67,8 @@ class Paginator {
                 typeof this.cid !== 'string'
             ) throw Error("<Paginator>.construct failed to construct <Paginator> with the data set.")
             var cid = this.cid
-            var row = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel("1").setStyle("PRIMARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle("SECONDARY").setDisabled(!(this.pages > 1))).addComponents(new MessageButton().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle("SECONDARY").setDisabled(!(this.pages > 1))), row2 = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle("DANGER"));
-            var menu = new MessageSelectMenu()
+            var row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel("1").setStyle(ButtonStyle.Primary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle(ButtonStyle.Secondary).setDisabled(!(this.pages > 1))).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle(ButtonStyle.Secondary).setDisabled(!(this.pages > 1))), row2 = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle(ButtonStyle.Danger));
+            var menu = new StringSelectMenuBuilder()
                 .setCustomId('pagntr_listener_menu')
                 .setPlaceholder('Page 1')
             for (var v = 0; v < this.pages; v++) {
@@ -80,17 +80,17 @@ class Paginator {
                     }
                 ])
             }
-            const menu_row = new MessageActionRow()
+            const menu_row = new ActionRowBuilder()
                 .addComponents(
                     menu
                 );
             this.msg = await this.message.reply({ embeds: [this.embeds[0]], components: [menu_row, row, row2] })
-            const collector = this.msg.createMessageComponentCollector({ componentType: 'BUTTON', time: this.timeout });
+            const collector = this.msg.createMessageComponentCollector({ componentType: ComponentType.Button, time: this.timeout });
             var current_page = 1
             var ended_normal = false
             collector.on('collect', async i => {
                 if (!this.authors.includes(i.user.id.toString())) return await i.reply({
-                    embeds: [new MessageEmbed()
+                    embeds: [new EmbedBuilder()
                         .setColor("#8B0000")
                         .setAuthor({ name: "An Error Occurred" })
                         .setTitle("Unauthorized Interaction")
@@ -102,7 +102,7 @@ class Paginator {
                         })], ephemeral: true
                 })
                 if (!i.customId.includes(this.cid)) return await i.reply({
-                    embeds: [new MessageEmbed()
+                    embeds: [new EmbedBuilder()
                         .setColor("#8B0000")
                         .setAuthor({ name: "An Error Occurred" })
                         .setTitle("Inaccessible Paginator")
@@ -122,7 +122,7 @@ class Paginator {
                         button: "exit",
                         _rawInteraction: i
                     })
-                    row = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel("1").setStyle("PRIMARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle("SECONDARY").setDisabled(!0)), row2 = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle("DANGER").setDisabled(!0));
+                    row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel("1").setStyle(ButtonStyle.Primary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle(ButtonStyle.Secondary).setDisabled(!0)), row2 = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle(ButtonStyle.Danger).setDisabled(!0));
                     await this.msg.edit({ embeds: [this.embeds[current_page - 1]], components: [row, row2] })
                     collector.stop()
                 }
@@ -134,7 +134,7 @@ class Paginator {
                         _rawInteraction: i
                     })
                     current_page = this.pages
-                    var row = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle("SECONDARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle("SECONDARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel(`${current_page}`).setStyle("PRIMARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle("SECONDARY").setDisabled(!0)), row2 = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle("DANGER"));
+                    var row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle(ButtonStyle.Secondary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle(ButtonStyle.Secondary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel(`${current_page}`).setStyle(ButtonStyle.Primary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle(ButtonStyle.Secondary).setDisabled(!0)), row2 = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle(ButtonStyle.Danger));
                     await this.msg.edit({ embeds: [this.embeds[current_page - 1]], components: [menu_row, row, row2] })
                 }
                 if (id === "pagntr_listener_left_far") {
@@ -145,7 +145,7 @@ class Paginator {
                         _rawInteraction: i
                     })
                     current_page = 1
-                    var row = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel("1").setStyle("PRIMARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle("SECONDARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle("SECONDARY")), row2 = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle("DANGER"));
+                    var row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel("1").setStyle(ButtonStyle.Primary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle(ButtonStyle.Secondary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle(ButtonStyle.Secondary)), row2 = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle(ButtonStyle.Danger));
                     await this.msg.edit({ embeds: [this.embeds[0]], components: [menu_row, row, row2] })
                 }
                 if (id === "pagntr_listener_left") {
@@ -156,7 +156,7 @@ class Paginator {
                         _rawInteraction: i
                     })
                     current_page--
-                    row = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle("SECONDARY").setDisabled(1 === current_page)).addComponents(new MessageButton().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle("SECONDARY").setDisabled(1 === current_page)).addComponents(new MessageButton().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel(`${current_page}`).setStyle("PRIMARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle("SECONDARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle("SECONDARY")), row2 = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle("DANGER"));
+                    row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle(ButtonStyle.Secondary).setDisabled(1 === current_page)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle(ButtonStyle.Secondary).setDisabled(1 === current_page)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel(`${current_page}`).setStyle(ButtonStyle.Primary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle(ButtonStyle.Secondary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle(ButtonStyle.Secondary)), row2 = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle(ButtonStyle.Danger));
                     await this.msg.edit({ embeds: [this.embeds[current_page - 1]], components: [menu_row, row, row2] })
                 }
                 if (id === "pagntr_listener_right") {
@@ -167,7 +167,7 @@ class Paginator {
                         _rawInteraction: i
                     })
                     current_page++
-                    row = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle("SECONDARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle("SECONDARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel(`${current_page}`).setStyle("PRIMARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle("SECONDARY").setDisabled(current_page === this.pages)).addComponents(new MessageButton().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle("SECONDARY").setDisabled(current_page === this.pages)), row2 = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle("DANGER"));
+                    row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle(ButtonStyle.Secondary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle(ButtonStyle.Secondary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel(`${current_page}`).setStyle(ButtonStyle.Primary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle(ButtonStyle.Secondary).setDisabled(current_page === this.pages)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle(ButtonStyle.Secondary).setDisabled(current_page === this.pages)), row2 = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle(ButtonStyle.Danger));
                     await this.msg.edit({ embeds: [this.embeds[current_page - 1]], components: [menu_row, row, row2] })
                 }
             });
@@ -178,14 +178,14 @@ class Paginator {
                     type: "CollectorTimeout",
                     _rawCollected: collected
                 })
-                row = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel("1").setStyle("PRIMARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle("SECONDARY").setDisabled(!0)), row2 = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle("DANGER").setDisabled(!0));
+                row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel("1").setStyle(ButtonStyle.Primary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle(ButtonStyle.Secondary).setDisabled(!0)), row2 = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle(ButtonStyle.Danger).setDisabled(!0));
                 await this.msg.edit({ embeds: [this.embeds[current_page - 1]], components: [row, row2] })
                 collector.stop()
             });
-            const menu_collector = this.msg.createMessageComponentCollector({ componentType: 'SELECT_MENU', time: this.timeout });
+            const menu_collector = this.msg.createMessageComponentCollector({ componentType: ComponentType.StringSelect, time: this.timeout });
             menu_collector.on("collect", async i => {
                 if (!this.authors.includes(i.user.id.toString())) return await i.reply({
-                    embeds: [new MessageEmbed()
+                    embeds: [new EmbedBuilder()
                         .setColor("#8B0000")
                         .setAuthor({ name: "An Error Occurred" })
                         .setTitle("Unauthorized Interaction")
@@ -204,7 +204,7 @@ class Paginator {
                     _rawInteraction: i
                 })
                 current_page = parseInt(selected_page)
-                row = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle("SECONDARY").setDisabled(1 === current_page)).addComponents(new MessageButton().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle("SECONDARY").setDisabled(1 === current_page)).addComponents(new MessageButton().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel(`${current_page}`).setStyle("PRIMARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle("SECONDARY").setDisabled(current_page === this.pages)).addComponents(new MessageButton().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle("SECONDARY").setDisabled(current_page === this.pages)), row2 = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle("DANGER"));
+                row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle(ButtonStyle.Secondary).setDisabled(1 === current_page)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle(ButtonStyle.Secondary).setDisabled(1 === current_page)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel(`${current_page}`).setStyle(ButtonStyle.Primary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle(ButtonStyle.Secondary).setDisabled(current_page === this.pages)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle(ButtonStyle.Secondary).setDisabled(current_page === this.pages)), row2 = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle(ButtonStyle.Danger));
                 await this.msg.edit({ embeds: [this.embeds[current_page - 1]], components: [menu_row, row, row2] })
             })
         } catch (e) {
@@ -291,8 +291,8 @@ class MultiMenuPaginator {
                 typeof this.cid !== 'string'
             ) throw Error("<Paginator>.construct failed to construct <Paginator> with the data set.")
             var cid = this.cid
-            var row = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel("1").setStyle("PRIMARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle("SECONDARY").setDisabled(!(this.pages > 1))).addComponents(new MessageButton().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle("SECONDARY").setDisabled(!(this.pages > 1))), row2 = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle("DANGER"));
-            var menu = new MessageSelectMenu()
+            var row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel("1").setStyle(ButtonStyle.Primary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle(ButtonStyle.Secondary).setDisabled(!(this.pages > 1))).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle(ButtonStyle.Secondary).setDisabled(!(this.pages > 1))), row2 = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle(ButtonStyle.Danger));
+            var menu = new StringSelectMenuBuilder()
                 .setCustomId('pagntr_listener_menu')
                 .setPlaceholder(`${this.categories[0].name}`)
             for (var v = 0; v < this.categories.length; v++) {
@@ -308,20 +308,20 @@ class MultiMenuPaginator {
                     }
                 ])
             }
-            const menu_row = new MessageActionRow()
+            const menu_row = new ActionRowBuilder()
                 .addComponents(
                     menu
                 );
             //this.msg = await this.message.reply({ embeds: [this.embeds[0][0]], components: [menu_row, row, row2] })
             await this.message.edit({ embeds: [this.embeds[0][0]], components: [menu_row, row, row2] })
             this.msg = this.message
-            const collector = this.msg.createMessageComponentCollector({ componentType: 'BUTTON', time: this.timeout });
+            const collector = this.msg.createMessageComponentCollector({ componentType: ComponentType.Button, time: this.timeout });
             var current_cat = 0
             var current_page = 1
             var ended_normal = false
             collector.on('collect', async i => {
                 if (!this.authors.includes(i.user.id.toString())) return await i.reply({
-                    embeds: [new MessageEmbed()
+                    embeds: [new EmbedBuilder()
                         .setColor("#8B0000")
                         .setAuthor({ name: "An Error Occurred" })
                         .setTitle("Unauthorized Interaction")
@@ -333,7 +333,7 @@ class MultiMenuPaginator {
                         })], ephemeral: true
                 })
                 if (!i.customId.includes(this.cid)) return await i.reply({
-                    embeds: [new MessageEmbed()
+                    embeds: [new EmbedBuilder()
                         .setColor("#8B0000")
                         .setAuthor({ name: "An Error Occurred" })
                         .setTitle("Inaccessible Paginator")
@@ -353,7 +353,7 @@ class MultiMenuPaginator {
                         button: "exit",
                         _rawInteraction: i
                     })
-                    row = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel("1").setStyle("PRIMARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle("SECONDARY").setDisabled(!0)), row2 = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle("DANGER").setDisabled(!0));
+                    row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel("1").setStyle(ButtonStyle.Primary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle(ButtonStyle.Secondary).setDisabled(!0)), row2 = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle(ButtonStyle.Danger).setDisabled(!0));
                     await this.msg.edit({ embeds: [this.embeds[current_cat][current_page - 1]], components: [row, row2] })
                     collector.stop()
                 }
@@ -365,7 +365,7 @@ class MultiMenuPaginator {
                         _rawInteraction: i
                     })
                     current_page = this.pages
-                    var row = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle("SECONDARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle("SECONDARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel(`${current_page}`).setStyle("PRIMARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle("SECONDARY").setDisabled(!0)), row2 = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle("DANGER"));
+                    var row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle(ButtonStyle.Secondary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle(ButtonStyle.Secondary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel(`${current_page}`).setStyle(ButtonStyle.Primary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle(ButtonStyle.Secondary).setDisabled(!0)), row2 = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle(ButtonStyle.Danger));
                     await this.msg.edit({ embeds: [this.embeds[current_cat][current_page - 1]], components: [menu_row, row, row2] })
                 }
                 if (id === "pagntr_listener_left_far") {
@@ -376,7 +376,7 @@ class MultiMenuPaginator {
                         _rawInteraction: i
                     })
                     current_page = 1
-                    var row = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel("1").setStyle("PRIMARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle("SECONDARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle("SECONDARY")), row2 = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle("DANGER"));
+                    var row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel("1").setStyle(ButtonStyle.Primary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle(ButtonStyle.Secondary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle(ButtonStyle.Secondary)), row2 = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle(ButtonStyle.Danger));
                     await this.msg.edit({ embeds: [this.embeds[current_cat][0]], components: [menu_row, row, row2] })
                 }
                 if (id === "pagntr_listener_left") {
@@ -387,7 +387,7 @@ class MultiMenuPaginator {
                         _rawInteraction: i
                     })
                     current_page--
-                    row = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle("SECONDARY").setDisabled(1 === current_page)).addComponents(new MessageButton().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle("SECONDARY").setDisabled(1 === current_page)).addComponents(new MessageButton().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel(`${current_page}`).setStyle("PRIMARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle("SECONDARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle("SECONDARY")), row2 = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle("DANGER"));
+                    row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle(ButtonStyle.Secondary).setDisabled(1 === current_page)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle(ButtonStyle.Secondary).setDisabled(1 === current_page)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel(`${current_page}`).setStyle(ButtonStyle.Primary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle(ButtonStyle.Secondary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle(ButtonStyle.Secondary)), row2 = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle(ButtonStyle.Danger));
                     await this.msg.edit({ embeds: [this.embeds[current_cat][current_page - 1]], components: [menu_row, row, row2] })
                 }
                 if (id === "pagntr_listener_right") {
@@ -398,7 +398,7 @@ class MultiMenuPaginator {
                         _rawInteraction: i
                     })
                     current_page++
-                    row = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle("SECONDARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle("SECONDARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel(`${current_page}`).setStyle("PRIMARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle("SECONDARY").setDisabled(current_page === this.pages)).addComponents(new MessageButton().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle("SECONDARY").setDisabled(current_page === this.pages)), row2 = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle("DANGER"));
+                    row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle(ButtonStyle.Secondary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle(ButtonStyle.Secondary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel(`${current_page}`).setStyle(ButtonStyle.Primary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle(ButtonStyle.Secondary).setDisabled(current_page === this.pages)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle(ButtonStyle.Secondary).setDisabled(current_page === this.pages)), row2 = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle(ButtonStyle.Danger));
                     await this.msg.edit({ embeds: [this.embeds[current_cat][current_page - 1]], components: [menu_row, row, row2] })
                 }
             });
@@ -409,14 +409,14 @@ class MultiMenuPaginator {
                     type: "CollectorTimeout",
                     _rawCollected: collected
                 })
-                row = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel("1").setStyle("PRIMARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle("SECONDARY").setDisabled(!0)).addComponents(new MessageButton().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle("SECONDARY").setDisabled(!0)), row2 = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle("DANGER").setDisabled(!0));
+                row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel("1").setStyle(ButtonStyle.Primary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle(ButtonStyle.Secondary).setDisabled(!0)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle(ButtonStyle.Secondary).setDisabled(!0)), row2 = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle(ButtonStyle.Danger).setDisabled(!0));
                 await this.msg.edit({ embeds: [this.embeds[current_cat][current_page - 1]], components: [row, row2] })
                 collector.stop()
             });
-            const menu_collector = this.msg.createMessageComponentCollector({ componentType: 'SELECT_MENU', time: this.timeout });
+            const menu_collector = this.msg.createMessageComponentCollector({ componentType: ComponentType.StringSelect, time: this.timeout });
             menu_collector.on("collect", async i => {
                 if (!this.authors.includes(i.user.id.toString())) return await i.reply({
-                    embeds: [new MessageEmbed()
+                    embeds: [new EmbedBuilder()
                         .setColor("#8B0000")
                         .setAuthor({ name: "An Error Occurred" })
                         .setTitle("Unauthorized Interaction")
@@ -438,7 +438,7 @@ class MultiMenuPaginator {
                 current_cat = parseInt(selected_cat)
                 current_page = 1
                 this.pages = this.categories[current_cat].number_of_embeds
-                row = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle("SECONDARY").setDisabled(1 === current_page)).addComponents(new MessageButton().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle("SECONDARY").setDisabled(1 === current_page)).addComponents(new MessageButton().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel("1").setStyle("PRIMARY")).addComponents(new MessageButton().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle("SECONDARY").setDisabled(current_page === this.pages)).addComponents(new MessageButton().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle("SECONDARY").setDisabled(current_page === this.pages)), row2 = new MessageActionRow().addComponents(new MessageButton().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle("DANGER"));
+                row = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left_far:${cid}`).setLabel(`1 ←`).setStyle(ButtonStyle.Secondary).setDisabled(1 === current_page)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_left:${cid}`).setLabel(`◄`).setStyle(ButtonStyle.Secondary).setDisabled(1 === current_page)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_page_num:${cid}`).setLabel("1").setStyle(ButtonStyle.Primary)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right:${cid}`).setLabel(`►`).setStyle(ButtonStyle.Secondary).setDisabled(current_page === this.pages)).addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_right_far:${cid}`).setLabel(`→ ${this.pages}`).setStyle(ButtonStyle.Secondary).setDisabled(current_page === this.pages)), row2 = new ActionRowBuilder().addComponents(new ButtonBuilder().setCustomId(`pagntr_listener_exit_pagntr:${cid}`).setLabel("Close Paginator").setStyle(ButtonStyle.Danger));
                 await this.msg.edit({ embeds: [this.embeds[current_cat][current_page - 1]], components: [menu_row, row, row2] })
             })
         } catch (e) {
