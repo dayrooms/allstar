@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const { default_prefix ,color,error,owner } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -21,8 +20,8 @@ module.exports = {
     } else {
 
       
-      let embed = new MessageEmbed()
-        .addField(`Booster Count `,`> <:allstarboost:997232872509427833>  Boosts ${message.guild.premiumSubscriptionCount} \n> <:allstarboostlvl2:997557580836638830> Level ${message.guild.premiumTier.replace('TIER_', '' && 'NONE','0')}`)
+      let embed = new EmbedBuilder()
+        .addFields({ name: `Booster Count `, value: `> <:allstarboost:997232872509427833>  Boosts ${message.guild.premiumSubscriptionCount} \n> <:allstarboostlvl2:997557580836638830> Level ${String(message.guild.premiumTier)}` })
         .setColor("#f47fff")
         //.setFooter({text: message.author.tag ,iconURL: client.user.displayAvatarURL()})
         await message.reply({embeds:[embed]});
