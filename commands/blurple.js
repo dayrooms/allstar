@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,MessageButton,MessageActionRow } = require('discord.js');
+const{ EmbedBuilder,ButtonBuilder,ActionRowBuilder,ButtonStyle } = require('discord.js');
 const { default_prefix ,color,error,owner } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -24,60 +23,60 @@ module.exports = {
       let mentionedMember = await message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args.join(' ').toLocaleLowerCase()) || message.guild.members.cache.find(r => r.displayName.toLowerCase() === args.join(' ').toLocaleLowerCase()) || client.users.cache.get(args[0])
 
         if(!mentionedMember) {
-              const row = new MessageActionRow()
+              const row = new ActionRowBuilder()
         .addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          .setLabel('webp')
         .setEmoji("<:MessageLink:1010885859735785553>")
-         .setURL(`${`https://some-random-api.ml/canvas/blurple2?avatar=` + message.author.displayAvatarURL({format: "webp", dynamic: true, size: 4096})}`)
-         .setStyle('LINK'),
+         .setURL(`${`https://some-random-api.ml/canvas/blurple2?avatar=` + message.author.displayAvatarURL({extension: "webp", size: 4096})}`)
+         .setStyle(ButtonStyle.Link),
         )
         .addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          .setLabel('jpg')
           .setEmoji("<:MessageLink:1010885859735785553>")
-           .setURL(`${`https://some-random-api.ml/canvas/blurple2?avatar=` + message.author.displayAvatarURL({format: "jpg", dynamic: true, size: 4096})}`)
-         .setStyle('LINK'),
+           .setURL(`${`https://some-random-api.ml/canvas/blurple2?avatar=` + message.author.displayAvatarURL({extension: "jpg", size: 4096})}`)
+         .setStyle(ButtonStyle.Link),
         )
         .addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          .setLabel('png')
           .setEmoji("<:MessageLink:1010885859735785553>")
-          .setURL(`${`https://some-random-api.ml/canvas/blurple2?avatar=` + message.author.displayAvatarURL({format: "png", dynamic: true, size: 4096})}`)
-         .setStyle('LINK'),
+          .setURL(`${`https://some-random-api.ml/canvas/blurple2?avatar=` + message.author.displayAvatarURL({extension: "png", size: 4096})}`)
+         .setStyle(ButtonStyle.Link),
         )
-          let embed = new MessageEmbed()
-          .setImage((`https://some-random-api.ml/canvas/blurple2?avatar=` + message.author.displayAvatarURL({ format: "png", dynamic: true, size: 4096 })))
+          let embed = new EmbedBuilder()
+          .setImage((`https://some-random-api.ml/canvas/blurple2?avatar=` + message.author.displayAvatarURL({ extension: "png", size: 4096 })))
           .setFooter({ text: `${message.author.tag}`})
           .setColor(color)
           await message.reply({embeds : [embed] , components: [row]}).catch(() => {/*Ignore error*/})
   
         }else{
-         const row = new MessageActionRow()
+         const row = new ActionRowBuilder()
         .addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          .setLabel('webp')
           .setEmoji("<:MessageLink:1010885859735785553>")
-         .setURL(`${`https://some-random-api.ml/canvas/blurple2?avatar=` + mentionedMember.user.displayAvatarURL({format: "webp", dynamic: true, size: 4096})}`)
-         .setStyle('LINK'),
+         .setURL(`${`https://some-random-api.ml/canvas/blurple2?avatar=` + mentionedMember.user.displayAvatarURL({extension: "webp", size: 4096})}`)
+         .setStyle(ButtonStyle.Link),
         )
         .addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          .setLabel('jpg')
           .setEmoji("<:MessageLink:1010885859735785553>")
-           .setURL(`${`https://some-random-api.ml/canvas/blurple2?avatar=` + mentionedMember.user.displayAvatarURL({format: "jpg", dynamic: true, size: 4096})}`)
-         .setStyle('LINK'),
+           .setURL(`${`https://some-random-api.ml/canvas/blurple2?avatar=` + mentionedMember.user.displayAvatarURL({extension: "jpg", size: 4096})}`)
+         .setStyle(ButtonStyle.Link),
         )
         .addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          .setLabel('png')
           .setEmoji("<:MessageLink:1010885859735785553>")
-          .setURL(`${`https://some-random-api.ml/canvas/blurple2?avatar=` + mentionedMember.user.displayAvatarURL({format: "png", dynamic: true, size: 4096})}`)
-           .setStyle('LINK'),
+          .setURL(`${`https://some-random-api.ml/canvas/blurple2?avatar=` + mentionedMember.user.displayAvatarURL({extension: "png", size: 4096})}`)
+           .setStyle(ButtonStyle.Link),
           )
          
-          let embed = new MessageEmbed()
-          .setImage((`https://some-random-api.ml/canvas/blurple2?avatar=` + mentionedMember.user.displayAvatarURL({ format: "png", dynamic: true, size: 4096 })))
+          let embed = new EmbedBuilder()
+          .setImage((`https://some-random-api.ml/canvas/blurple2?avatar=` + mentionedMember.user.displayAvatarURL({ extension: "png", size: 4096 })))
           .setFooter({ text: `${mentionedMember.user.tag}`})
           .setColor(color)
           await message.reply({embeds:[embed] , components: [row]}).catch(() => {/*Ignore error*/})
