@@ -1,4 +1,4 @@
-const { MessageEmbed, Permissions } = require("discord.js");
+const { EmbedBuilder } = require("discord.js");
 const db = require('quick.db')
 const {
   default_prefix,
@@ -27,7 +27,7 @@ module.exports = {
       message.react(`⌛`);
     } else {
       let vanity = db.get(`vanity_${message.guild.id}`);
-      let checkenable = new MessageEmbed()
+      let checkenable = new EmbedBuilder()
         .setAuthor({ name: "Security" })
         .setDescription(
           `<:allstarenabled:996521189986021386> Antinuke Is Enabled VanityURL - ${vanity} \n Usage : \n <:allstar:1001031487103193108> whitelist <<heist#0001> \n <:allstar:1001031487103193108> blacklist <<heist#0001>> \n <:allstar:1001031487103193108> antinuke [on/off] \n <:allstar:1001031487103193108> antinuke info \n <:allstar:1001031487103193108> antinuke settings \n <:allstar:1001031487103193108> antinuke enable antiban `
@@ -36,7 +36,7 @@ module.exports = {
           `https://cdn.discordapp.com/attachments/991601306747813978/996704762110148688/IconServerSecurity_1.gif`
         )
         .setColor(color);
-      let checkdisabled = new MessageEmbed()
+      let checkdisabled = new EmbedBuilder()
         .setDescription(
           `<:allstardisabled:996521221749481516>  Antinuke Is Disabled \n Usage : \n <:allstar:1001031487103193108> whitelist <<heist#0001> \n <:allstar:1001031487103193108> blacklist <<heist#0001>> \n <:allstar:1001031487103193108> antinuke [on/off] \n <:allstar:1001031487103193108> antinuke info \n <:allstar:1001031487103193108> antinuke settings \n <:allstar:1001031487103193108> antinuke enable antiban `
         )
@@ -44,7 +44,7 @@ module.exports = {
           `https://cdn.discordapp.com/attachments/991601306747813978/996704762110148688/IconServerSecurity_1.gif`
         )
         .setColor(color);
-      let onlyown = new MessageEmbed()
+      let onlyown = new EmbedBuilder()
         .setDescription(`${xmark} Only server owner can use this command`)
         .setColor(error);
 
@@ -55,14 +55,14 @@ module.exports = {
           /*Ignore error*/
         });
 
-      let aenabled = new MessageEmbed()
+      let aenabled = new EmbedBuilder()
         .setDescription(`${checked} Antinuke is now enabled`)
         .setColor(color);
-      let missperms = new MessageEmbed()
+      let missperms = new EmbedBuilder()
         .setDescription(`${xmark}  You're missing \`MANAGE_GUILD\` permission`)
         .setColor(error);
 
-      let nukeable = new MessageEmbed()
+      let nukeable = new EmbedBuilder()
         .setDescription(`${checked} Antinuke Enabled`)
         .setColor(color);
       if (args[0] == "on") {
@@ -143,10 +143,10 @@ module.exports = {
           db.delete(`antiwebhookdelete_${message.guild.id}`)
     
           db.delete(`antiwebhookupdate_${message.guild.id}`)
-        let disabled = new MessageEmbed()
+        let disabled = new EmbedBuilder()
           .setDescription(`${checked}  Antinuke is now disabled`)
           .setColor(color);
-        let alreadydisabled = new MessageEmbed()
+        let alreadydisabled = new EmbedBuilder()
           .setDescription(`${xmark}  Antinuke is disabled`)
           .setColor(error);
         if ((await db.has(`anti-new_${message.guild.id}`)) === true) {
@@ -171,14 +171,14 @@ module.exports = {
           });
         }
       } else if (args[0] == "info") {
-        let embed11 = new MessageEmbed()
+        let embed11 = new EmbedBuilder()
           .setTitle(
             `<:allstarsecurity:996512639666618518>  Allstar Antinuke To keep your server safe`
           )
-          .addField(
-            `Anti Features :`,
-            ` <:allstar:1001031487103193108> Vanity Update \n <:allstar:1001031487103193108> Channel Create \n <:allstar:1001031487103193108> Channel Delete \n <:allstar:1001031487103193108> Channel Update \n <:allstar:1001031487103193108> Ban Add \n <:allstar:1001031487103193108> Bot Add \n <:allstar:1001031487103193108> Kick Add \n <:allstar:1001031487103193108> Role Create \n <:allstar:1001031487103193108> Role Delete \n <:allstar:1001031487103193108> Role Update \n <:allstar:1001031487103193108> Role Member \n<:allstar:1001031487103193108> Webhook Create \n <:allstar:1001031487103193108> Webhook Delete \n <:allstar:1001031487103193108> Webhook Update`
-          )
+          .addFields({
+            name: `Anti Features :`,
+            value: ` <:allstar:1001031487103193108> Vanity Update \n <:allstar:1001031487103193108> Channel Create \n <:allstar:1001031487103193108> Channel Delete \n <:allstar:1001031487103193108> Channel Update \n <:allstar:1001031487103193108> Ban Add \n <:allstar:1001031487103193108> Bot Add \n <:allstar:1001031487103193108> Kick Add \n <:allstar:1001031487103193108> Role Create \n <:allstar:1001031487103193108> Role Delete \n <:allstar:1001031487103193108> Role Update \n <:allstar:1001031487103193108> Role Member \n<:allstar:1001031487103193108> Webhook Create \n <:allstar:1001031487103193108> Webhook Delete \n <:allstar:1001031487103193108> Webhook Update`
+          })
           .setThumbnail(client.user.displayAvatarURL())
           .setColor(color);
 
@@ -357,7 +357,7 @@ module.exports = {
         if(antialt  == true) antialt  = `<:allstarenabled:1032192242884038676>  ` 
         else antialt = `<:allstardisabled:1032192240027697193> `
         
-        let embed = new MessageEmbed()
+        let embed = new EmbedBuilder()
         //.setAuthor({name:`     Allstar Antinuke Settings`,iconURL:`${client.user.displayAvatarURL({dynamic:true})}`})
        //.setTitle(`：             Allstar Antinuke Setting              ：`)
         .setDescription('\```' + `             Allstar Antinuke Setting              ` + '\```')
