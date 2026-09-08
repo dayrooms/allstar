@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,MessageAttachment } = require('discord.js');
+const{ EmbedBuilder,AttachmentBuilder } = require('discord.js');
 const { execSync } = require("child_process");
 const axios = require('axios')
 const { default_prefix ,color,error,owner } = require("../config.json")
@@ -39,7 +38,7 @@ module.exports = {
      message.reply({content:`${error}`})
   }
       /*
-        let embed = new MessageEmbed()
+        let embed = new EmbedBuilder()
         .setURL(`${response.data.url}`)
         .setTitle(`${response.data.title}`)
         .setDescription(`<:down2:1010942456562462750> : ${response.data.upvotes} | <:Message:1010885858792067192> : ${response.data.comments}`)
