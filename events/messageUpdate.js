@@ -1,4 +1,4 @@
-const { MessageEmbed,MessageAttachment } = require("discord.js");
+const { EmbedBuilder,AttachmentBuilder } = require("discord.js");
 const { default_prefix ,color,error,owner } = require("../config.json")
 const db = require('quick.db')
 const ms = require('moment');
@@ -26,7 +26,7 @@ module.exports = {
   let auto = db.get(`autosniped_${newMessage.guild.id}`);
   if(auto === true) {
    let image = newMessage.attachments.first() ? newMessage.attachments.first().proxyURL : null
-    let embed = new MessageEmbed()
+    let embed = new EmbedBuilder()
     .setAuthor({name:`${newMessage.author.tag}`,iconURL:`${newMessage.author.displayAvatarURL()}`})
      .setDescription(' \```' + newMessage.content + '\``` ')
     .setTimestamp()
@@ -39,7 +39,7 @@ module.exports = {
       let chx = db.get(`logs_${newMessage.guild.id}`);
      if(chx) {
    let image = newMessage.attachments.first() ? newMessage.attachments.first().proxyURL : null
-    let embed = new MessageEmbed()
+    let embed = new EmbedBuilder()
 
      .setDescription(`**Mod Logs** <:allstarmoderation:1032192249754288169>  \n\n <:allstarreply:1032192256192553030> Message Deleted by ${newMessage.author.tag} <:allstarreply:1032192256192553030> \n `+' \```' + newMessage.content + '\```  \n  \```' + oldMessage.content + '\``` ')
 
@@ -60,7 +60,7 @@ module.exports = {
   let auto = db.get(`autosniped_${newMessage.guild.id}`);
   if(auto === true) {
    let image = newMessage.attachments.first() ? newMessage.attachments.first().proxyURL : null
-    let embed = new MessageEmbed()
+    let embed = new EmbedBuilder()
     .setAuthor({name:`${newMessage.author.tag}`,iconURL:`${newMessage.author.displayAvatarURL()}`})
           .setDescription(' \```' + newMessage.content + '\``` ')
     .setTimestamp()
@@ -71,7 +71,7 @@ module.exports = {
      let chx = db.get(`logs_${newMessage.guild.id}`);
      if(chx) {
    let image = newMessage.attachments.first() ? newMessage.attachments.first().proxyURL : null
-    let embed = new MessageEmbed()
+    let embed = new EmbedBuilder()
      .setDescription(`**Mod Logs** <:allstarmoderation:1032192249754288169>  \n\n <:allstarreply:1032192256192553030> Message Edited by ${newMessage.author.tag} <:allstarreply:1032192256192553030> \n `+' \```' + newMessage.content + '\``` \n \```' + oldMessage.content + '\``` ')
    
 
