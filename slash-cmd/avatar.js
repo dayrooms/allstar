@@ -1,5 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { MessageEmbed, MessageActionRow, MessageButton } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, ButtonBuilder, ButtonStyle } = require('discord.js');
 var fs = require('fs');
 const { normalize } = require('path');
 const { description } = require('../commands/usage');
@@ -16,30 +16,30 @@ module.exports.runCmd = async (client, interaction, generalData) => {
 
   const user = interaction.options.getUser('target') || interaction.user;
 
-  const row = new MessageActionRow()
+  const row = new ActionRowBuilder()
     .addComponents(
-      new MessageButton()
+      new ButtonBuilder()
         .setLabel('webp')
         .setEmoji("<:MessageLink:1010885859735785553>")
-        .setURL(`${user.displayAvatarURL({ format: "webp", dynamic: true, size: 4096 })}`)
-        .setStyle('LINK'),
+        .setURL(`${user.displayAvatarURL({ extension: "webp", size: 4096 })}`)
+        .setStyle(ButtonStyle.Link),
     )
     .addComponents(
-      new MessageButton()
+      new ButtonBuilder()
         .setLabel('jpg')
         .setEmoji("<:MessageLink:1010885859735785553>")
-        .setURL(`${user.displayAvatarURL({ format: "jpg", dynamic: true, size: 4096 })}`)
-        .setStyle('LINK'),
+        .setURL(`${user.displayAvatarURL({ extension: "jpg", size: 4096 })}`)
+        .setStyle(ButtonStyle.Link),
     )
     .addComponents(
-      new MessageButton()
+      new ButtonBuilder()
         .setLabel('png')
         .setEmoji("<:MessageLink:1010885859735785553>")
-        .setURL(`${user.displayAvatarURL({ format: "png", dynamic: true, size: 4096 })}`)
-        .setStyle('LINK'),
+        .setURL(`${user.displayAvatarURL({ extension: "png", size: 4096 })}`)
+        .setStyle(ButtonStyle.Link),
     )
-  let embed = new MessageEmbed()
-    .setImage((user.displayAvatarURL({ format: "png", dynamic: true, size: 4096 })))
+  let embed = new EmbedBuilder()
+    .setImage((user.displayAvatarURL({ extension: "png", size: 4096 })))
     .setFooter({ text: `${user.tag}` })
     .setColor("#7289da")
   await generalData.message.edit({ embeds: [embed], components: [row],ephemeral:true }).catch(() => {/*Ignore error*/ })
