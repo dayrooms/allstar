@@ -1,4 +1,4 @@
-const { MessageEmbed,MessageAttachment,Collection,Client } = require("discord.js");
+const { EmbedBuilder,AttachmentBuilder,Collection,Client } = require("discord.js");
 const { default_prefix ,color,error,owner } = require("../config.json")
 const db = require('quick.db')
 const ms = require('moment');
@@ -34,7 +34,7 @@ module.exports = {
   let auto = db.get(`autosniped_${message.guild.id}`);
   if(auto === true) {
    let image = message.attachments.first() ? message.attachments.first().proxyURL : null
-    let embed = new MessageEmbed()
+    let embed = new EmbedBuilder()
     .setAuthor({name:`${message.author.tag}`,iconURL:`${message.author.displayAvatarURL()}`})
      .setDescription(' \```' + message.content + '\``` ')
     .setTimestamp()
@@ -47,7 +47,7 @@ module.exports = {
    let chx = db.get(`logs_${message.guild.id}`);
      if(chx) {
    let image = message.attachments.first() ? message.attachments.first().proxyURL : null
-    let embed = new MessageEmbed()
+    let embed = new EmbedBuilder()
 
      .setDescription(`**Mod Logs** <:allstarmoderation:1032192249754288169>  \n\n <:allstarreply:1032192256192553030> Message Deleted by ${message.author.tag} <:allstarreply:1032192256192553030> \n\n `+' \```' + message.content + '\``` ')
 
@@ -75,7 +75,7 @@ module.exports = {
   let auto = db.get(`autosniped_${message.guild.id}`);
   if(auto === true) {
    let image = message.attachments.first() ? message.attachments.first().proxyURL : null
-    let embed = new MessageEmbed()
+    let embed = new EmbedBuilder()
     .setAuthor({name:`${message.author.tag}`,iconURL:`${message.author.displayAvatarURL()}`})
           .setDescription(' \```' + message.content + '\``` ')
     .setTimestamp()
@@ -86,7 +86,7 @@ module.exports = {
   let chx = db.get(`logs_${message.guild.id}`);
      if(chx) {
    let image = message.attachments.first() ? message.attachments.first().proxyURL : null
-    let embed = new MessageEmbed()
+    let embed = new EmbedBuilder()
      .setDescription(`**Mod Logs** <:allstarmoderation:1032192249754288169>  \n\n <:allstarreply:1032192256192553030> Message Deleted by ${message.author.tag} <:allstarreply:1032192256192553030> \n\n `+' \```' + message.content + '\``` ')
    
 
@@ -97,4 +97,3 @@ module.exports = {
     
   },
 };
-
