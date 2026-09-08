@@ -1,5 +1,4 @@
-
-const{ MessageEmbed, Permissions  } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const db = require('quick.db')
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const talkedRecently = new Set();
@@ -21,15 +20,15 @@ module.exports = {
              message.react(`⌛`)
     } else {
 
-    let checkenable = new MessageEmbed()
+    let checkenable = new EmbedBuilder()
     .setDescription(`<:allstarenabled:996521189986021386> Anti Spam Is Enabled `)
     .setThumbnail(`https://cdn.discordapp.com/attachments/991601306747813978/996704762110148688/IconServerSecurity_1.gif`)
     .setColor(color)
-    let checkdisabled = new MessageEmbed()
+    let checkdisabled = new EmbedBuilder()
     .setDescription(`<:allstardisabled:996521221749481516>  Anti Spam Is Disabled `)
     .setThumbnail(`https://cdn.discordapp.com/attachments/991601306747813978/996704762110148688/IconServerSecurity_1.gif`)
     .setColor(color)
-            let onlyown = new MessageEmbed()
+            let onlyown = new EmbedBuilder()
         .setDescription(`${xmark} Only server owner can use this command`)
         .setColor(error)
 
@@ -40,12 +39,12 @@ module.exports = {
      //if(message.author.id !== message.guild.ownerId) return message.channel.send({embeds:[onlyown]});
    if (!authorized.includes(message.author.id)) return message.reply({embeds:[onlyown]}).catch(() => {/*Ignore error*/})
 
-     let aenabled = new MessageEmbed().setDescription(`${checked} Anti Spam is now enabled`).setColor(color) 
-               let missperms = new MessageEmbed()
+     let aenabled = new EmbedBuilder().setDescription(`${checked} Anti Spam is now enabled`).setColor(color) 
+               let missperms = new EmbedBuilder()
         .setDescription(`${xmark} You're missing perms`)
         .setColor(error)
                
-        let nukeable = new MessageEmbed()
+        let nukeable = new EmbedBuilder()
         .setDescription(`${checked} Anti Spam enabled`)
         .setColor(color)
  if (args[0] == 'on') {
@@ -57,10 +56,10 @@ if (!authorized.includes(message.author.id)) return message.reply({embeds:[onlyo
 
       } else return message.reply({ embeds:[aenabled]}).catch(() => {/*Ignore error*/})
     } else if (args[0] == 'off') {
-         let disabled = new MessageEmbed()
+         let disabled = new EmbedBuilder()
          .setDescription(`${checked} Anti Spam is now disabled`)
          .setColor(color)
-          let alreadydisabled = new MessageEmbed()
+          let alreadydisabled = new EmbedBuilder()
          .setDescription(`${xmark} Anti Spam is disabled`)
          .setColor(error)
       if (await db.has(`antispam_${message.guild.id}`) === true) {
@@ -75,7 +74,7 @@ if (!authorized.includes(message.author.id)) return message.reply({embeds:[onlyo
       else if(antibot === true) {return message.reply({embeds:[checkenable]}).catch(() => {/*Ignore error*/}) }
       
     }else if(args[0] == 'info'){
-            let embed11 = new MessageEmbed()
+            let embed11 = new EmbedBuilder()
         .setDescription(`<:allstarmoderation:996512587397218344>  Anti Spam \n <:allstar:1001031487103193108> antiraid [on/off] info :\`quarantines every spammer \`  \n <:allstar:1001031487103193108> whitelisted users won't trigger the event`)
  
         .setColor(color)
