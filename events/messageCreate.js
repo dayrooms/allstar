@@ -1,4 +1,4 @@
-const { MessageEmbed,Permissions,MessageActionRow,MessageButton } = require("discord.js");
+const { EmbedBuilder,ActionRowBuilder,ButtonBuilder,ButtonStyle,ChannelType,MessageType } = require("discord.js");
 const { default_prefix ,color,error,owner,xmark,checked } = require("../config.json")
 const db = require('quick.db')
 const axios = require('axios')
@@ -10,7 +10,7 @@ module.exports = {
     if (message.author.bot) return;
  
     
-       if(message.type === 'USER_PREMIUM_GUILD_SUBSCRIPTION'){
+       if(message.type === MessageType.UserPremiumGuildSubscription){
 
        let channel = db.get(`boostchan_${message.guild.id}`)
        let welcome = db.get(`boostmsg_${message.guild.id}`)
@@ -20,7 +20,7 @@ module.exports = {
       welcome = welcome.replace('{user.tag}', message.author.tag);
       welcome = welcome.replace('{user.id}', message.author.id);
       welcome = welcome.replace('{boostcount}', message.guild.premiumSubscriptionCount);
-      welcome = welcome.replace('{levelcount}', message.guild.premiumTier.replace('TIER_', '' && 'NONE','0'));
+      welcome = welcome.replace('{levelcount}', String(message.guild.premiumTier));
       welcome = welcome.replace('{guild.name}', message.member.guild.name);
       welcome = welcome.replace('{guild.id}', message.member.guild.id);
        if(channel && welcome) client.channels.cache.get(channel).send({embeds:[
@@ -38,7 +38,7 @@ module.exports = {
     if (prefix2 === null) { prefix2 = default_prefix; }
     if (args1.length === 1 && message.mentions.users.has(client.user.id)) {
     let mentionedMember =  message.member;
-      const prefixEmbed = new MessageEmbed()
+      const prefixEmbed = new EmbedBuilder()
         .setDescription(`<:dbot_icon_settings:995777328946892810>  **Prefixes For ${message.author.username}** \n> Default Prefix: \`${default_prefix}\` \n> Server prefix: \`${db.get(`prefix_${message.guild.id}`)}\` \n> Custom Prefix: \`${db.get(`prefix_${message.author.id}` || "Not Set")}\``)
         .setColor(color)  
 
@@ -69,14 +69,14 @@ module.exports = {
       client.commands.find(
         (cmd) => cmd.aliases && cmd.aliases.includes(commandName)
       );
-           let embedsf = new MessageEmbed()
+           let embedsf = new EmbedBuilder()
       .setDescription(`${xmark} Command not found`)
        .setColor(error)
       
       
     if (!command) return;
 
-    if (command.guildOnly && message.channel.type !== "text") {
+    if (command.guildOnly && message.channel.type !== ChannelType.GuildText) {
     return;
     
     }
@@ -111,19 +111,19 @@ module.exports = {
         })
         }
       else {
-                  const row = new MessageActionRow().addComponents(
-             new MessageButton()
+                  const row = new ActionRowBuilder().addComponents(
+             new ButtonBuilder()
               .setCustomId('yes')
               .setEmoji("<:Blurple_check:1013176396861931630>")
-              .setStyle('SECONDARY'),
+              .setStyle(ButtonStyle.Secondary),
             
-            new MessageButton()
+            new ButtonBuilder()
               .setCustomId('no')
               .setEmoji("<:DW_X_Mark:1013176426763145216>")
-              .setStyle('SECONDARY')
+              .setStyle(ButtonStyle.Secondary)
           )
           let msg = message.reply({embeds:[
-            new MessageEmbed().setDescription(`Do you agree to allstars [Privacy policy](https://nekokouri.gitbook.io/allstar/details/privacy-policy) \n **Warning** Reacting with ${xmark} will blacklist you from using allstar`).setColor(color)
+            new EmbedBuilder().setDescription(`Do you agree to allstars [Privacy policy](https://nekokouri.gitbook.io/allstar/details/privacy-policy) \n **Warning** Reacting with ${xmark} will blacklist you from using allstar`).setColor(color)
           ],
                          components:[row]
                         })
@@ -143,7 +143,7 @@ module.exports = {
               
                       let trustedusers = db.get(`privacy`)
         if(trustedusers && trustedusers.find(find => find.user == message.author.id)) {
-          let trust = new MessageEmbed()
+          let trust = new EmbedBuilder()
           .setColor(error)
           .setDescription(`${xmark} That user is already whitelisted`)
         return 
@@ -152,7 +152,7 @@ let data = {
     user: message.author.id
 }
         db.push(`privacy`, data)
-        let added = new MessageEmbed()
+        let added = new EmbedBuilder()
         .setDescription(`
        ${checked}  You accepted to allstars privacy policy
         `)
@@ -172,10 +172,10 @@ let data = {
     user: message.author.id
 }
               db.push(`blacklisted`,data)
-           let embed = new MessageEmbed()
+           let embed = new EmbedBuilder()
           .setColor(color)
             return message.channel.send({embeds:[
-              new MessageEmbed().setDescription(`${xmark} now you'll be blacklisted from using commands`).setColor(color)
+              new EmbedBuilder().setDescription(`${xmark} now you'll be blacklisted from using commands`).setColor(color)
             ]})
             }
           })
