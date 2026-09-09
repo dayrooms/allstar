@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -20,9 +19,9 @@ module.exports = {
     } else {
         
 
-      let embed = new MessageEmbed()
+      let embed = new EmbedBuilder()
         //.addField(`memberCount`,`***${message.guild.memberCount}***`)
-        .addField(`Member Count `,`**Total ${message.guild.memberCount} **\n>  <:allstarhumans:996652234261659718> Humans : ${message.guild.memberCount - message.guild.members.cache.filter(member => member.user.bot).size} \n> <:allstarbots:996652601170993202> Bots : ${message.guild.members.cache.filter(member => member.user.bot).size}`)
+        .addFields({ name: `Member Count `, value: `**Total ${message.guild.memberCount} **\n>  <:allstarhumans:996652234261659718> Humans : ${message.guild.memberCount - message.guild.members.cache.filter(member => member.user.bot).size} \n> <:allstarbots:996652601170993202> Bots : ${message.guild.members.cache.filter(member => member.user.bot).size}` })
         .setColor(color)
          message.reply({embeds:[embed]}); 
       
