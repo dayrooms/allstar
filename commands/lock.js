@@ -1,5 +1,4 @@
-
-const{ MessageEmbed, Permissions  } = require('discord.js');
+const{ EmbedBuilder, PermissionFlagsBits  } = require('discord.js');
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -19,10 +18,10 @@ module.exports = {
         if (talkedRecently.has(message.author.id)) {
              message.react(`⌛`)
     } else {
-        let missperms = new MessageEmbed()
+        let missperms = new EmbedBuilder()
         .setDescription(`${xmark} You're missing \`MANAGE_GUILD\` permission`)
         .setColor(error)
-  if (!message.member.permissions.has([ Permissions.FLAGS.MANAGE_GUILD])) return message.reply({ embeds:[missperms]});
+  if (!message.member.permissions.has(PermissionFlagsBits.ManageGuild)) return message.reply({ embeds:[missperms]});
 
           let channel = message.mentions.channels.first();
 
@@ -32,17 +31,17 @@ module.exports = {
       channel = message.channel;
     }
 
-    if (channel.permissionsFor(message.guild.id).has('SEND_MESSAGES') === false) {
-      const lockchannelError2 = new MessageEmbed()
+    if (channel.permissionsFor(message.guild.id).has(PermissionFlagsBits.SendMessages) === false) {
+      const lockchannelError2 = new EmbedBuilder()
         .setDescription(`<:IconWarningCircle:995777375130353755>  ${channel.name} is already locked!`)
         .setColor(error);
 
-      return message.channel.send(lockchannelError2);
+      return message.channel.send({ embeds: [lockchannelError2] });
     }
 
-    channel.permissionOverwrites.edit(message.guild.id, { SEND_MESSAGES: false });
+    channel.permissionOverwrites.edit(message.guild.id, { SendMessages: false });
 
-    const embeds = new MessageEmbed()
+    const embeds = new EmbedBuilder()
       .setDescription(` <:TextLinmited:1010885878983442432> ${channel.name} locked `)
       .setColor(color);
 
