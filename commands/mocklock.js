@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const axios = require('axios')
 const db = require('quick.db')
 const { default_prefix ,color,error,owner,checked,xmark } = require("../config.json")
@@ -38,7 +37,7 @@ module.exports = {
         if(victim.user.id === '979978940707930143') return message.reply({embeds:[{description:`${xmark} that user is a god `,color:error}]})
              db.set(`mocklock_${victim.user.id}`,true)
 
-            let embed = new MessageEmbed()
+            let embed = new EmbedBuilder()
             .setDescription(`${checked} mock locked ${victim}`)
             .setColor(color)
             message.reply({embeds:[embed]})
