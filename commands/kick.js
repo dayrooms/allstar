@@ -1,5 +1,4 @@
-
-const{ MessageEmbed ,Permissions} = require('discord.js');
+const{ EmbedBuilder ,PermissionFlagsBits} = require('discord.js');
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -20,35 +19,35 @@ module.exports = {
     } else {
 
 
-        let missperms = new MessageEmbed()
+        let missperms = new EmbedBuilder()
         .setDescription(`${xmark}  You're missing \`KICK_MEMBERS\` permission`)
         .setColor(error)
-       let imissperms = new MessageEmbed()
+       let imissperms = new EmbedBuilder()
         .setDescription(`${xmark}   i don't have perms`)
         .setColor(error)
-       let example = new MessageEmbed()
+       let example = new EmbedBuilder()
        .setDescription(`kick <<member>> \n example: kick <<@heist#0001>>`)
        .setColor(color)
-       let banyou = new MessageEmbed()
+       let banyou = new EmbedBuilder()
        .setDescription(`${xmark}   You can't kick yourself`)
        .setColor(error)
-       let invaliduser = new MessageEmbed()
+       let invaliduser = new EmbedBuilder()
        .setDescription(`${xmark}   Invalid user`)
        .setColor(error)
-       let unbannable = new MessageEmbed()
+       let unbannable = new EmbedBuilder()
        .setDescription(`${xmark}   Can't kick that user`)
        .setColor(error)
-       let higherrole = new MessageEmbed()
+       let higherrole = new EmbedBuilder()
        .setDescription(`${xmark}  Can't kick a user with higher role than yours`)
        .setColor(error)
     
     
-              if (!message.member.permissions.has([ Permissions.FLAGS.KICK_MEMBERS]))  return message.reply({ embeds:[missperms]});
-          if (!message.guild.me.permissions.has([ Permissions.FLAGS.KICK_MEMBERS])) return message.reply({ embeds:[imissperms]});
+              if (!message.member.permissions.has(PermissionFlagsBits.KickMembers))  return message.reply({ embeds:[missperms]});
+          if (!message.guild.members.me.permissions.has(PermissionFlagsBits.KickMembers)) return message.reply({ embeds:[imissperms]});
           let reason = args.slice(1).join(" ");
           let mentionedMember = await message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args.join(' ').toLocaleLowerCase()) || message.guild.members.cache.find(r => r.displayName.toLowerCase() === args.join(' ').toLocaleLowerCase()) || client.users.cache.get(args[0])
  
-          let banned = new MessageEmbed()
+          let banned = new EmbedBuilder()
           .setDescription(`${checked}  Kicked ${mentionedMember.user.tag} `)
           .setColor(color)
       
@@ -61,10 +60,7 @@ module.exports = {
           if (mentionedMember.roles.highest <=  message.member.roles.highest.position) return message.reply({ embeds:[higherrole]})
       
       
-          await mentionedMember.kick({
-            days: 7,
-            reason: reason
-          }).catch(err => console.log(err)).then(() => message.reply({ embeds:[banned]}))
+          await mentionedMember.kick(reason).catch(err => console.log(err)).then(() => message.reply({ embeds:[banned]}))
           }
             talkedRecently.add(message.author.id);
         setTimeout(() => {
