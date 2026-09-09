@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,MessageButton,MessageActionRow } = require('discord.js');
+const{ EmbedBuilder,ButtonBuilder,ActionRowBuilder,ButtonStyle,ChannelType,GuildPremiumTier } = require("discord.js");
 const axios = require('axios')
 const ms = require('moment')
 const { default_prefix ,color,error,owner } = require("../config.json")
@@ -23,12 +22,12 @@ module.exports = {
              message.react(`⌛`)
     } else {
        
-        if (message.guild.premiumTier.includes('1')) {
+        if (message.guild.premiumTier === GuildPremiumTier.Tier1) {
           let levelemoji = `<:allstarboostlvl1:997557493360234596> `;
         }
-      else if (message.guild.premiumTier.includes('2')) {
+      else if (message.guild.premiumTier === GuildPremiumTier.Tier2) {
         let levelemoji = `<:allstarboostlvl2:997557538151211078> `;
-      } else if (message.guild.premiumTier.includes('3')) {
+      } else if (message.guild.premiumTier === GuildPremiumTier.Tier3) {
         let levelemoji = `<:allstarboostlvl2:997557580836638830> `;
       } let levelemoji = `<:887705796476018688:989122635705233418>`
          let x = message.guild.vanityURLCode 
@@ -43,7 +42,7 @@ module.exports = {
       VERY_HIGH: 'Highest'
     };  
           
-                let embed = new MessageEmbed()
+                let embed = new EmbedBuilder()
         .setAuthor({name:`${message.guild.name} `})
         .setThumbnail(message.guild.iconURL({dynamic:true}))
         .setColor(color)
@@ -71,13 +70,13 @@ module.exports = {
         },
         {
             name:`Boost`,
-            value: `${emoji} Level ${message.guild.premiumTier.replace('TIER_', '' && 'NONE','0')} \n${emoji} Boosts ${message.guild.premiumSubscriptionCount} `,
+            value:`${emoji} Level ${String(message.guild.premiumTier)} \n${emoji} Boosts ${message.guild.premiumSubscriptionCount} `,
             inline: true,
         },
 
         {
           name:`Channels`,
-          value: `${emoji} Text ${message.guild.channels.cache.filter(channel => channel.type == 'GUILD_TEXT').size} \n${emoji} Voice ${message.guild.channels.cache.filter(channel => channel.type == 'GUILD_VOICE').size}\n${emoji} Categories ${message.guild.channels.cache.filter(channel => channel.type == 'GUILD_CATEGORY').size}`,
+          value: `${emoji} Text ${message.guild.channels.cache.filter(channel => channel.type == ChannelType.GuildText).size} \n${emoji} Voice ${message.guild.channels.cache.filter(channel => channel.type == ChannelType.GuildVoice).size}\n${emoji} Categories ${message.guild.channels.cache.filter(channel => channel.type == ChannelType.GuildCategory).size}`,
           inline: true,
       },
         
@@ -89,13 +88,13 @@ module.exports = {
                   
         )
                 
-        const row = new MessageActionRow()
+        const row = new ActionRowBuilder()
         .addComponents(
-          new MessageButton()
+          new ButtonBuilder()
           .setLabel('icon')
           .setEmoji("<:MessageLink:1010885859735785553>")
           .setURL(`${message.guild.iconURL({dynamic:true,size:4096})}`)
-          .setStyle('LINK'),
+          .setStyle(ButtonStyle.Link),
          )
                 const data = await axios.get(`https://discord.com/api/guilds/${message.guild.id}`, {
             headers:{
@@ -111,19 +110,19 @@ module.exports = {
 
 
        if(url) row.addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          .setLabel('banner')
          .setEmoji("<:MessageLink:1010885859735785553>")
          .setURL(`${url}`)
-         .setStyle('LINK'),
+         .setStyle(ButtonStyle.Link),
         )
           
          if(message.guild.splashURL()) row.addComponents(
-         new MessageButton()
+         new ButtonBuilder()
          .setLabel('splash')
          .setEmoji("<:MessageLink:1010885859735785553>")
-         .setURL(`${message.guild.splashURL({format:"png",dynamic:false,size:4096})}`)
-         .setStyle('LINK'),
+         .setURL(`${message.guild.splashURL({extension:"png",forceStatic:true,size:4096})}`)
+         .setStyle(ButtonStyle.Link),
         ) 
 
       
@@ -131,7 +130,7 @@ module.exports = {
 
 
       /*
-        let embed = new MessageEmbed()
+        let embed = new EmbedBuilder()
         .setDescription(`${message.guild.name} \n <:allstar:1001031487103193108> ${message.guild.description}`)
         .setThumbnail(message.guild.iconURL({dynamic:true}))
         .setColor(color)
