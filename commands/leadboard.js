@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,MessageButton,MessageActionRow } = require('discord.js');
+const{ EmbedBuilder,ButtonBuilder,ActionRowBuilder } = require('discord.js');
 const db = require('quick.db')
 const { default_prefix ,color,error,owner } = require("../config.json")
 const talkedRecently = new Set();
@@ -39,7 +38,7 @@ module.exports = {
             .slice(0, 10)
             .join("\n");
 
-          let embed = new MessageEmbed()
+          let embed = new EmbedBuilder()
   
           .setColor(color)
           .setThumbnail(message.guild.iconURL({dynamic:true,size:4096}))
@@ -68,7 +67,7 @@ module.exports = {
                 .slice(0, 10)
                 .join("\n");
     
-              let embed = new MessageEmbed()
+              let embed = new EmbedBuilder()
       
               .setColor(color)
               .setThumbnail(message.guild.iconURL({dynamic:true,size:4096}))
