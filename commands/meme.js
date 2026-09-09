@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,MessageAttachment } = require('discord.js');
+const{ EmbedBuilder,AttachmentBuilder } = require('discord.js');
 const axios = require('axios')
 const { default_prefix ,color,error,owner } = require("../config.json")
 const talkedRecently = new Set();
@@ -21,7 +20,7 @@ module.exports = {
     } else {
       axios.get(`https://luminabot.xyz/api/json/meme`)
       .then(response => {
-        let embed = new MessageEmbed()
+        let embed = new EmbedBuilder()
         .setURL(`${response.data.url}`)
         .setTitle(`${response.data.title}`)
         .setDescription(`:thumbsup: : ${response.data.upvotes} | 💬 : ${response.data.comments}`)
