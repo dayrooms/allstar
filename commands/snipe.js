@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const db = require('quick.db')
 const talkedRecently = new Set();
@@ -24,14 +23,14 @@ module.exports = {
      // const msg = db.get(`sniped${message.channel.id}`)
       const msg = db.get(`snipeindex_${message.channel.id}`)
            
-            let ok = new MessageEmbed()
+            let ok = new EmbedBuilder()
         .setDescription(`${xmark} ${message.member} there are no recently deleted messages`)
         .setColor(error)
         
       if (msg === null) return message.reply({embeds:[ok]})
       msg.reverse()
       if(args[0] > msg.length) return message.reply({embeds:[{description:`${xmark} ${message.member} that index doesn't exist longest is ${msg.length} `,color:error}]})
-      let embed = new MessageEmbed()
+      let embed = new EmbedBuilder()
 
       .setAuthor({name:`${msg[args[0]  - 1|| 0].message.author}`,iconURL:`${msg[args[0]  - 1||0].message.avatar}`})
       .setDescription('' + msg[args[0]  - 1||0].message.content + '')
