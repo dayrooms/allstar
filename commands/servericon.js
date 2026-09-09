@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const { default_prefix ,color,error,owner } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -20,8 +19,8 @@ module.exports = {
              message.react(`⌛`)
     } else {
 
-          let embed = new MessageEmbed()
-          .setImage((message.guild.iconURL({ format: "png", dynamic: true, size: 4096 })))
+          let embed = new EmbedBuilder()
+          .setImage((message.guild.iconURL({ extension: "png", size: 4096 })))
           .setFooter({ text: `${message.guild.name}`})
           .setColor(color)
           await message.reply({embeds:[embed]}).catch(() => {/*Ignore error*/})
