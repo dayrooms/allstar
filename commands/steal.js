@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,Permissions,Util } = require('discord.js');
+const{ EmbedBuilder,PermissionFlagsBits,parseEmoji } = require('discord.js');
 const Discord = require('discord.js');
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const talkedRecently = new Set();
@@ -16,22 +15,22 @@ module.exports = {
 		user: [],
 	},
 	execute: async(message, args, client) => {
-        let missperms = new MessageEmbed()
+        let missperms = new EmbedBuilder()
         .setDescription(`${xmark} You're missing perms`)
         .setColor(error)
-        let imissperms = new MessageEmbed()
+        let imissperms = new EmbedBuilder()
         .setDescription(`${xmark}  i don't have perms`)
         .setColor(error)
 
 
         if (talkedRecently.has(message.author.id)) {
-          const getEmoji = Util.parseEmoji(args[0]);
+          const getEmoji = parseEmoji(args[0]);
                 if (getEmoji.id) {
         const emojiExt = getEmoji.animated ? '.gif' : '.png';
         const emojiURL = `https://cdn.discordapp.com/emojis/${getEmoji.id + emojiExt}`;
         await message.guild.emojis
-          .create(emojiURL, getEmoji.name)
-        let x = new MessageEmbed()
+          .create({ attachment: emojiURL, name: getEmoji.name })
+        let x = new EmbedBuilder()
       .setDescription(`${checked} Created Emote ${args[0]}`)
        .setColor(color)
        return message.reply({embeds:[x]})
@@ -40,37 +39,37 @@ module.exports = {
              message.react(`⌛`)
     } else {
 
-        if (!message.member.permissions.has([ Permissions.FLAGS.MANAGE_MESSAGES]))  return message.reply({ embeds:[missperms]});
-        if (!message.guild.me.permissions.has([ Permissions.FLAGS.MANAGE_MESSAGES])) return message.reply({ embeds:[imissperms]});
+        if (!message.member.permissions.has(PermissionFlagsBits.ManageMessages))  return message.reply({ embeds:[missperms]});
+        if (!message.guild.members.me.permissions.has(PermissionFlagsBits.ManageMessages)) return message.reply({ embeds:[imissperms]});
       
       
           if (!args[0]) {
-      const emojiEmbed = new MessageEmbed()
+      const emojiEmbed = new EmbedBuilder()
         .setDescription(`addemote <<emote>> \n example createmote <:jj_pls:996539162796769431> `)
         .setColor(color)
       if (!args[0]) return message.reply({embeds:[emojiEmbed]})
     }
      if(args[51]) {
-       let too = new MessageEmbed()
+       let too = new EmbedBuilder()
        .setDescription(`${xmark} You can't create more than 50 emojis`)
        .setColor(error)
        return message.reply({embeds:[too]})
      }
       let emojiss = new Array();
     for (const emojis of args) {
-      const getEmoji = Util.parseEmoji(emojis);
+      const getEmoji = parseEmoji(emojis);
 
       if (getEmoji.id) {
         const emojiExt = getEmoji.animated ? '.gif' : '.png';
         const emojiURL = `https://cdn.discordapp.com/emojis/${getEmoji.id + emojiExt}`;
         await message.guild.emojis
-          .create(emojiURL, getEmoji.name)
+          .create({ attachment: emojiURL, name: getEmoji.name })
           .then((emoji) => (
           emojiss.push(emoji)
         ))
       }
     }
-        let help = new MessageEmbed()
+        let help = new EmbedBuilder()
         .setDescription(`${checked} Succesfully Created ${emojiss.length} emojis `)
         .setColor(color)
     await message.reply({embeds:[help]});
