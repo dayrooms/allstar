@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,MessageAttachment } = require('discord.js');
+const{ EmbedBuilder,AttachmentBuilder } = require('discord.js');
 const canvacord = require("canvacord");
 const { default_prefix ,color,error,owner } = require("../config.json")
 const db = require('quick.db')
@@ -99,7 +98,7 @@ module.exports = {
 
 rank.build()
     .then(data => {
-  let attachment = new MessageAttachment(data,"rankcard.png")
+  let attachment = new AttachmentBuilder(data, { name: "rankcard.png" })
   message.reply({files:[attachment]})
         //canvacord.write(buffer, "RankCard.png");
     });
@@ -180,7 +179,7 @@ rank.build()
 
 rank.build()
     .then(data => {
-  let attachment = new MessageAttachment(data,"rankcard.png")
+  let attachment = new AttachmentBuilder(data, { name: "rankcard.png" })
   message.reply({files:[attachment]})
         //canvacord.write(buffer, "RankCard.png");
     });
