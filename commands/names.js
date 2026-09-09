@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,MessageButton, MessageActionRow } = require('discord.js');
+const{ EmbedBuilder,ButtonBuilder, ActionRowBuilder, ButtonStyle } = require('discord.js');
 const db = require('quick.db')
 const { default_prefix ,color,error,owner,xmark } = require("../config.json")
 const talkedRecently = new Set();
@@ -42,22 +41,22 @@ module.exports = {
           .join("\n");
 
 
-               const button1 = new MessageButton()
+               const button1 = new ButtonBuilder()
       .setCustomId('previousbtn')
       .setEmoji("<a:left:1033526539188449310>")
-      .setStyle('PRIMARY');
-            let invite2 = new MessageButton()
+      .setStyle(ButtonStyle.Primary);
+            let invite2 = new ButtonBuilder()
          .setLabel('Invite')
          .setURL("https://discord.com/api/oauth2/authorize?client_id=938863295543251024&permissions=8&scope=bot%20applications.commands")
-         .setStyle('LINK')
-      const button2 = new MessageButton()
+         .setStyle(ButtonStyle.Link)
+      const button2 = new ButtonBuilder()
       .setCustomId('nextbtn')
       .setEmoji("<:right:1033526800401317928> ")
-      .setStyle('PRIMARY');
-       const button3 = new MessageButton()
+      .setStyle(ButtonStyle.Primary);
+       const button3 = new ButtonBuilder()
       .setCustomId('fastp')
       .setEmoji("<:DW_X_Mark:1032345318127304806>")
-      .setStyle('DANGER');
+      .setStyle(ButtonStyle.Danger);
 
 
 
@@ -66,8 +65,8 @@ module.exports = {
       button3,
       button2,
   ]
-    const row = new MessageActionRow().addComponents(buttonList);
-        let embed = new MessageEmbed()
+    const row = new ActionRowBuilder().addComponents(buttonList);
+        let embed = new EmbedBuilder()
 
         .setColor(color)
         .setTitle(`${mentionedMember.user.tag} Names History`)
@@ -119,7 +118,7 @@ const collector = await curPage.createMessageComponentCollector({
                 .setTitle(`${mentionedMember.user.tag} Names History`)
                 .setThumbnail(mentionedMember.user.displayAvatarURL({dynamic:true,size:4096}))
                   .setFooter(
-                    `Page - ${page}/${Math.round(data.length / 10 + 1)} (${data.length}) names`
+                    { text: `Page - ${page}/${Math.round(data.length / 10 + 1)} (${data.length}) names` }
                   )
                   .setDescription(description)
               //   .setThumbnail(message.guild.iconURL({dynamic:true,size:4096}));
