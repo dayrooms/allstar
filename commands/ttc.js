@@ -1,4 +1,4 @@
-var { MessageActionRow, MessageButton, MessageEmbed } = require("discord.js")
+const{ ActionRowBuilder, ButtonBuilder, ButtonStyle, ComponentType, EmbedBuilder } = require("discord.js")
 const ai = require('tictactoe-complex-ai');
 
 module.exports = {
@@ -15,91 +15,91 @@ module.exports = {
     },
     execute: async (message, args, client) => {
 
-        var r1_b1 = new MessageButton()
+        var r1_b1 = new ButtonBuilder()
             .setCustomId('r1_b1_1')
             .setLabel("\u200B")
-            .setStyle('SECONDARY')
-        var r1_b2 = new MessageButton()
+            .setStyle(ButtonStyle.Secondary)
+        var r1_b2 = new ButtonBuilder()
             .setCustomId('r1_b2_2')
             .setLabel("\u200B")
-            .setStyle('SECONDARY')
-        var r1_b3 = new MessageButton()
+            .setStyle(ButtonStyle.Secondary)
+        var r1_b3 = new ButtonBuilder()
             .setCustomId('r1_b3_3')
             .setLabel("\u200B")
-            .setStyle('SECONDARY')
-        var r2_b1 = new MessageButton()
+            .setStyle(ButtonStyle.Secondary)
+        var r2_b1 = new ButtonBuilder()
             .setCustomId('r2_b1_4')
             .setLabel("\u200B")
-            .setStyle('SECONDARY')
-        var r2_b2 = new MessageButton()
+            .setStyle(ButtonStyle.Secondary)
+        var r2_b2 = new ButtonBuilder()
             .setCustomId('r2_b2_5')
             .setLabel("\u200B")
-            .setStyle('SECONDARY')
-        var r2_b3 = new MessageButton()
+            .setStyle(ButtonStyle.Secondary)
+        var r2_b3 = new ButtonBuilder()
             .setCustomId('r2_b3_6')
             .setLabel("\u200B")
-            .setStyle('SECONDARY')
-        var r3_b1 = new MessageButton()
+            .setStyle(ButtonStyle.Secondary)
+        var r3_b1 = new ButtonBuilder()
             .setCustomId('r3_b1_7')
             .setLabel("\u200B")
-            .setStyle('SECONDARY')
-        var r3_b2 = new MessageButton()
+            .setStyle(ButtonStyle.Secondary)
+        var r3_b2 = new ButtonBuilder()
             .setCustomId('r3_b2_8')
             .setLabel("\u200B")
-            .setStyle('SECONDARY')
-        var r3_b3 = new MessageButton()
+            .setStyle(ButtonStyle.Secondary)
+        var r3_b3 = new ButtonBuilder()
             .setCustomId('r3_b3_9')
             .setLabel("\u200B")
-            .setStyle('SECONDARY')
-        var end_game = new MessageButton()
+            .setStyle(ButtonStyle.Secondary)
+        var end_game = new ButtonBuilder()
             .setCustomId('end_game_rps')
             .setLabel("End Game")
-            .setStyle('PRIMARY')
-        var r1 = new MessageActionRow()
+            .setStyle(ButtonStyle.Primary)
+        var r1 = new ActionRowBuilder()
             .addComponents(r1_b1)
             .addComponents(r1_b2)
             .addComponents(r1_b3)
-        var r2 = new MessageActionRow()
+        var r2 = new ActionRowBuilder()
             .addComponents(r2_b1)
             .addComponents(r2_b2)
             .addComponents(r2_b3)
-        var r3 = new MessageActionRow()
+        var r3 = new ActionRowBuilder()
             .addComponents(r3_b1)
             .addComponents(r3_b2)
             .addComponents(r3_b3)
-        var r4 = new MessageActionRow()
+        var r4 = new ActionRowBuilder()
             .addComponents(end_game)
-        const Buttons = new MessageActionRow()
+        const Buttons = new ActionRowBuilder()
             .addComponents(
-                new MessageButton()
+                new ButtonBuilder()
                     .setCustomId('easy_diff')
                     .setLabel("Easy")
-                    .setStyle('PRIMARY')
+                    .setStyle(ButtonStyle.Primary)
             ).addComponents(
-                new MessageButton()
+                new ButtonBuilder()
                     .setCustomId('medium_diff')
                     .setLabel("Medium")
-                    .setStyle('PRIMARY')
+                    .setStyle(ButtonStyle.Primary)
             ).addComponents(
-                new MessageButton()
+                new ButtonBuilder()
                     .setCustomId('hard_diff')
                     .setLabel("Hard")
-                    .setStyle('PRIMARY')
+                    .setStyle(ButtonStyle.Primary)
             ).addComponents(
-                new MessageButton()
+                new ButtonBuilder()
                     .setCustomId('expert_diff')
                     .setLabel("Expert")
-                    .setStyle('PRIMARY')
+                    .setStyle(ButtonStyle.Primary)
             );
-        const embed = new MessageEmbed()
-            .setColor("RANDOM")
+        const embed = new EmbedBuilder()
+            .setColor("Random")
             .setTitle("Tic-Tac-Toe Game")
             .setDescription("You can play against an AI with 4 different difficulties varying from Easy to Expert. Please select your difficulty below to begin a game. *Multiplayer will be supported in the future.*")
 
-            .setFooter(`Allstar`, client.user.displayAvatarURL())
+            .setFooter({ text: `Allstar`, iconURL: client.user.displayAvatarURL() })
             .setTimestamp(Date.now())
         var msg = await message.channel.send({ embeds: [embed], components: [Buttons] })
-        const collector = msg.createMessageComponentCollector({ componentType: 'BUTTON', time: 1000 * 60 * 10 });
+        const collector = msg.createMessageComponentCollector({ componentType: ComponentType.Button, time: 1000 * 60 * 10 });
         var diff = null;
         var diffC = ""
         var board = ['', '', '', '', '', '', '', '', ''];
@@ -144,20 +144,20 @@ module.exports = {
             })
             await i.deferUpdate()
             if (i.customId === "end_game_rps") {
-                r1_b1 = new MessageButton().setCustomId("r1_b1_1").setLabel("" === board[0] ? "​" : board[0]).setStyle("SECONDARY").setDisabled(!0), r1_b2 = new MessageButton().setCustomId("r1_b2_2").setLabel("" === board[1] ? "​" : board[1]).setStyle("SECONDARY").setDisabled(!0), r1_b3 = new MessageButton().setCustomId("r1_b3_3").setLabel("" === board[2] ? "​" : board[2]).setStyle("SECONDARY").setDisabled(!0), r2_b1 = new MessageButton().setCustomId("r2_b1_4").setLabel("" === board[3] ? "​" : board[3]).setStyle("SECONDARY").setDisabled(!0), r2_b2 = new MessageButton().setCustomId("r2_b2_5").setLabel("" === board[4] ? "​" : board[4]).setStyle("SECONDARY").setDisabled(!0), r2_b3 = new MessageButton().setCustomId("r2_b3_6").setLabel("" === board[5] ? "​" : board[5]).setStyle("SECONDARY").setDisabled(!0), r3_b1 = new MessageButton().setCustomId("r3_b1_7").setLabel("" === board[6] ? "​" : board[6]).setStyle("SECONDARY").setDisabled(!0), r3_b2 = new MessageButton().setCustomId("r3_b2_8").setLabel("" === board[7] ? "​" : board[7]).setStyle("SECONDARY").setDisabled(!0), r3_b3 = new MessageButton().setCustomId("r3_b3_9").setLabel("" === board[8] ? "​" : board[8]).setStyle("SECONDARY").setDisabled(!0);
-                r1 = new MessageActionRow().addComponents(r1_b1).addComponents(r1_b2).addComponents(r1_b3), r2 = new MessageActionRow().addComponents(r2_b1).addComponents(r2_b2).addComponents(r2_b3), r3 = new MessageActionRow().addComponents(r3_b1).addComponents(r3_b2).addComponents(r3_b3);
+                r1_b1 = new ButtonBuilder().setCustomId("r1_b1_1").setLabel("" === board[0] ? "​" : board[0]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r1_b2 = new ButtonBuilder().setCustomId("r1_b2_2").setLabel("" === board[1] ? "​" : board[1]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r1_b3 = new ButtonBuilder().setCustomId("r1_b3_3").setLabel("" === board[2] ? "​" : board[2]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r2_b1 = new ButtonBuilder().setCustomId("r2_b1_4").setLabel("" === board[3] ? "​" : board[3]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r2_b2 = new ButtonBuilder().setCustomId("r2_b2_5").setLabel("" === board[4] ? "​" : board[4]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r2_b3 = new ButtonBuilder().setCustomId("r2_b3_6").setLabel("" === board[5] ? "​" : board[5]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r3_b1 = new ButtonBuilder().setCustomId("r3_b1_7").setLabel("" === board[6] ? "​" : board[6]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r3_b2 = new ButtonBuilder().setCustomId("r3_b2_8").setLabel("" === board[7] ? "​" : board[7]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r3_b3 = new ButtonBuilder().setCustomId("r3_b3_9").setLabel("" === board[8] ? "​" : board[8]).setStyle(ButtonStyle.Secondary).setDisabled(!0);
+                r1 = new ActionRowBuilder().addComponents(r1_b1).addComponents(r1_b2).addComponents(r1_b3), r2 = new ActionRowBuilder().addComponents(r2_b1).addComponents(r2_b2).addComponents(r2_b3), r3 = new ActionRowBuilder().addComponents(r3_b1).addComponents(r3_b2).addComponents(r3_b3);
                 game_ended = true;
                 collector.stop();
                 return msg.edit({
-                    embeds: [new MessageEmbed()
-                        .setColor("WHITE")
+                    embeds: [new EmbedBuilder()
+                        .setColor("White")
                         .setTitle(`Tic-Tac-Toe Game [${diffC}] (You: X, AI: O)`)
                         .setDescription("Game Ended, the game has been ended by the player. The board is shown below.")], components: [r1, r2, r3]
                 })
             }
             if (cnp === true) return await i.editReply({
-                embeds: [new MessageEmbed()
-                    .setColor("RED")
+                embeds: [new EmbedBuilder()
+                    .setColor("Red")
                     .setTitle(`Tic-Tac-Toe Game [${diffC}]`)
                     .setDescription("You're not allowed to play when it is not your turn!")], ephemeral: true
             })
@@ -168,8 +168,8 @@ module.exports = {
                 diffC = diffC.join("")
                 aiInstance = ai.createAI({ level: diff });
                 await msg.edit({
-                    embeds: [new MessageEmbed()
-                        .setColor("RANDOM")
+                    embeds: [new EmbedBuilder()
+                        .setColor("Random")
                         .setTitle(`Tic-Tac-Toe Game [${diffC}] (You: X, AI: O)`)
                         .setDescription("Welcome to TicTacToe! Im sure you know how to play this. To play simply use the buttons below. Good Luck!")], components: [r1, r2, r3, r4]
                 })
@@ -182,32 +182,32 @@ module.exports = {
                 board[num - 1] = "X"
                 eval(`r${row}_b${btn}.setDisabled(true)`)
                 eval(`r${row}_b${btn}.setLabel("X")`)
-                eval(`r${row}_b${btn}.setStyle("SUCCESS")`)
-                r1 = new MessageActionRow()
+                eval(`r${row}_b${btn}.setStyle(ButtonStyle.Success)`)
+                r1 = new ActionRowBuilder()
                     .addComponents(r1_b1)
                     .addComponents(r1_b2)
                     .addComponents(r1_b3)
-                r2 = new MessageActionRow()
+                r2 = new ActionRowBuilder()
                     .addComponents(r2_b1)
                     .addComponents(r2_b2)
                     .addComponents(r2_b3)
-                r3 = new MessageActionRow()
+                r3 = new ActionRowBuilder()
                     .addComponents(r3_b1)
                     .addComponents(r3_b2)
                     .addComponents(r3_b3)
                 await msg.edit({
-                    embeds: [new MessageEmbed()
-                        .setColor("RANDOM")
+                    embeds: [new EmbedBuilder()
+                        .setColor("Random")
                         .setTitle(`Tic-Tac-Toe Game [${diffC}] (You: X, AI: O)`)
                         .setDescription("Welcome to TicTacToe! Im sure you know how to play this. To play simply use the buttons below. Good Luck!")], components: [r1, r2, r3, r4]
                 })
                 has_won_q(board)
                 if (game_ended === true) {
-                    r1_b1 = new MessageButton().setCustomId("r1_b1_1").setLabel("" === board[0] ? "​" : board[0]).setStyle("SECONDARY").setDisabled(!0), r1_b2 = new MessageButton().setCustomId("r1_b2_2").setLabel("" === board[1] ? "​" : board[1]).setStyle("SECONDARY").setDisabled(!0), r1_b3 = new MessageButton().setCustomId("r1_b3_3").setLabel("" === board[2] ? "​" : board[2]).setStyle("SECONDARY").setDisabled(!0), r2_b1 = new MessageButton().setCustomId("r2_b1_4").setLabel("" === board[3] ? "​" : board[3]).setStyle("SECONDARY").setDisabled(!0), r2_b2 = new MessageButton().setCustomId("r2_b2_5").setLabel("" === board[4] ? "​" : board[4]).setStyle("SECONDARY").setDisabled(!0), r2_b3 = new MessageButton().setCustomId("r2_b3_6").setLabel("" === board[5] ? "​" : board[5]).setStyle("SECONDARY").setDisabled(!0), r3_b1 = new MessageButton().setCustomId("r3_b1_7").setLabel("" === board[6] ? "​" : board[6]).setStyle("SECONDARY").setDisabled(!0), r3_b2 = new MessageButton().setCustomId("r3_b2_8").setLabel("" === board[7] ? "​" : board[7]).setStyle("SECONDARY").setDisabled(!0), r3_b3 = new MessageButton().setCustomId("r3_b3_9").setLabel("" === board[8] ? "​" : board[8]).setStyle("SECONDARY").setDisabled(!0);
-                    r1 = new MessageActionRow().addComponents(r1_b1).addComponents(r1_b2).addComponents(r1_b3), r2 = new MessageActionRow().addComponents(r2_b1).addComponents(r2_b2).addComponents(r2_b3), r3 = new MessageActionRow().addComponents(r3_b1).addComponents(r3_b2).addComponents(r3_b3);
+                    r1_b1 = new ButtonBuilder().setCustomId("r1_b1_1").setLabel("" === board[0] ? "​" : board[0]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r1_b2 = new ButtonBuilder().setCustomId("r1_b2_2").setLabel("" === board[1] ? "​" : board[1]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r1_b3 = new ButtonBuilder().setCustomId("r1_b3_3").setLabel("" === board[2] ? "​" : board[2]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r2_b1 = new ButtonBuilder().setCustomId("r2_b1_4").setLabel("" === board[3] ? "​" : board[3]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r2_b2 = new ButtonBuilder().setCustomId("r2_b2_5").setLabel("" === board[4] ? "​" : board[4]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r2_b3 = new ButtonBuilder().setCustomId("r2_b3_6").setLabel("" === board[5] ? "​" : board[5]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r3_b1 = new ButtonBuilder().setCustomId("r3_b1_7").setLabel("" === board[6] ? "​" : board[6]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r3_b2 = new ButtonBuilder().setCustomId("r3_b2_8").setLabel("" === board[7] ? "​" : board[7]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r3_b3 = new ButtonBuilder().setCustomId("r3_b3_9").setLabel("" === board[8] ? "​" : board[8]).setStyle(ButtonStyle.Secondary).setDisabled(!0);
+                    r1 = new ActionRowBuilder().addComponents(r1_b1).addComponents(r1_b2).addComponents(r1_b3), r2 = new ActionRowBuilder().addComponents(r2_b1).addComponents(r2_b2).addComponents(r2_b3), r3 = new ActionRowBuilder().addComponents(r3_b1).addComponents(r3_b2).addComponents(r3_b3);
                     return msg.edit({
-                        embeds: [new MessageEmbed()
-                            .setColor("GREEN")
+                        embeds: [new EmbedBuilder()
+                            .setColor("Green")
                             .setTitle(`Tic-Tac-Toe Game [${diffC}] (You: X, AI: O)`)
                             .setDescription(`Congrats! You have won the game against the AI. The board is shown below`)], components: [r1, r2, r3]
                     })
@@ -226,34 +226,34 @@ module.exports = {
                     if (pos === 8) row = 3, btn = 3;
                     eval(`r${row}_b${btn}.setDisabled(true)`)
                     eval(`r${row}_b${btn}.setLabel("O")`)
-                    eval(`r${row}_b${btn}.setStyle("DANGER")`)
-                    r1 = new MessageActionRow()
+                    eval(`r${row}_b${btn}.setStyle(ButtonStyle.Danger)`)
+                    r1 = new ActionRowBuilder()
                         .addComponents(r1_b1)
                         .addComponents(r1_b2)
                         .addComponents(r1_b3)
-                    r2 = new MessageActionRow()
+                    r2 = new ActionRowBuilder()
                         .addComponents(r2_b1)
                         .addComponents(r2_b2)
                         .addComponents(r2_b3)
-                    r3 = new MessageActionRow()
+                    r3 = new ActionRowBuilder()
                         .addComponents(r3_b1)
                         .addComponents(r3_b2)
                         .addComponents(r3_b3)
                     await msg.edit({
-                        embeds: [new MessageEmbed()
-                            .setColor("RANDOM")
+                        embeds: [new EmbedBuilder()
+                            .setColor("Random")
                             .setTitle(`Tic-Tac-Toe Game [${diffC}] (You: X, AI: O)`)
                             .setDescription("Welcome to TicTacToe! Im sure you know how to play this. To play simply use the buttons below. Good Luck!")], components: [r1, r2, r3, r4]
                     })
                     has_won_q(board)
                     cnp = false;
                     if (game_ended === true) {
-                        r1_b1 = new MessageButton().setCustomId("r1_b1_1").setLabel("" === board[0] ? "​" : board[0]).setStyle("SECONDARY").setDisabled(!0), r1_b2 = new MessageButton().setCustomId("r1_b2_2").setLabel("" === board[1] ? "​" : board[1]).setStyle("SECONDARY").setDisabled(!0), r1_b3 = new MessageButton().setCustomId("r1_b3_3").setLabel("" === board[2] ? "​" : board[2]).setStyle("SECONDARY").setDisabled(!0), r2_b1 = new MessageButton().setCustomId("r2_b1_4").setLabel("" === board[3] ? "​" : board[3]).setStyle("SECONDARY").setDisabled(!0), r2_b2 = new MessageButton().setCustomId("r2_b2_5").setLabel("" === board[4] ? "​" : board[4]).setStyle("SECONDARY").setDisabled(!0), r2_b3 = new MessageButton().setCustomId("r2_b3_6").setLabel("" === board[5] ? "​" : board[5]).setStyle("SECONDARY").setDisabled(!0), r3_b1 = new MessageButton().setCustomId("r3_b1_7").setLabel("" === board[6] ? "​" : board[6]).setStyle("SECONDARY").setDisabled(!0), r3_b2 = new MessageButton().setCustomId("r3_b2_8").setLabel("" === board[7] ? "​" : board[7]).setStyle("SECONDARY").setDisabled(!0), r3_b3 = new MessageButton().setCustomId("r3_b3_9").setLabel("" === board[8] ? "​" : board[8]).setStyle("SECONDARY").setDisabled(!0);
-                        r1 = new MessageActionRow().addComponents(r1_b1).addComponents(r1_b2).addComponents(r1_b3), r2 = new MessageActionRow().addComponents(r2_b1).addComponents(r2_b2).addComponents(r2_b3), r3 = new MessageActionRow().addComponents(r3_b1).addComponents(r3_b2).addComponents(r3_b3);
+                        r1_b1 = new ButtonBuilder().setCustomId("r1_b1_1").setLabel("" === board[0] ? "​" : board[0]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r1_b2 = new ButtonBuilder().setCustomId("r1_b2_2").setLabel("" === board[1] ? "​" : board[1]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r1_b3 = new ButtonBuilder().setCustomId("r1_b3_3").setLabel("" === board[2] ? "​" : board[2]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r2_b1 = new ButtonBuilder().setCustomId("r2_b1_4").setLabel("" === board[3] ? "​" : board[3]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r2_b2 = new ButtonBuilder().setCustomId("r2_b2_5").setLabel("" === board[4] ? "​" : board[4]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r2_b3 = new ButtonBuilder().setCustomId("r2_b3_6").setLabel("" === board[5] ? "​" : board[5]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r3_b1 = new ButtonBuilder().setCustomId("r3_b1_7").setLabel("" === board[6] ? "​" : board[6]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r3_b2 = new ButtonBuilder().setCustomId("r3_b2_8").setLabel("" === board[7] ? "​" : board[7]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r3_b3 = new ButtonBuilder().setCustomId("r3_b3_9").setLabel("" === board[8] ? "​" : board[8]).setStyle(ButtonStyle.Secondary).setDisabled(!0);
+                        r1 = new ActionRowBuilder().addComponents(r1_b1).addComponents(r1_b2).addComponents(r1_b3), r2 = new ActionRowBuilder().addComponents(r2_b1).addComponents(r2_b2).addComponents(r2_b3), r3 = new ActionRowBuilder().addComponents(r3_b1).addComponents(r3_b2).addComponents(r3_b3);
 
                         return msg.edit({
-                            embeds: [new MessageEmbed()
-                                .setColor("RED")
+                            embeds: [new EmbedBuilder()
+                                .setColor("Red")
                                 .setTitle(`Tic-Tac-Toe Game [${diffC}] (You: X, AI: O)`)
                                 .setDescription(`You have been defeated by an AI. You should feel stupid! The board is shown below.`)], components: [r1, r2, r3]
                         })
@@ -261,12 +261,12 @@ module.exports = {
                 }).catch(async () => {
                     game_ended = true;
                     collector.stop();
-                    r1_b1 = new MessageButton().setCustomId("r1_b1_1").setLabel("" === board[0] ? "​" : board[0]).setStyle("SECONDARY").setDisabled(!0), r1_b2 = new MessageButton().setCustomId("r1_b2_2").setLabel("" === board[1] ? "​" : board[1]).setStyle("SECONDARY").setDisabled(!0), r1_b3 = new MessageButton().setCustomId("r1_b3_3").setLabel("" === board[2] ? "​" : board[2]).setStyle("SECONDARY").setDisabled(!0), r2_b1 = new MessageButton().setCustomId("r2_b1_4").setLabel("" === board[3] ? "​" : board[3]).setStyle("SECONDARY").setDisabled(!0), r2_b2 = new MessageButton().setCustomId("r2_b2_5").setLabel("" === board[4] ? "​" : board[4]).setStyle("SECONDARY").setDisabled(!0), r2_b3 = new MessageButton().setCustomId("r2_b3_6").setLabel("" === board[5] ? "​" : board[5]).setStyle("SECONDARY").setDisabled(!0), r3_b1 = new MessageButton().setCustomId("r3_b1_7").setLabel("" === board[6] ? "​" : board[6]).setStyle("SECONDARY").setDisabled(!0), r3_b2 = new MessageButton().setCustomId("r3_b2_8").setLabel("" === board[7] ? "​" : board[7]).setStyle("SECONDARY").setDisabled(!0), r3_b3 = new MessageButton().setCustomId("r3_b3_9").setLabel("" === board[8] ? "​" : board[8]).setStyle("SECONDARY").setDisabled(!0);
-                    r1 = new MessageActionRow().addComponents(r1_b1).addComponents(r1_b2).addComponents(r1_b3), r2 = new MessageActionRow().addComponents(r2_b1).addComponents(r2_b2).addComponents(r2_b3), r3 = new MessageActionRow().addComponents(r3_b1).addComponents(r3_b2).addComponents(r3_b3);
+                    r1_b1 = new ButtonBuilder().setCustomId("r1_b1_1").setLabel("" === board[0] ? "​" : board[0]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r1_b2 = new ButtonBuilder().setCustomId("r1_b2_2").setLabel("" === board[1] ? "​" : board[1]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r1_b3 = new ButtonBuilder().setCustomId("r1_b3_3").setLabel("" === board[2] ? "​" : board[2]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r2_b1 = new ButtonBuilder().setCustomId("r2_b1_4").setLabel("" === board[3] ? "​" : board[3]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r2_b2 = new ButtonBuilder().setCustomId("r2_b2_5").setLabel("" === board[4] ? "​" : board[4]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r2_b3 = new ButtonBuilder().setCustomId("r2_b3_6").setLabel("" === board[5] ? "​" : board[5]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r3_b1 = new ButtonBuilder().setCustomId("r3_b1_7").setLabel("" === board[6] ? "​" : board[6]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r3_b2 = new ButtonBuilder().setCustomId("r3_b2_8").setLabel("" === board[7] ? "​" : board[7]).setStyle(ButtonStyle.Secondary).setDisabled(!0), r3_b3 = new ButtonBuilder().setCustomId("r3_b3_9").setLabel("" === board[8] ? "​" : board[8]).setStyle(ButtonStyle.Secondary).setDisabled(!0);
+                    r1 = new ActionRowBuilder().addComponents(r1_b1).addComponents(r1_b2).addComponents(r1_b3), r2 = new ActionRowBuilder().addComponents(r2_b1).addComponents(r2_b2).addComponents(r2_b3), r3 = new ActionRowBuilder().addComponents(r3_b1).addComponents(r3_b2).addComponents(r3_b3);
 
                     return msg.edit({
-                        embeds: [new MessageEmbed()
-                            .setColor("YELLOW")
+                        embeds: [new EmbedBuilder()
+                            .setColor("Yellow")
                             .setTitle(`Tic-Tac-Toe Game [${diffC}] (You: X, AI: O)`)
                             .setDescription("Game Ended, It's a tie! The board is shown below.")], components: [r1, r2, r3]
                     })
@@ -277,8 +277,8 @@ module.exports = {
         collector.on('end', collected => {
             if (game_ended === true) return;
             return msg.edit({
-                embeds: [new MessageEmbed()
-                    .setColor("YELLOW")
+                embeds: [new EmbedBuilder()
+                    .setColor("Yellow")
                     .setTitle(`Tic-Tac-Toe Game [${diffC}]`)
                     .setDescription("Game Ended, the game either ended because the timeout limit was reached or the AI failed to respond.")], components: []
             })
