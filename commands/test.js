@@ -1,3 +1,4 @@
+const { EmbedBuilder } = require("discord.js");
 module.exports = {
     name: 'test',
     description: '',
@@ -11,7 +12,7 @@ module.exports = {
     },
     execute: async (message, args, client) => {
         var Paginator = require("../Paginator.js").Paginator
-        var paginator = new Paginator(client, message, [new MessageEmbed().setColor("#FFFFFF").setTitle("hi").setDescription("Hello!"), new MessageEmbed().setColor("#FFFFFF").setTitle("hi2").setDescription("Hello2!"), new MessageEmbed().setColor("#FFFFFF").setTitle("hi3").setDescription("Hello3!")], 3);
+        var paginator = new Paginator(client, message, [new EmbedBuilder().setColor("#FFFFFF").setTitle("hi").setDescription("Hello!"), new EmbedBuilder().setColor("#FFFFFF").setTitle("hi2").setDescription("Hello2!"), new EmbedBuilder().setColor("#FFFFFF").setTitle("hi3").setDescription("Hello3!")], 3);
         paginator.setTimeout(60000)
         paginator.setAuthors([message.author.id])
         paginator.on("Error", function (error) {
