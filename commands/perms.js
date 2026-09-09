@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const { default_prefix ,color,error,owner } = require("../config.json")
 const moment = require('moment');
 const talkedRecently = new Set();
@@ -36,10 +35,10 @@ module.exports = {
 
 
         
-        let embed = new MessageEmbed()
+        let embed = new EmbedBuilder()
         .setThumbnail(mentionedMember.user.displayAvatarURL({dynamic:true}))
         .setColor(color)
-        .addField(`${mentionedMember.user.username} Permissions`,`${`${mentionedMember.permissions.toArray().sort((a, b) => a.localeCompare(b)).map(p=> `\`${p}\``).join(", ")}`}`)
+        .addFields({ name: `${mentionedMember.user.username} Permissions`, value: `${`${mentionedMember.permissions.toArray().sort((a, b) => a.localeCompare(b)).map(p=> `\`${p}\``).join(", ")}`}` })
 
         message.reply({embeds:[embed]});
 
