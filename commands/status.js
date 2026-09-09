@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,MessageAttachment,MessageActionRow,MessageButton } = require('discord.js');
+const{ EmbedBuilder, ActivityType } = require('discord.js');
 
 const canvacord = require("canvacord");
 const { default_prefix ,color,error,owner ,xmark} = require("../config.json")
@@ -27,11 +26,21 @@ module.exports = {
 let mentionedMember = await message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args.join(' ').toLocaleLowerCase()) || message.guild.members.cache.find(r => r.displayName.toLowerCase() === args.join(' ').toLocaleLowerCase()) || client.users.cache.get(args[0])
 
 if(!mentionedMember) mentionedMember = message.guild.members.cache.get(message.author.id)
-            if(mentionedMember.presence == null) return message.reply({embeds:[new MessageEmbed().setDescription(`${xmark} That user is offline`).setColor(error)]})
+            if(mentionedMember.presence == null) return message.reply({embeds:[new EmbedBuilder().setDescription(`${xmark} That user is offline`).setColor(error)]})
       
       
-            if(mentionedMember.presence.activities[0] === 'undefined') return  message.reply({embeds:[new MessageEmbed().setDescription(`${xmark} ${mentionedMember.user.username} doesn't have an activity `).setColor(error)]})
-           if(!mentionedMember.presence.activities[0]) return  message.reply({embeds:[new MessageEmbed().setDescription(`${xmark} ${mentionedMember.user.username} doesn't have an activity `).setColor(error)]})
+            if(mentionedMember.presence.activities[0] === 'undefined') return  message.reply({embeds:[new EmbedBuilder().setDescription(`${xmark} ${mentionedMember.user.username} doesn't have an activity `).setColor(error)]})
+           if(!mentionedMember.presence.activities[0]) return  message.reply({embeds:[new EmbedBuilder().setDescription(`${xmark} ${mentionedMember.user.username} doesn't have an activity `).setColor(error)]})
+
+  const activityTypeNames = {
+    [ActivityType.Playing]: 'playing',
+    [ActivityType.Streaming]: 'streaming',
+    [ActivityType.Listening]: 'listening to',
+    [ActivityType.Watching]: 'watching',
+    [ActivityType.Custom]: 'custom',
+    [ActivityType.Competing]: 'competing in',
+  };
+  const activityTypeName = (activity) => activityTypeNames[activity.type] || activity.type.toString();
            
   try {
     
@@ -39,12 +48,12 @@ if(!mentionedMember) mentionedMember = message.guild.members.cache.get(message.a
             let style = 'R'
             let started = `<t:${Math.floor(mentionedMember.presence.activities[0].timestamps.start/1000)}` + (style ? `:${style}` : '') + '>'
         
-            const embed = new MessageEmbed()
-            .setDescription(`${mentionedMember.user.username} is ${mentionedMember.presence.activities[0].type.toLowerCase() } ${mentionedMember.presence.activities[0].name} since ${started}`)
+            const embed = new EmbedBuilder()
+            .setDescription(`${mentionedMember.user.username} is ${activityTypeName(mentionedMember.presence.activities[0]) } ${mentionedMember.presence.activities[0].name} since ${started}`)
                 .addFields(
                 {
                   name:`Type`,
-                  value:`${mentionedMember.presence.activities[0].type.toLowerCase() }`,
+                  value:`${activityTypeName(mentionedMember.presence.activities[0]) }`,
                   inline:true
                 },
                   {
@@ -57,12 +66,12 @@ if(!mentionedMember) mentionedMember = message.guild.members.cache.get(message.a
             message.reply({embeds:[embed]}) 
                
   }catch{
-                const embed = new MessageEmbed()
-            .setDescription(`${mentionedMember.user.username} is ${mentionedMember.presence.activities[0].type.toLowerCase() } ${mentionedMember.presence.activities[0].name} `)
+                const embed = new EmbedBuilder()
+            .setDescription(`${mentionedMember.user.username} is ${activityTypeName(mentionedMember.presence.activities[0]) } ${mentionedMember.presence.activities[0].name} `)
                 .addFields(
                 {
                   name:`Type`,
-                  value:`${mentionedMember.presence.activities[0].type.toLowerCase() }`,
+                  value:`${activityTypeName(mentionedMember.presence.activities[0]) }`,
                   inline:true
                 },
                   {
