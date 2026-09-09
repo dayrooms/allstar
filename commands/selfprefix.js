@@ -1,5 +1,4 @@
-
-const{ MessageEmbed , Permissions} = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const db = require('quick.db')
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const talkedRecently = new Set();
@@ -22,22 +21,22 @@ module.exports = {
     } else {
 
 
-        let missperms = new MessageEmbed()
+        let missperms = new EmbedBuilder()
        .setDescription(`${xmark} You're missing \`MANAGE_ROLES\` permission`)
         .setColor(error)
-        let missprefix = new MessageEmbed()
+        let missprefix = new EmbedBuilder()
         .setDescription(`${xmark} Please provide A Prefix`)
         .setColor(error)
-        let doublec = new MessageEmbed()
+        let doublec = new EmbedBuilder()
         .setDescription(`${xmark} You cannot set prefix to a double argument`)
         .setColor(error)
-        let lengthprefix = new MessageEmbed()
+        let lengthprefix = new EmbedBuilder()
         .setDescription(`${xmark}  prefix can't be longer than 3 characters`)
         .setColor(error)
-        let resetfix = new MessageEmbed()
+        let resetfix = new EmbedBuilder()
         .setDescription(`${checked}  prefix has been reset to Default`)
         .setColor(color)
-        let succesfulfix = new MessageEmbed()
+        let succesfulfix = new EmbedBuilder()
         .setDescription(`${checked}  Prefix updated to ${args[1]}`)
         .setColor(color)
     /*
@@ -66,7 +65,7 @@ module.exports = {
       if(userfix === null) userfix = `Not Set`
       
             let mentionedMember =  message.member;
-      const prefixEmbed = new MessageEmbed()
+      const prefixEmbed = new EmbedBuilder()
         .setDescription(`<:Settings:1032717784456626226>   **Global Prefix For ${message.author.username}**  \n> Custom Prefix: \`${userfix || "Not Set"}\``)
         .setColor(color)  
       message.reply({embeds:[prefixEmbed]})
