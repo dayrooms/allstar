@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const { default_prefix ,color,error,owner,xmark,checked } = require("../config.json")
 const db = require('quick.db')
 const talkedRecently = new Set();
@@ -28,7 +27,7 @@ module.exports = {
      if (!authorized.includes(message.author.id)) return 
                   let mentionedMember = await message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args.join(' ').toLocaleLowerCase()) || message.guild.members.cache.find(r => r.displayName.toLowerCase() === args.join(' ').toLocaleLowerCase()) 
                   if(! mentionedMember) {
-                    let usermention = new MessageEmbed()
+                    let usermention = new EmbedBuilder()
                     .setDescription(`${xmark}  Mention a user/ID`)
                     .setColor(error)
                     return message.reply({
@@ -39,7 +38,7 @@ module.exports = {
                   let database = db.get(`blacklisted`)
                   if(database) {
                       let data = database.find(x => x.user ===  mentionedMember.user.id)
-                    let unabletofind = new MessageEmbed()
+                    let unabletofind = new EmbedBuilder()
                     .setDescription(`${xmark}  Could not find that user in the database`)
                     .setColor(error)
                       if(!data) return message.reply({embeds:[unabletofind]})
@@ -52,7 +51,7 @@ module.exports = {
                       })
                     
                       db.set(`blacklisted`, filter)
-                    let deleted = new MessageEmbed()
+                    let deleted = new EmbedBuilder()
                     .setDescription(`${checked} Removed ${ mentionedMember} From command blacklist `)
                     .setColor(color)
                     
@@ -61,7 +60,7 @@ module.exports = {
                     });
                     
                   } else {          
-                      let notrust = new MessageEmbed()
+                      let notrust = new EmbedBuilder()
                       .setDescription(`${xmark}  That user is not blacklisted`)
                       .setColor(error)
                   message.reply({embeds:[notrust]})
