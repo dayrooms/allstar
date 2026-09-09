@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const axios = require('axios')
 const db = require('quick.db')
 const { default_prefix ,color,error,owner,checked } = require("../config.json")
@@ -36,7 +35,7 @@ module.exports = {
 
              db.delete(`mocklock_${victim.user.id}`)
 
-            let embed = new MessageEmbed()
+            let embed = new EmbedBuilder()
             .setDescription(`${checked} mock unlocked ${victim}`)
             .setColor(color)
             message.reply({embeds:[embed]})
