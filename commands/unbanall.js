@@ -1,5 +1,4 @@
-
-const{ MessageEmbed, Permissions,MessageActionRow,MessageButton  } = require('discord.js');
+const{ EmbedBuilder, PermissionFlagsBits,ActionRowBuilder,ButtonBuilder,ButtonStyle  } = require('discord.js');
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -19,31 +18,31 @@ module.exports = {
              message.react(`⌛`)
     } else {
 
-                let missperms = new MessageEmbed()
+                let missperms = new EmbedBuilder()
         .setDescription(`${xmark} You're missing \`BAN_MEMBERS\` permission`)
         .setColor(error)
-       let imissperms = new MessageEmbed()
+       let imissperms = new EmbedBuilder()
         .setDescription(`${xmark}  i don't have perms`)
         .setColor(error)
-            if (!message.member.permissions.has([ Permissions.FLAGS.BAN_MEMBERS]))  return message.reply({ embeds:[missperms]});
-        if (!message.guild.me.permissions.has([ Permissions.FLAGS.BAN_MEMBERS])) return message.reply({ embeds:[imissperms]});
+            if (!message.member.permissions.has(PermissionFlagsBits.BanMembers))  return message.reply({ embeds:[missperms]});
+        if (!message.guild.members.me.permissions.has(PermissionFlagsBits.BanMembers)) return message.reply({ embeds:[imissperms]});
 
        
 
       
-                const row = new MessageActionRow().addComponents(
-             new MessageButton()
+                const row = new ActionRowBuilder().addComponents(
+             new ButtonBuilder()
               .setCustomId('yes')
               .setEmoji("<:Blurple_check:1013176396861931630>")
-              .setStyle('SECONDARY'),
+              .setStyle(ButtonStyle.Secondary),
             
-            new MessageButton()
+            new ButtonBuilder()
               .setCustomId('no')
               .setEmoji("<:DW_X_Mark:1013176426763145216>")
-              .setStyle('SECONDARY')
+              .setStyle(ButtonStyle.Secondary)
           )
           let msg = message.reply({embeds:[
-            new MessageEmbed().setDescription(`Are you sure you want to unban everyone ?.`).setColor(color)
+            new EmbedBuilder().setDescription(`Are you sure you want to unban everyone ?.`).setColor(color)
           ],
                          components:[row]
                         }).then(m => {
@@ -64,11 +63,11 @@ module.exports = {
             const id = ButtonInteraction.first().customId;
             if(id === 'yes') {
 
-        let nobannded = new MessageEmbed()
+        let nobannded = new EmbedBuilder()
         .setTitle(`${xmark}  There are no banned users`)
         .setTimestamp()
         .setColor(error)
-        let embed = new MessageEmbed()
+        let embed = new EmbedBuilder()
         .setTitle(`${checked}  Unbanning everyone`)
         .setTimestamp()
         .setColor(color)
@@ -84,11 +83,11 @@ module.exports = {
       })
             }
             if(id === 'no') {
-                           let embed = new MessageEmbed()
+                           let embed = new EmbedBuilder()
           .setTitle(`Canceled`)
           .setColor(color)
             message.channel.send({embeds:[
-              new MessageEmbed().setDescription(`${checked} Succesfully Canceled`).setColor(color)
+              new EmbedBuilder().setDescription(`${checked} Succesfully Canceled`).setColor(color)
             ]})
             }
           })
