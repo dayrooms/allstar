@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,Permissions } = require('discord.js');
+const{ EmbedBuilder,PermissionFlagsBits } = require('discord.js');
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -18,21 +17,21 @@ module.exports = {
                 if (talkedRecently.has(message.author.id)) {
              message.react(`⌛`)
     } else {
-              let missperms = new MessageEmbed()
+              let missperms = new EmbedBuilder()
     .setDescription(`${xmark} You're missing \`MANAGE_MESSAGES\` permission`)
     .setColor(error)
-   let imissperms = new MessageEmbed()
+   let imissperms = new EmbedBuilder()
     .setDescription(`${xmark} i don't have perms`)
     .setColor(error)
-          let invaliduser = new MessageEmbed()
+          let invaliduser = new EmbedBuilder()
        .setDescription(`${xmark} Invalid user`)
        .setColor(error)
-       let higherrole = new MessageEmbed()
+       let higherrole = new EmbedBuilder()
        .setDescription(`${xmark} Can't mute a user with higher role than yours`)
        .setColor(error)
    
-        if (!message.member.permissions.has([ Permissions.FLAGS.MANAGE_MESSAGES]))  return message.reply({ embeds:[missperms]});
-        if (!message.guild.me.permissions.has([ Permissions.FLAGS.MANAGE_MESSAGES])) return message.reply({ embeds:[imissperms]});
+        if (!message.member.permissions.has(PermissionFlagsBits.ManageMessages))  return message.reply({ embeds:[missperms]});
+        if (!message.guild.members.me.permissions.has(PermissionFlagsBits.ManageMessages)) return message.reply({ embeds:[imissperms]});
        
       
 
@@ -40,16 +39,16 @@ module.exports = {
   
       if(!member) return message.reply({ embeds:[invaliduser]})
       if (message.member.roles.highest.comparePositionTo(member.roles.highest) <= 0) return message.reply({ embeds:[higherrole]})
-      let help = new MessageEmbed()
+      let help = new EmbedBuilder()
       .setDescription(`${xmark} Provide an user to [timeout/removetimeout]`)
       .setColor(error)
-      let cant = new MessageEmbed()
+      let cant = new EmbedBuilder()
       .setDescription(`${xmark} I can't access that user`)
       .setColor(error)
-               let one = new MessageEmbed()
+               let one = new EmbedBuilder()
           .setDescription(`${checked}  User has been Timedout`)
           .setColor(color)
-                        let done = new MessageEmbed()
+                        let done = new EmbedBuilder()
           .setDescription(`${checked}  User has been Removed from Timeout`)
           .setColor(color)
       if (!member) {
