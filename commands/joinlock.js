@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const db = require('quick.db')
 const { default_prefix ,color,error,owner,checked,xmark } = require("../config.json")
 const talkedRecently = new Set();
@@ -20,7 +19,7 @@ module.exports = {
         if (talkedRecently.has(message.author.id)) {
              message.react(`⌛`)
     } else {
-              let onlyown = new MessageEmbed()
+              let onlyown = new EmbedBuilder()
         .setDescription(`${xmark} Only server owner can use this command`)
         .setColor(error)
 
@@ -35,7 +34,7 @@ module.exports = {
       if(args[0] === 'on'){
         db.set(`joinlock_${message.guild.id}`,true)
         message.reply({embeds:[
-          new MessageEmbed()
+          new EmbedBuilder()
           .setDescription(`${checked} Join lock is now enabled`)
           .setColor(color)
         ]})
@@ -43,7 +42,7 @@ module.exports = {
       else if(args[0] === 'off'){
         db.delete(`joinlock_${message.guild.id}`)
          message.reply({embeds:[
-          new MessageEmbed()
+          new EmbedBuilder()
           .setDescription(`${checked} Join lock is now disabled`)
           .setColor(color)
         ]})
