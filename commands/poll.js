@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder, PermissionFlagsBits } = require('discord.js');
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -21,16 +20,16 @@ module.exports = {
     } else {
           
     
-            let missperms = new MessageEmbed()
+            let missperms = new EmbedBuilder()
         .setDescription(`${xmark} You're missing \`MANAGE_MESSAGES\` permission`)
         .setColor(error)
-       let imissperms = new MessageEmbed()
+       let imissperms = new EmbedBuilder()
         .setDescription(`${xmark}  i don't have perms`)
         .setColor(error)
-    if (!message.member.permissions.has("MANAGE_MESSAGES")) return message.reply({embds:[missperms]});
-    if (!message.guild.me.permissions.has("MANAGE_MESSAGES")) return message.reply({embeds:[imissperms]});
+    if (!message.member.permissions.has(PermissionFlagsBits.ManageMessages)) return message.reply({embds:[missperms]});
+    if (!message.guild.members.me.permissions.has(PermissionFlagsBits.ManageMessages)) return message.reply({embeds:[imissperms]});
       
-      let x = new MessageEmbed()
+      let x = new EmbedBuilder()
       .setDescription(`${xmark} You need to provide a question`)
       .setColor(error)
       
@@ -39,7 +38,7 @@ module.exports = {
       if(message.attachments.first()) {
 
          let msg = args.join(' ');
-          let embed = new MessageEmbed()
+          let embed = new EmbedBuilder()
         .setDescription(` ${msg}`)
         .setColor(color)
       .setImage(`${message.attachments.first().url}`)
@@ -51,7 +50,7 @@ module.exports = {
       } else {
 
         let msg = args.join(' ');
-        let embed = new MessageEmbed()
+        let embed = new EmbedBuilder()
       .setDescription(` ${msg}`)
       .setColor(color)
         .setFooter({text:`Poll Created by ${message.author.tag}`})
