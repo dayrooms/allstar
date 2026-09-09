@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,Permissions,Util } = require('discord.js');
+const{ EmbedBuilder,PermissionFlagsBits,parseEmoji } = require('discord.js');
 const Discord = require('discord.js');
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const talkedRecently = new Set();
@@ -16,10 +15,10 @@ module.exports = {
 		user: [],
 	},
 	execute: async(message, args, client) => {
-        let missperms = new MessageEmbed()
+        let missperms = new EmbedBuilder()
         .setDescription(`${xmark} You're missing perms`)
         .setColor(error)
-        let imissperms = new MessageEmbed()
+        let imissperms = new EmbedBuilder()
         .setDescription(`${xmark}  i don't have perms`)
         .setColor(error)
 
@@ -28,16 +27,16 @@ module.exports = {
              message.react(`⌛`)
     } else {
       if(args[0] === 'steal'){
-        if (!message.member.permissions.has([ Permissions.FLAGS.MANAGE_MESSAGES]))  return message.reply({ embeds:[missperms]});
-        if (!message.guild.me.permissions.has([ Permissions.FLAGS.MANAGE_MESSAGES])) return message.reply({ embeds:[imissperms]});
+        if (!message.member.permissions.has(PermissionFlagsBits.ManageMessages))  return message.reply({ embeds:[missperms]});
+        if (!message.guild.members.me.permissions.has(PermissionFlagsBits.ManageMessages)) return message.reply({ embeds:[imissperms]});
       
-        const getSticker= Util.parseEmoji(args[1]);
+        const getSticker= parseEmoji(args[1]);
         if (getSticker.id) {
 const stickerExt = getSticker.animated ? '.gif' : '.png';
 const stickerURL = `https://cdn.discordapp.com/emojis/${getSticker.id + stickerExt}`;
 await message.guild.stickers
-  .create(stickerURL, getSticker.name,message.guild.name)
-let x = new MessageEmbed()
+  .create({ file: stickerURL, name: getSticker.name, tags: message.guild.name })
+let x = new EmbedBuilder()
 .setDescription(`${checked} Created Sticker ${getSticker.name}`)
 .addFields({
   name:`ID`,
@@ -55,8 +54,8 @@ return message.reply({embeds:[x]})
       }else if(args[0] === 'add'){
             try {
                    await message.guild.stickers
-     .create(args[1], message.author.username,message.guild.name)
-        let x = new MessageEmbed()
+     .create({ file: args[1], name: message.author.username, tags: message.guild.name })
+        let x = new EmbedBuilder()
          .setDescription(`${checked} Created Sticker `)
          .setImage(args[1])
          .setColor(color)
