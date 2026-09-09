@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,MessageAttachment,MessageActionRow,MessageButton } = require('discord.js');
+const{ EmbedBuilder,ActionRowBuilder,ButtonBuilder,ButtonStyle } = require("discord.js");
 const { default_prefix ,color,error,owner } = require("../config.json")
 const axios = require('axios')
 
@@ -31,14 +30,14 @@ module.exports = {
               axios.get(`https://api.rival.rocks/tiktok?url=${args[0]}&api-key=0fe401ac-8ca9-4885-8973-7619eab605ad`)
                 .then(async response => {
                         var link = `${response.data.items}`
-                               const row = new MessageActionRow()
+                               const row = new ActionRowBuilder()
 
                               .addComponents(
-                                  new MessageButton()
+                                  new ButtonBuilder()
                                     .setLabel('Video Link')
                                     .setEmoji("<:tiktok:1038387756021334026> ")
                                     .setURL(`${args[0]}`)
-                                    .setStyle('LINK'),
+                                    .setStyle(ButtonStyle.Link),
                                    )
                             message.delete()
                       await message.channel.send({files:[
@@ -47,12 +46,11 @@ module.exports = {
                             name: 'allstar.mp4'
                         }
                       ],embeds:[
-                        new MessageEmbed()
-                        .addField(`<:tiktok:1038387756021334026>   @${response.data.username}(${response.data.nickname})`,`> ${response.data.desc} \n> \`💬\` ${response.data.stats.comment_count_formatted} \`👍\` ${response.data.stats.digg_count_formatted} \`🔗\` ${response.data.stats.download_count_formatted}  (${response.data.stats.play_count_formatted} views)  \n> \`🎵\`  ${response.data.music.title}  ( ${response.data.music.author}) `)
+                        new EmbedBuilder()
+                        .addFields({ name: `<:tiktok:1038387756021334026>   @${response.data.username}(${response.data.nickname})`, value: `> ${response.data.desc} \n> \`💬\` ${response.data.stats.comment_count_formatted} \`👍\` ${response.data.stats.digg_count_formatted} \`🔗\` ${response.data.stats.download_count_formatted}  (${response.data.stats.play_count_formatted} views)  \n> \`🎵\`  ${response.data.music.title}  ( ${response.data.music.author}) ` })
                         .setFooter({text:`requested by : ${message.author.tag}`})
                         .setColor("#000000")
                       ],components:[row]})
-                        message.channel.stopTyping()
                           .catch(err => { console.log(error)}); // if sending of the Discord message itself failed
                   })
                    
