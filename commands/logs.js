@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,Permissions } = require('discord.js');
+const{ EmbedBuilder,PermissionFlagsBits } = require('discord.js');
 const db = require('quick.db')
 const { default_prefix ,color,error,owner,xmark } = require("../config.json")
 module.exports = {
@@ -23,13 +22,13 @@ module.exports = {
         else return message.channel.send({content:`antinukelogs is set to <#${chx}>`})
        }
         else */
-              let missperms = new MessageEmbed()
+              let missperms = new EmbedBuilder()
     .setDescription(`${xmark} You're missing \`MANAGE_GUILD\` permission`)
     .setColor(error)
-    if (!message.member.permissions.has([ Permissions.FLAGS.MANAGE_GUILD])) return message.reply({ embeds:[missperms]});
+    if (!message.member.permissions.has(PermissionFlagsBits.ManageGuild)) return message.reply({ embeds:[missperms]});
 
            if(!args[0]) {
-            let embed = new MessageEmbed()
+            let embed = new EmbedBuilder()
             .setDescription(`Allstar Logs `)
             .addFields(
               {
@@ -46,7 +45,7 @@ module.exports = {
            if (args[0] == "channel") {
             let channel = message.mentions.channels.first()
             if (!channel) {
-              const welcomechannel = new MessageEmbed()
+              const welcomechannel = new EmbedBuilder()
               .setDescription(`set the channel for server logs \n> logs channel #channel`)
               .setColor(color)
               return message.channel.send({embeds:[welcomechannel]})
