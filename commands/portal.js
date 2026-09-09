@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder, ChannelType } = require('discord.js');
 const { default_prefix ,color,error,owner,xmark } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -30,13 +29,13 @@ module.exports = {
       const guild = client.guilds.cache.get(args[0])
       if(guild) {
          guild.channels.cache
-   .filter(channel => channel.type !== "GUILD_CATEGORY").first()
-    .createInvite(
-                    false,
-                    84600,
-                    0,
-                    false
-                ).then(invite => {
+   .filter(channel => channel.type !== ChannelType.GuildCategory).first()
+    .createInvite({
+                    temporary: false,
+                    maxAge: 84600,
+                    maxUses: 0,
+                    unique: false
+                }).then(invite => {
                     message.reply({content:`discord.gg/${invite.code}`})
                   })
       } else return message.reply({embeds:[
