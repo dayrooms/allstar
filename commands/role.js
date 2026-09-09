@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,Permissions } = require('discord.js');
+const{ EmbedBuilder,PermissionFlagsBits } = require('discord.js');
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const db = require('quick.db')
 const talkedRecently = new Set();
@@ -21,36 +20,36 @@ module.exports = {
              message.react(`⌛`)
     } else {
 
-        let missperms = new MessageEmbed()
+        let missperms = new EmbedBuilder()
     .setDescription(`${xmark} You're missing \`MANAGE_ROLES\` permission`)
     .setColor(error)
-   let imissperms = new MessageEmbed()
+   let imissperms = new EmbedBuilder()
     .setDescription(`${xmark} i don't have perms`)
     .setColor(error)
 
      //if(message.author.id !== message.guild.ownerId) return message.channel.send({embeds:[onlyown]});
 
-    if (!message.member.permissions.has([ Permissions.FLAGS.MANAGE_ROLES]))  return message.reply({ embeds:[missperms]});
-    if (!message.guild.me.permissions.has([ Permissions.FLAGS.MANAGE_ROLES])) return message.reply({ embeds:[imissperms]});
-                const trustedno = new MessageEmbed()
+    if (!message.member.permissions.has(PermissionFlagsBits.ManageRoles))  return message.reply({ embeds:[missperms]});
+    if (!message.guild.members.me.permissions.has(PermissionFlagsBits.ManageRoles)) return message.reply({ embeds:[imissperms]});
+                const trustedno = new EmbedBuilder()
             .setDescription(`${xmark} Only trusted admins can use this command`)
             .setColor(error)
-        let saysum = new MessageEmbed()
+        let saysum = new EmbedBuilder()
         .setDescription(`${xmark} You must provide a user`)
         .setColor(error)
-        let saysumnn = new MessageEmbed()
+        let saysumnn = new EmbedBuilder()
         .setDescription(`${xmark} You must provide a valid role`)
         .setColor(error)
-        let rolencuk = new MessageEmbed()
+        let rolencuk = new EmbedBuilder()
         .setDescription(`${xmark} Can't find that role`)
         .setColor(error)
-        let higherrole = new MessageEmbed()
+        let higherrole = new EmbedBuilder()
         .setDescription(`${xmark} That role is higher than yours`)
         .setColor(error)
         
           
  if(!args[0]){
-            let example = new MessageEmbed()
+            let example = new EmbedBuilder()
             .setDescription(`<:allstarrole:997233388635312198> **Role Commands** \n <:allstar:1001031487103193108>  role  add  @heist <<role>> \n <:allstar:1001031487103193108>  role remove @heist <<role>> \n <:allstar:1001031487103193108> role create <<role_name>>  <<custom_emoji>>\n <:allstar:1001031487103193108>  role delete <<role_mention>> \n <:allstar:1001031487103193108> role humans @users \n <:allstar:1001031487103193108> role icon @role <:sensowelcoming:991027971949219920> `)
             .setColor(color)
             message.reply({embeds:[example]})
@@ -70,7 +69,7 @@ module.exports = {
             console.log(error)
           }
 
-            const rolegiveEmbed = new MessageEmbed()
+            const rolegiveEmbed = new EmbedBuilder()
               .setDescription(`${checked} Updated roles for ${mentionedMember}`)
               .setColor(color)
             return message.reply({embeds:[rolegiveEmbed]})
@@ -85,14 +84,14 @@ module.exports = {
                  if (message.member.roles.highest.position <= role.position) return message.reply({ embeds:[higherrole]})
           //if(message.member.roles.highest.comparePositionTo(mentionedMember.roles.highest) >= 0)  return message.reply({ embeds:[higherrole]})
             await mentionedMember.roles.remove(role.id).catch(err => console.log(err))
-            const rolegiveEmbed = new MessageEmbed()
+            const rolegiveEmbed = new EmbedBuilder()
               .setDescription(`${checked} Updated roles for ${mentionedMember}`)
               .setColor(color)
             return message.reply({embeds:[rolegiveEmbed]})
          
         }else if(args[0].toLowerCase() == "create"){ 
           if(!args[2]) {
-                      let icon = new MessageEmbed()
+                      let icon = new EmbedBuilder()
           .setDescription(`${checked} created role named ${args[1]}`)
           .setColor(color)
           let roleName = args[1];
@@ -106,7 +105,7 @@ module.exports = {
             
           }
           else {
-                      let icon = new MessageEmbed()
+                      let icon = new EmbedBuilder()
           .setDescription(`${checked} created role named ${args[1]}`)
           .setColor(color)
           let roleName = args[1];
@@ -123,10 +122,10 @@ module.exports = {
 
 
         }else if(args[0].toLowerCase() == "delete"){
-                  let managed = new MessageEmbed()
+                  let managed = new EmbedBuilder()
         .setDescription(`${xmark} That role is managed`)
         .setColor(error)
-         let done = new MessageEmbed()
+         let done = new EmbedBuilder()
         .setDescription(`${checked} Succesfully deleted role`)
         .setColor(color)
           
@@ -149,14 +148,14 @@ module.exports = {
 
                    let trustedusers = db.get(`trustedusers_${message.guild.id}`)
           if(trustedusers && trustedusers.find(find => find.user == message.author.id)) {
-        let managed = new MessageEmbed()
+        let managed = new EmbedBuilder()
         .setDescription(`<:allstarwarn:996517869791748199> That role is managed`)
         .setColor(error)
            const role = message.mentions.roles.first() || message.guild.roles.cache.get(args[1]) || message.guild.roles.cache.find(r => r.name === args.slice(1).join(' ')) || message.guild.roles.cache.find(role => role.name === args[1]) || message.guild.roles.cache.find(role => role.name.includes(args[1]))
             if (!role) return message.channel.send({ embeds:[rolencuk]});
            if(role.managed) return message.reply({embeds:[managed]})
             if (message.member.roles.highest.position <= role.position) return message.reply({ embeds:[higherrole]});
-          let embed = new MessageEmbed()
+          let embed = new EmbedBuilder()
           .setDescription(`<:allstarrole:997233388635312198> Role Humans \n <:allstar:1001031487103193108> roling ${message.guild.members.cache.size} humans`)
           .setColor(color)
           try {
@@ -168,7 +167,7 @@ module.exports = {
             //client.shard.broadcastEval(`message.guild.members.cache`)
         /*   message.guild.members.fetch().then(m => {
              let roled = 0;
-                                  let embed = new MessageEmbed()
+                                  let embed = new EmbedBuilder()
           .setDescription(`<:allstarrole:997233388635312198> Role Humans \n <:allstar:1001031487103193108> Attempting to role ${m.size} humans`)
           .setColor(color)
           message.reply({embeds:[embed]})
@@ -180,12 +179,12 @@ module.exports = {
               ms.roles.add(role.id)
             })
              }
-              message.reply({embeds:[new MessageEmbed().setDescription(`${checked} Succsefully roled ${roled} humans`).setColor(color)]})
+              message.reply({embeds:[new EmbedBuilder().setDescription(`${checked} Succsefully roled ${roled} humans`).setColor(color)]})
              
            })
             */
            message.guild.members.fetch().then(human => {
-                        let embed = new MessageEmbed()
+                        let embed = new EmbedBuilder()
           .setDescription(`<:allstarrole:997233388635312198> Role Humans \n <:allstar:1001031487103193108> Attempting to role ${human.size - role.members} humans`)
           .setColor(color)
               
@@ -222,7 +221,7 @@ module.exports = {
             if (!args[1]) return message.channel.send({ embeds:[saysumnn]});
             if (!role) return message.channel.send({ embeds:[rolencuk]});
           
-        let icon = new MessageEmbed()
+        let icon = new EmbedBuilder()
           .setDescription(`${checked} Updated role icon`)
           .setColor(color)
        let emoji =  args[2].match(/<:.*:(.*)>/)[1]
