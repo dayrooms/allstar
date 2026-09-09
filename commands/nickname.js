@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,Permissions } = require('discord.js');
+const{ EmbedBuilder,PermissionFlagsBits } = require('discord.js');
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const db = require('quick.db')
 const talkedRecently = new Set();
@@ -21,26 +20,26 @@ module.exports = {
     } else {
 
 
-        let missperms = new MessageEmbed()
+        let missperms = new EmbedBuilder()
         .setDescription(`${xmark} You're missing \`MANAGE_MESSAGES\` permission`)
         .setColor(error)
-       let imissperms = new MessageEmbed()
+       let imissperms = new EmbedBuilder()
         .setDescription(`${xmark}  i don't have perms`)
         .setColor(error)
-       let example = new MessageEmbed()
+       let example = new EmbedBuilder()
        .setDescription(`${xmark} you need to provide a [User/ID]`)
        .setColor(error)
-       let invaliduser = new MessageEmbed()
+       let invaliduser = new EmbedBuilder()
        .setDescription(`${xmark} Invalid user`)
        .setColor(error)
 
-       let higherrole = new MessageEmbed()
+       let higherrole = new EmbedBuilder()
        .setDescription(`${xmark} Can't reanme user with higher role than yours`)
        .setColor(error)
     
     
-              if (!message.member.permissions.has([ Permissions.FLAGS.MANAGE_MESSAGES]))  return message.reply({ embeds:[missperms]});
-          if (!message.guild.me.permissions.has([ Permissions.FLAGS.MANAGE_MESSAGES])) return message.reply({ embeds:[imissperms]});
+              if (!message.member.permissions.has(PermissionFlagsBits.ManageMessages))  return message.reply({ embeds:[missperms]});
+          if (!message.guild.members.me.permissions.has(PermissionFlagsBits.ManageMessages)) return message.reply({ embeds:[imissperms]});
             
 
           let mentionedMember = await message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args.join(' ').toLocaleLowerCase()) || message.guild.members.cache.find(r => r.displayName.toLowerCase() === args.join(' ').toLocaleLowerCase()) || client.users.cache.get(args[0])
@@ -51,7 +50,7 @@ module.exports = {
        let nick = args.splice(1).join(' ')
          mentionedMember.setNickname(nick)
         message.reply({embeds:[
-          new MessageEmbed()
+          new EmbedBuilder()
           .setDescription(`${checked} Renamed ${mentionedMember.user.username} to ${nick}`)
           .setColor(color)
         ]})
