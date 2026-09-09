@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const { default_prefix ,color,error,owner } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -24,13 +23,13 @@ module.exports = {
           if(client.ws.ping < 100) { let pingemoji = `<:allstarconnection:996699189432025180>`} 
       else  pingemoji = `<:allstarbadconnection:996700696671948901> `
 
-          let embeds = new MessageEmbed()
+          let embeds = new EmbedBuilder()
         .setDescription(`> ws : \`${Math.round(client.ws.ping)}\` `)
         .setColor(color)
         message.reply({embeds:[embeds]})
         .then(msg => msg.edit({
           embeds:[
-            new MessageEmbed()
+            new EmbedBuilder()
         .setDescription(`> <:allstarconnection:1032192239172059156> ws \`${Math.round(client.ws.ping)}\` , rest : \`${msg.createdTimestamp - message.createdTimestamp}\``)
         .setColor(color)
           ]
