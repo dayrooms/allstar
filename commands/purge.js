@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,Permissions } = require('discord.js');
+const{ EmbedBuilder,PermissionFlagsBits } = require('discord.js');
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -15,30 +14,30 @@ module.exports = {
 		user: [],
 	},
 	execute: async(message, args, client) => {
-        let missperms = new MessageEmbed()
+        let missperms = new EmbedBuilder()
         .setDescription(`${xmark} You're missing \`MANAGE_MESSAGES\` permission`)
         .setColor(error)
-        let imissperms = new MessageEmbed()
+        let imissperms = new EmbedBuilder()
         .setDescription(`${xmark} i don't have perms`)
         .setColor(error)
-        let errorski = new MessageEmbed()
+        let errorski = new EmbedBuilder()
         .setDescription(`${xmark}  Make sure to put a number`)
         .setColor(error)
-        let fraction = new MessageEmbed()
+        let fraction = new EmbedBuilder()
         .setDescription(`${xmark}  Make sure to put a fraction number `)
         .setColor(error)
-        let limit = new MessageEmbed()
+        let limit = new EmbedBuilder()
         .setDescription(`${xmark}  Max amount is 100 `)
         .setColor(error)
-        let help = new MessageEmbed()
+        let help = new EmbedBuilder()
         .setDescription(`purge <<amount>> \n  example: purge 10 \n aliases : clear,c`)
         .setColor(color)
         if (talkedRecently.has(message.author.id)) {
              message.react(`⌛`)
     } else {
 
-        if (!message.member.permissions.has([ Permissions.FLAGS.MANAGE_MESSAGES]))  return message.reply({ embeds:[missperms]});
-        if (!message.guild.me.permissions.has([ Permissions.FLAGS.MANAGE_MESSAGES])) return message.reply({ embeds:[imissperms]});
+        if (!message.member.permissions.has(PermissionFlagsBits.ManageMessages))  return message.reply({ embeds:[missperms]});
+        if (!message.guild.members.me.permissions.has(PermissionFlagsBits.ManageMessages)) return message.reply({ embeds:[imissperms]});
     
 
         if (!args[0]) return message.reply({embeds:[help]})
@@ -49,7 +48,7 @@ module.exports = {
         const fetched = await message.channel.messages.fetch({
           limit: amountToDelete
         });
-            let purged = new MessageEmbed()
+            let purged = new EmbedBuilder()
             .setDescription(`${checked} Purged ${fetched.size} Messages`)
             .setColor(color)
  
