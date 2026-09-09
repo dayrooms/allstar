@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,Permissions,MessageActionRow,MessageButton } = require('discord.js');
+const{ EmbedBuilder,PermissionFlagsBits,ActionRowBuilder,ButtonBuilder,ButtonStyle } = require('discord.js');
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -20,27 +19,27 @@ module.exports = {
              message.react(`⌛`)
     } else {
 
-        let missperms = new MessageEmbed()
+        let missperms = new EmbedBuilder()
         .setDescription(`${xmark} You're missing \`MANAGE_CHANNELS\` permission`)
          .setColor(color)
-               let imissperms = new MessageEmbed()
+               let imissperms = new EmbedBuilder()
         .setDescription(`<:allstarwarn:996517869791748199>  i don't have perms`)
         .setColor(error)
-        if (!message.guild.me.permissions.has([ Permissions.FLAGS.MANAGE_CHANNELS])) return message.reply({ embeds:[imissperms]});
-        if (!message.member.permissions.has([ Permissions.FLAGS.MANAGE_CHANNELS]))  return message.channel.send({ embeds:[missperms]});
-          const row = new MessageActionRow().addComponents(
-             new MessageButton()
+        if (!message.guild.members.me.permissions.has(PermissionFlagsBits.ManageChannels)) return message.reply({ embeds:[imissperms]});
+        if (!message.member.permissions.has(PermissionFlagsBits.ManageChannels))  return message.channel.send({ embeds:[missperms]});
+          const row = new ActionRowBuilder().addComponents(
+             new ButtonBuilder()
               .setCustomId('yes')
               .setEmoji("<:Blurple_check:1013176396861931630>")
-              .setStyle('SECONDARY'),
+              .setStyle(ButtonStyle.Secondary),
             
-            new MessageButton()
+            new ButtonBuilder()
               .setCustomId('no')
               .setEmoji("<:DW_X_Mark:1013176426763145216>")
-              .setStyle('SECONDARY')
+              .setStyle(ButtonStyle.Secondary)
           )
           let msg = message.reply({embeds:[
-            new MessageEmbed().setDescription(`Are you sure you want to nuke this channel?.`).setColor(color)
+            new EmbedBuilder().setDescription(`Are you sure you want to nuke this channel?.`).setColor(color)
           ],
                          components:[row]
                         }).then(m => {
@@ -60,7 +59,7 @@ module.exports = {
            
             const id = ButtonInteraction.first().customId;
             if(id === 'yes') {
-             let embed = new MessageEmbed()
+             let embed = new EmbedBuilder()
           .setDescription(`${checked} Channel Nuked by ${message.author.tag}`)
           .setColor(color)
           message.channel.clone().then(channel => {
@@ -70,11 +69,11 @@ module.exports = {
           message.channel.delete().catch(() => {/*Ignore error*/})
             }
             if(id === 'no') {
-                           let embed = new MessageEmbed()
+                           let embed = new EmbedBuilder()
           .setTitle(`Canceled`)
           .setColor(color)
             message.channel.send({embeds:[
-              new MessageEmbed().setDescription(`${checked} Succesfully Canceled`).setColor(color)
+              new EmbedBuilder().setDescription(`${checked} Succesfully Canceled`).setColor(color)
             ]})
             }
           })
@@ -82,7 +81,7 @@ module.exports = {
           
           
           /*
-          let embed = new MessageEmbed()
+          let embed = new EmbedBuilder()
           .setTitle(`${checked} Channel Nuked by ${message.author.tag}`)
           .setColor(color)
           message.channel.clone().then(channel => {
