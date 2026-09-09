@@ -1,5 +1,4 @@
-
-const{ MessageEmbed, Permissions  } = require('discord.js');
+const{ EmbedBuilder, PermissionFlagsBits  } = require('discord.js');
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -18,27 +17,27 @@ module.exports = {
                 if (talkedRecently.has(message.author.id)) {
              message.react(`⌛`)
     } else {
-        let missperms = new MessageEmbed()
+        let missperms = new EmbedBuilder()
          .setDescription(`${xmark} You're missing \`BAN_MEMBERS\` permission`)
         .setColor(error)
-       let imissperms = new MessageEmbed()
+       let imissperms = new EmbedBuilder()
         .setDescription(`${xmark} i don't have perms`)
         .setColor(error)
-       let provideid = new MessageEmbed()
+       let provideid = new EmbedBuilder()
        .setDescription(`${xmark}  Provide me an ID to unban`)
        .setColor(error)
-       let notbanned = new MessageEmbed()
+       let notbanned = new EmbedBuilder()
        .setDescription(`${xmark} That user is not banned`)
        .setColor(error)
-       let failedunban = new MessageEmbed()
+       let failedunban = new EmbedBuilder()
        .setDescription(`${xmark} failed to unban that user`)
        .setColor(error)
-       let worked = new MessageEmbed()
+       let worked = new EmbedBuilder()
        .setDescription(`${checked} Succesfully Unbanned`)
        .setColor(color)
   
-        if (!message.member.permissions.has([ Permissions.FLAGS.BAN_MEMBERS]))  return message.reply({ embeds:[missperms]});
-        if (!message.guild.me.permissions.has([ Permissions.FLAGS.BAN_MEMBERS])) return message.reply({ embeds:[imissperms]});
+        if (!message.member.permissions.has(PermissionFlagsBits.BanMembers))  return message.reply({ embeds:[missperms]});
+        if (!message.guild.members.me.permissions.has(PermissionFlagsBits.BanMembers)) return message.reply({ embeds:[imissperms]});
     
           const ID = args[0];
           const user = await message.guild.bans.fetch(ID).catch(() => {/* */})
@@ -61,4 +60,3 @@ module.exports = {
         }, 3500);
     }
     }
-  
