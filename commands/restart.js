@@ -1,5 +1,4 @@
-
-const { MessageEmbed } = require('discord.js');
+const { EmbedBuilder } = require('discord.js');
 const { owner } = require("../config.json")
 module.exports = {
     name: 'restart',
@@ -13,7 +12,7 @@ module.exports = {
         user: [],
     },
     execute: async (message, args, client) => {
-        var permissionDenied = new MessageEmbed()
+        var permissionDenied = new EmbedBuilder()
             .setColor("#8B0000")
             .setAuthor({ name: "Error Occured" })
             .setTitle("Permission Denied")
@@ -23,7 +22,7 @@ module.exports = {
                 text: `${client.user.username}`,
                 iconURL: client.user.displayAvatarURL()
             });
-        var loadingEmbed = new MessageEmbed()
+        var loadingEmbed = new EmbedBuilder()
             .setColor("#FFFFFF")
             .setTitle("Restarting Bot <a:vile_loading:1045004235915411536>")
             .setDescription("Please wait while the bot is being restarted. This may take a few minutes.")
