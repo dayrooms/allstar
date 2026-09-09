@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const axios = require('axios')
 const { default_prefix ,color,error,owner ,xmark} = require("../config.json")
 const talkedRecently = new Set();
@@ -48,7 +47,7 @@ module.exports = {
 
 
 
-          let embeds = new MessageEmbed()
+          let embeds = new EmbedBuilder()
         .setDescription(`> ${pingemoji} : ${Math.round(client.ws.ping)}ms.`)
         .setColor(color)
         message.reply({embeds:[embeds]})
