@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const axios = require('axios')
 const { default_prefix ,color,error,owner } = require("../config.json")
 const talkedRecently = new Set();
@@ -30,7 +29,7 @@ module.exports = {
             let url = data.banner.startsWith("a_")?".gif?size=4096":".png?size=4096";
             url = `https://cdn.discordapp.com/banners/${message.guild.id}/${data.banner}${url}`
       
-      const embed = new MessageEmbed()
+      const embed = new EmbedBuilder()
 
         .setColor(color)
         .setTitle(`${message.guild.name}'s banner`)
