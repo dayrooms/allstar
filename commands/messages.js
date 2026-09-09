@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const db = require('quick.db')
 const { default_prefix ,color,error,owner } = require("../config.json")
 const talkedRecently = new Set();
@@ -28,12 +27,12 @@ module.exports = {
       
       let data = db.get(`activity_${message.guild.id}_${message.author.id}`)
       message.reply({embeds:[
-        new MessageEmbed().setDescription(`<:Message:1010885858792067192>  **${message.author.tag}** has sent ${data || 0} messages`).setColor(color)
+        new EmbedBuilder().setDescription(`<:Message:1010885858792067192>  **${message.author.tag}** has sent ${data || 0} messages`).setColor(color)
       ]})
         } else{
                 let data = db.get(`activity_${message.guild.id}_${mentionedMember.user.id}`)
       message.reply({embeds:[
-        new MessageEmbed().setDescription(`<:Message:1010885858792067192>  **${mentionedMember.user.tag}** has sent ${data || 0} messages`).setColor(color)
+        new EmbedBuilder().setDescription(`<:Message:1010885858792067192>  **${mentionedMember.user.tag}** has sent ${data || 0} messages`).setColor(color)
       ]})
         }
 
