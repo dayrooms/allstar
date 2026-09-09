@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const { default_prefix ,color,error,owner, xmark } = require("../config.json")
 const moment = require('moment')
 const talkedRecently = new Set();
@@ -21,7 +20,7 @@ module.exports = {
              message.react(`⌛`)
     } else {
       
-      let noprovide = new MessageEmbed()
+      let noprovide = new EmbedBuilder()
       .setDescription(`${xmark} You need to provide a [role/roleID]`)
       .setColor(error)
     if (!args[0]) return message.reply({embeds:[noprovide]})
@@ -30,7 +29,7 @@ module.exports = {
 
 
       
-      let embed = new MessageEmbed()
+      let embed = new EmbedBuilder()
       .setDescription(`<:allstarrole:997233388635312198> **Role Info** ${role.name}`)
       .addFields(
         {
