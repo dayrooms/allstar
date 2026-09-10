@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,MessageActionRow,MessageButton } = require('discord.js');
+const{ EmbedBuilder,ActionRowBuilder,ButtonBuilder } = require('discord.js');
 const { default_prefix ,color,error,owner } = require("../config.json")
 const moment = require('moment');
 const talkedRecently = new Set();
@@ -61,7 +60,7 @@ module.exports = {
 
         let joinPos = Array.from(message.guild.members.cache).map(x => x = x[1]).sort((a, b) => a.joinedAt - b.joinedAt)
    
-        let embed = new MessageEmbed()
+        let embed = new EmbedBuilder()
         .setTitle(`${mentionedMember.user.username} ${mentionedMember.presence.status.replace('dnd','<:dndsssss:1032192241546035260>').replace('idle','<:idles:1032192245933277264>').replace('online','<:online:1032192253772435457> ').replace('offline','<:offline:1032192252811939930>')} \`${mentionedMember.user.id}\``)
         .setThumbnail(mentionedMember.user.displayAvatarURL({dynamic:true, size:4096}))
         .setFooter({text:`Join position ${joinPos.findIndex(obj => obj.user.id === mentionedMember.id) === 0 ? 1 : joinPos.findIndex(obj => obj.user.id === mentionedMember.id)}`})
@@ -91,7 +90,7 @@ module.exports = {
         },
        
             )
-        .addField(`Roles [${message.guild.members.cache.get(mentionedMember.id).roles.cache.size || "0"}]`,` ${rolemap || "0"}`)
+        .addFields({ name: `Roles [${message.guild.members.cache.get(mentionedMember.id).roles.cache.size || "0"}]`, value: ` ${rolemap || "0"}` })
        // .addField(`Permissions`,'\```YAML\n' + perms + '\```')
 
         message.reply({embeds:[embed]});
