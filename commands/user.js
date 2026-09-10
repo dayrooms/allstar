@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const { default_prefix ,color,error,owner,xmark,checked } = require("../config.json")
 const db = require('quick.db')
 const talkedRecently = new Set();
