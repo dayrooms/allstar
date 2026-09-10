@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const { default_prefix ,color,error,owner } = require("../config.json")
 const moment = require("moment");
 require("moment-duration-format");
@@ -23,7 +22,7 @@ module.exports = {
         const style = 'R'
         const starttime = `<t:${Math.floor(client.readyAt / 1000)}` + (style ? `:${style}` : '') + '>'
         const duration = moment.duration(client.uptime).format(" D [days], H [hrs], m [mins], s [secs]");
-        let onlyown = new MessageEmbed()
+        let onlyown = new EmbedBuilder()
         .setDescription(`Only server owner can use this command`)
         .setColor(color)
 
@@ -33,7 +32,7 @@ module.exports = {
         ];
      //if(message.author.id !== message.guild.ownerId) return message.channel.send({embeds:[onlyown]});
    //  if (!authorized.includes(authorized)) return;
-        let embed = new MessageEmbed()
+        let embed = new EmbedBuilder()
         .setDescription(` **Uptime** \n> • Mem Usage  :: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)} MB \n> • Uptime     :: ${duration}`)
         .setTimestamp()
         .setColor(color)
