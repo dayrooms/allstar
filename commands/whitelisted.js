@@ -1,6 +1,5 @@
-
 const db = require('quick.db')
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -20,11 +19,11 @@ module.exports = {
              message.react(`⌛`)
     } else {
           
-         let errors = new MessageEmbed()
+         let errors = new EmbedBuilder()
         .setDescription(`${xmark} There are no whitelisted users`)
         .setColor(error)
                    
-              let onlyown = new MessageEmbed()
+              let onlyown = new EmbedBuilder()
         .setDescription(`${xmark} Only server owner can use this command`)
         .setColor(error)
 
@@ -37,7 +36,7 @@ module.exports = {
       
       let guild = message.guild.iconURL()
    
-      let wordlist = new MessageEmbed()
+      let wordlist = new EmbedBuilder()
        let database = db.get(`trustedusers_${message.guild.id}`)
        if(database == null && !database) return (message.reply({embeds:[errors]})).catch(() => {/*Ignore error*/});
        if(database && database.length) {
@@ -48,7 +47,7 @@ module.exports = {
               
           })
          wordlist.setDescription(message.guild.name)
-          wordlist.addField('Whitelisted Users', `>  ${arrayv.join("\n> ")}`)
+          wordlist.addFields({ name: 'Whitelisted Users', value: `>  ${arrayv.join("\n> ")}` })
          wordlist.setThumbnail(message.guild.iconURL({dynamic:true}))
           wordlist.setColor(color)
       }
