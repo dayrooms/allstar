@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const { default_prefix ,color,error,owner } = require("../config.json")
 const urban = require('relevant-urban')
 const talkedRecently = new Set();
@@ -20,7 +19,7 @@ module.exports = {
              message.react(`⌛`)
     } else {
          const search = await urban(args.join(" "))
-         let embed = new MessageEmbed()
+         let embed = new EmbedBuilder()
          .setThumbnail('https://images.newrepublic.com/a0a10f8123e4aeb5617a37ffd2f7f1449d1b69e1.jpeg')
          .setDescription(`**${search.word}** \n  ${search.definition} \n\n${search.example} `)
          .setColor(color)
