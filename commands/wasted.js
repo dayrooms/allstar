@@ -1,5 +1,4 @@
-
-const{ MessageEmbed,MessageAttachment } = require('discord.js');
+const{ EmbedBuilder,AttachmentBuilder } = require('discord.js');
 const { default_prefix ,color,error,owner } = require("../config.json")
 const canvacord = require("canvacord");
 const talkedRecently = new Set();
@@ -24,9 +23,9 @@ module.exports = {
 
       let mentionedMember = await message.mentions.members.first() || message.guild.members.cache.get(args[0]) || message.guild.members.cache.find(r => r.user.username.toLowerCase() === args.join(' ').toLocaleLowerCase()) || message.guild.members.cache.find(r => r.displayName.toLowerCase() === args.join(' ').toLocaleLowerCase()) || client.users.cache.get(args[0])
  
-      let avatar = mentionedMember.user.displayAvatarURL({ dynamic: false, format: 'png' ,size:4096});
+      let avatar = mentionedMember.user.displayAvatarURL({ extension: 'png', forceStatic: true ,size:4096});
       let image = await canvacord.Canvas.wasted(avatar);
-      let attachment = new MessageAttachment(image, "wasted.png");
+      let attachment = new AttachmentBuilder(image, { name: "wasted.png" });
       message.reply({files:[attachment]})
       
       
