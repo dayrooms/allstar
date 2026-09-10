@@ -1,6 +1,5 @@
-
 const db = require('quick.db')
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const { default_prefix , color,error,owner,checked,xmark } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -22,7 +21,7 @@ module.exports = {
 
        let antinuke = db.get(`anti-new_${message.guild.id}`)
 
-        let onlyown = new MessageEmbed()
+        let onlyown = new EmbedBuilder()
         .setDescription(`${xmark} Only server owner can use this command`)
         .setColor(error)
 
@@ -37,7 +36,7 @@ module.exports = {
        if(antinuke !== true) return message.reply({embeds:[{description:`${xmark} You need to enable antinuke first.`,color:error}]}) 
         let user = message.mentions.users.first()  || message.guild.members.cache.get(args[0]);
         if(!user) {
-            let usermention = new MessageEmbed()
+            let usermention = new EmbedBuilder()
             .setDescription(`
             ${xmark}  Mention user to whitelist
             `)
@@ -49,7 +48,7 @@ module.exports = {
         }
         let trustedusers = db.get(`trustedusers_${message.guild.id}`)
         if(trustedusers && trustedusers.find(find => find.user == user.id)) {
-          let trust = new MessageEmbed()
+          let trust = new EmbedBuilder()
           .setColor(error)
           .setDescription(`${xmark} That user is already whitelisted`)
         return message.reply({embeds:[trust]})
@@ -58,7 +57,7 @@ let data = {
     user: user.id
 }
         db.push(`trustedusers_${message.guild.id}`, data)
-        let added = new MessageEmbed()
+        let added = new EmbedBuilder()
         .setDescription(`
        ${checked} ${user.username} has been whitelisted
         `)
