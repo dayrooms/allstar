@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const { default_prefix ,color,error,owner,xmark } = require("../config.json")
 const talkedRecently = new Set();
 module.exports = {
@@ -21,7 +20,7 @@ module.exports = {
     } else {
 
       message.guild.fetchVanityData().then(async vanity => {
-              let embed = new MessageEmbed()
+              let embed = new EmbedBuilder()
       .setDescription(`<:MessageLink:1010885859735785553> https://discord.gg/${vanity.code} has ${vanity.uses} joins`)
      .setColor(color)
         //.setFooter({text: message.author.tag ,iconURL: client.user.displayAvatarURL()})
