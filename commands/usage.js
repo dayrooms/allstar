@@ -2,7 +2,7 @@ var os = require("os")
 var osu = require("os-utils")
 const si = require('systeminformation');
 var memStat = require('mem-stat');
-const { MessageEmbed } = require("discord.js")
+const { EmbedBuilder } = require("discord.js")
 const parseMilliseconds = require('parse-ms');
 
 
@@ -22,7 +22,7 @@ module.exports = {
 
 
     try {
-      var loadingEmbed = new MessageEmbed()
+      var loadingEmbed = new EmbedBuilder()
         .setColor("#FFFFFF")
         .setTitle("Fetching Information <a:vile_loading:1045004235915411536>")
         .setDescription("Please wait while the process is gathering information about the system.")
@@ -64,7 +64,7 @@ module.exports = {
       var used = (memStat.total("GiB") - memStat.free("GiB")).toFixed(2)
       var total = Math.round(memStat.total("GiB"))
       var prec = memStat.usedPercent().toFixed(2);
-      var embed = new MessageEmbed()
+      var embed = new EmbedBuilder()
         .setColor(0xFFFFFF)
         .setTitle('Usage Info')
         .setDescription('Current usage data & stats are displayed below.')
@@ -81,7 +81,7 @@ module.exports = {
         .setFooter({ text: `${client.user.username}`, iconURL: client.user.displayAvatarURL() });
       await msg.edit({ embeds: [embed] });
     } catch (e) {
-      var failedEmbed = new MessageEmbed()
+      var failedEmbed = new EmbedBuilder()
         .setColor("#8B0000")
         .setTitle("Process Failed <a:vile_error:1045004235915411536>")
         .setDescription("An unknown error has occurred when fetching the information this process has requested.")
@@ -131,7 +131,7 @@ module.exports.handler = async (client) => {
     var used = (memStat.total("GiB") - memStat.free("GiB")).toFixed(2)
     var total = Math.round(memStat.total("GiB"))
     var prec = memStat.usedPercent().toFixed(2);
-    var embed = new MessageEmbed()
+    var embed = new EmbedBuilder()
       .setColor(0xFFFFFF)
       .setTitle('Usage Info')
       .setDescription('Current usage data & stats are displayed below.')
