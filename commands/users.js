@@ -1,5 +1,4 @@
-
-const{ MessageEmbed } = require('discord.js');
+const{ EmbedBuilder } = require('discord.js');
 const db = require('quick.db')
 const { default_prefix ,color,error,owner } = require("../config.json")
 const talkedRecently = new Set();
@@ -28,7 +27,7 @@ module.exports = {
      //if(message.author.id !== message.guild.ownerId) return message.channel.send({embeds:[onlyown]});
    if (!authorized.includes(message.author.id)) return;
 
-      let embed = new MessageEmbed()
+      let embed = new EmbedBuilder()
       .setDescription(`${db.get(`privacy`).length} Users Accepted [Privacy Policy](https://nekokouri.gitbook.io/allstar/details/privacy-policy) \n ${db.get(`blacklisted`).length} Denied [Privacy Policy](https://nekokouri.gitbook.io/allstar/details/privacy-policy)`)
       .setColor(color)
       message.reply({embeds:[embed]})
